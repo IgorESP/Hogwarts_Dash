@@ -1,10 +1,19 @@
 fileFormatVersion: 2
-guid: 83cac9470a8a8f345b4d3df3ed5fec04
+guid: 004dd84f42fef76468b75d7554145f06
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4490225412599239525
-    second: harry_potter_houses___pixel_art_edition_by_mihneasto_d9xochy-pre_0
+      213: -4318860327989039163
+    second: harry_potter_houses_0
+  - first:
+      213: -1071822577849677651
+    second: harry_potter_houses_1
+  - first:
+      213: 6859111464967369875
+    second: harry_potter_houses_2
+  - first:
+      213: -2684145144174153046
+    second: harry_potter_houses_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +46,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -51,7 +60,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 200
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -75,7 +84,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -139,13 +148,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: harry_potter_houses___pixel_art_edition_by_mihneasto_d9xochy-pre_0
+      name: harry_potter_houses_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 894
-        height: 894
+        y: 447
+        width: 447
+        height: 447
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +163,74 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b9c279807c38fa1c0800000000000000
-      internalID: -4490225412599239525
+      spriteID: 5cfafabf9635014c0800000000000000
+      internalID: -4318860327989039163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: harry_potter_houses_1
+      rect:
+        serializedVersion: 2
+        x: 447
+        y: 447
+        width: 447
+        height: 447
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da8c6015b0f1021f0800000000000000
+      internalID: -1071822577849677651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: harry_potter_houses_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 447
+        height: 447
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39470384985703f50800000000000000
+      internalID: 6859111464967369875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: harry_potter_houses_3
+      rect:
+        serializedVersion: 2
+        x: 447
+        y: 0
+        width: 447
+        height: 447
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa2f8eb663000cad0800000000000000
+      internalID: -2684145144174153046
       vertices: []
       indices: 
       edges: []
@@ -164,7 +239,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 643c475d1c8be7d4bb2ac84bfc098e4b
     internalID: 0
     vertices: []
     indices: 
@@ -174,7 +249,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      harry_potter_houses___pixel_art_edition_by_mihneasto_d9xochy-pre_0: -4490225412599239525
+      harry_potter_houses_0: -4318860327989039163
+      harry_potter_houses_1: -1071822577849677651
+      harry_potter_houses_2: 6859111464967369875
+      harry_potter_houses_3: -2684145144174153046
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
