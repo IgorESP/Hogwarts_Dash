@@ -719,7 +719,7 @@ GameObject:
   - component: {fileID: 662757499}
   - component: {fileID: 662757502}
   m_Layer: 0
-  m_Name: cubo_slytherin_0
+  m_Name: jugador
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -873,7 +873,7 @@ GameObject:
   - component: {fileID: 730961392}
   - component: {fileID: 730961393}
   m_Layer: 0
-  m_Name: Suelo
+  m_Name: SueloSlytherin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3067,7 +3067,7 @@ GameObject:
   - component: {fileID: 766822403}
   - component: {fileID: 766822402}
   m_Layer: 0
-  m_Name: Fondo
+  m_Name: FondoSlytherin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
