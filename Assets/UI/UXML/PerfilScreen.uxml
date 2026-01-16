@@ -1,0 +1,32 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+  <Style src="project://database/Assets/UI/USS/PerfilScreen.uss" />
+    <ui:VisualElement name="Contenedor" style="flex-grow: 1; background-image: url('project://database/Assets/ASSETS_MENUS/fondo%20(1).png?fileID=2800000&amp;guid=0ae676ad7a14f814c9b9fbe500038b98&amp;type=3#fondo (1)'); width: 100%; height: 100%; position: absolute; -unity-background-scale-mode: scale-and-crop; align-items: center; justify-content: flex-start; padding-top: 50px;">
+       
+    
+        <!-- TÍTULO -->
+        <ui:Label text="Selecciona tu casa:" style="font-size: 25px; color: white; margin-bottom: 20px; -unity-font-style: bold;" />
+        
+        <!-- CONTENEDOR DE BOTONES DE CASAS -->
+        <ui:VisualElement name="ContenedorCasas" style="flex-direction: row; justify-content: center; align-items: center; margin-bottom: 30px; flex-wrap: wrap; width: 80%;">
+            <ui:Button name="Boton_Gryffindor" class="boton-casa" style="background-image: url('project://database/Assets/ASSETS_CUBOS/cubo_gryffindor.png?fileID=8732451491206344441&amp;guid=7dfad456f7ec77549965e31b3676492d&amp;type=3#cubo_gryffindor_0'); width: 150px; height: 150px; margin: 10px; background-color: rgba(0, 0, 0, 0); border-width: 3px; border-color: rgb(255, 215, 0); border-radius: 10px; -unity-background-scale-mode: scale-to-fit;" />
+            <ui:Button name="Boton_Hufflepuff" class="boton-casa" style="background-image: url('project://database/Assets/ASSETS_CUBOS/cubo_hufflepuff.png?fileID=-8772699260811039704&amp;guid=e4b035cec741f084ab049f7e76735f6c&amp;type=3#cubo_hufflepuff_0'); width: 150px; height: 150px; margin: 10px; background-color: rgba(0, 0, 0, 0); border-width: 3px; border-color: rgb(255, 215, 0); border-radius: 10px; -unity-background-scale-mode: scale-to-fit;" />
+            <ui:Button name="Boton_Ravenclaw" class="boton-casa" style="background-image: url('project://database/Assets/ASSETS_CUBOS/cubo_ravenclaw.png?fileID=8646343858890659315&amp;guid=88561b6fb3896214baf5faacca6e4d46&amp;type=3#cubo_ravenclaw_0'); width: 150px; height: 150px; margin: 10px; background-color: rgba(0, 0, 0, 0); border-width: 3px; border-color: rgb(255, 215, 0); border-radius: 10px; -unity-background-scale-mode: scale-to-fit;" />
+            <ui:Button name="Boton_Slytherin" class="boton-casa" style="background-image: url('project://database/Assets/ASSETS_CUBOS/cubo_slytherin.png?fileID=-8318489692804935999&amp;guid=aacc3e1ebfe0b4b4494b7cfd110bd17f&amp;type=3#cubo_slytherin_0'); width: 150px; height: 150px; margin: 10px; background-color: rgba(0, 0, 0, 0); border-width: 3px; border-color: rgb(255, 215, 0); border-radius: 10px; -unity-background-scale-mode: scale-to-fit;" />
+        </ui:VisualElement>
+        
+        <!-- CONTENEDOR DE ICONOS DE LA CASA SELECCIONADA -->
+        <ui:VisualElement name="ContenedorIconos" style="flex-direction: row; justify-content: center; align-items: center; margin-top: 30px; margin-bottom: 20px; flex-wrap: wrap; width: 80%;">
+            <ui:VisualElement name="Icono_Cubo" class="icono-casa" style="width: 100px; height: 100px; margin: 10px; -unity-background-scale-mode: scale-to-fit;" />
+            <ui:VisualElement name="Icono_Cohete" class="icono-casa" style="width: 100px; height: 100px; margin: 10px; -unity-background-scale-mode: scale-to-fit;" />
+            <ui:VisualElement name="Icono_Bola" class="icono-casa" style="width: 100px; height: 100px; margin: 10px; -unity-background-scale-mode: scale-to-fit;" />
+            <ui:VisualElement name="Icono_UFO" class="icono-casa" style="width: 100px; height: 100px; margin: 10px; -unity-background-scale-mode: scale-to-fit;" />
+        </ui:VisualElement>
+        
+        <!-- BOTÓN CONFIRMAR -->
+        <ui:Button name="Boton_Confirmar" text="ENTRAR AL JUEGO"  />
+        
+        <!-- BOTÓN VOLVER -->
+        <ui:Button name="Boton_Volver" text="← ATRÁS" style="width:150px; height: 50px; font_size: 20px; background-color:rgba(139, 69, 19, 0.8); color:rgb(255,215,0); border-radius: 10px; border-width: 2px; border-color: rgb(255, 215, 0); -unity-font-style: bold;" />
+        
+    </ui:VisualElement>
+</ui:UXML>

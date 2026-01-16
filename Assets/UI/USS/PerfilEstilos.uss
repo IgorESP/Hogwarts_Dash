@@ -1,0 +1,182 @@
+/* ====================================
+   ESTILOS PARA BOTONES DE CASAS
+   ==================================== */
+
+.boton-casa {
+    transition-duration: 0.3s;
+    transition-property: scale, border-width, border-color;
+}
+
+.boton-casa:hover {
+    scale: 1.2;
+    border-width: 6px !important;
+    border-color: rgb(255, 255, 255) !important;
+}
+
+/* Clase para casa seleccionada - MÁS VISIBLE */
+.casa-seleccionada {
+    border-width: 8px !important;
+    border-color: white !important;
+    scale: 1.15;
+}
+
+/* ====================================
+   COLORES DE GRYFFINDOR
+   ==================================== */
+
+/* Flecha cambia de color según la casa */
+.color-gryffindor #Boton_Volver {
+    -unity-background-image-tint-color: rgb(174, 0, 1);
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.color-gryffindor #Boton_Volver:hover {
+    -unity-background-image-tint-color: rgb(220, 20, 20);
+    scale: 1.2;
+}
+
+/* Botón Confirmar cambia de color según la casa */
+.color-gryffindor #Boton_Confirmar {
+    background-color: rgb(174, 0, 1);
+    border-color: rgb(255, 215, 0);
+    border-width: 4px;
+    color: rgb(255, 215, 0);
+}
+
+.color-gryffindor #Boton_Confirmar:hover {
+    background-color: rgb(220, 20, 20);
+    scale: 1.08;
+    border-color: rgb(255, 255, 255);
+    border-width: 5px;
+}
+
+/* ====================================
+   COLORES DE HUFFLEPUFF
+   ==================================== */
+
+.color-hufflepuff #Boton_Volver {
+    -unity-background-image-tint-color: rgb(236, 177, 31);
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.color-hufflepuff #Boton_Volver:hover {
+    -unity-background-image-tint-color: rgb(255, 198, 51);
+    scale: 1.2;
+}
+
+.color-hufflepuff #Boton_Confirmar {
+    background-color: rgb(236, 177, 31);
+    border-color: rgb(0, 0, 0);
+    border-width: 4px;
+    color: rgb(0, 0, 0);
+}
+
+.color-hufflepuff #Boton_Confirmar:hover {
+    background-color: rgb(255, 198, 51);
+    scale: 1.08;
+    border-color: rgb(255, 255, 255);
+    border-width: 5px;
+}
+
+/* ====================================
+   COLORES DE RAVENCLAW
+   ==================================== */
+
+.color-ravenclaw #Boton_Volver {
+    -unity-background-image-tint-color: rgb(34, 56, 116);
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.color-ravenclaw #Boton_Volver:hover {
+    -unity-background-image-tint-color: rgb(54, 76, 136);
+    scale: 1.2;
+}
+
+.color-ravenclaw #Boton_Confirmar {
+    background-color: rgb(34, 56, 116);
+    border-color: rgb(150, 150, 150);
+    border-width: 4px;
+    color: rgb(255, 215, 0);
+}
+
+.color-ravenclaw #Boton_Confirmar:hover {
+    background-color: rgb(54, 76, 136);
+    scale: 1.08;
+    border-color: rgb(255, 255, 255);
+    border-width: 5px;
+}
+
+/* ====================================
+   COLORES DE SLYTHERIN
+   ==================================== */
+
+.color-slytherin #Boton_Volver {
+    -unity-background-image-tint-color: rgb(46, 91, 62);
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.color-slytherin #Boton_Volver:hover {
+    -unity-background-image-tint-color: rgb(66, 111, 82);
+    scale: 1.2;
+}
+
+.color-slytherin #Boton_Confirmar {
+    background-color: rgb(46, 91, 62);
+    border-color: rgb(170, 170, 170);
+    border-width: 4px;
+    color: rgb(255, 215, 0);
+}
+
+.color-slytherin #Boton_Confirmar:hover {
+    background-color: rgb(66, 111, 82);
+    scale: 1.08;
+    border-color: rgb(255, 255, 255);
+    border-width: 5px;
+}
+
+/* ====================================
+   ESTILOS BASE PARA BOTONES
+   ==================================== */
+
+#Boton_Volver {
+    transition-duration: 0.3s;
+    transition-property: scale, -unity-background-image-tint-color;
+}
+
+#Boton_Volver:active {
+    scale: 0.85;
+}
+
+#Boton_Confirmar {
+    transition-duration: 0.3s;
+    transition-property: scale, background-color, border-color, border-width;
+}
+
+#Boton_Confirmar:active {
+    scale: 0.9;
+}
+
+/* ====================================
+   ESTILOS PARA ICONOS DE CASA
+   ==================================== */
+
+.icono-casa {
+    transition-duration: 0.4s;
+    transition-property: scale, rotate;
+    border-radius: 15px;
+}
+
+.icono-casa:hover {
+    scale: 1.3;
+    rotate: 15deg;
+}
+
+/* ====================================
+   CONTENEDOR DE ICONOS
+   ==================================== */
+
+#ContenedorIconos {
+    opacity: 1;
+    transition-duration: 0.5s;
+    transition-property: opacity;
+}

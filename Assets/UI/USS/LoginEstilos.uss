@@ -1,0 +1,66 @@
+/* ====================================
+   PANEL DE LOGIN
+   ==================================== */
+
+#PanelLogin {
+    transition-duration: 0.3s;
+}
+
+/* ====================================
+   CAMPOS DE INPUT
+   ==================================== */
+
+.campo-input {
+    transition-duration: 0.25s;
+    transition-property: border-color, background-color, scale;
+}
+
+.campo-input:hover {
+    border-color: rgb(255, 215, 0) !important;
+    background-color: rgba(50, 45, 35, 0.95);
+    scale: 1.02;
+}
+
+/* TextField styling */
+#Campo_Usuario .unity-text-field__input,
+#Campo_Contrasena .unity-text-field__input {
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    color: white;
+    font-size: 18px;
+}
+
+/* ====================================
+   BOTONES
+   ==================================== */
+
+.boton-login {
+    transition-duration: 0.25s;
+    transition-property: scale, background-color;
+}
+
+.boton-login:hover {
+    scale: 1.05;
+}
+
+.boton-login:active {
+    scale: 0.97;
+}
+
+/* Botón Verde - Iniciar Sesión */
+#Boton_IniciarSesion:hover {
+    background-color: rgb(20, 170, 60);
+}
+
+/* Botón Naranja - Registrarse */
+#Boton_Registrarse:hover {
+    background-color: rgb(200, 115, 50);
+}
+
+/* ====================================
+   MENSAJE DE ERROR
+   ==================================== */
+
+#Mensaje_Error {
+    opacity: 1;
+}
