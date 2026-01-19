@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: Interiors_tilesets_852
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: -210093272, guid: 577888f9a093e794584bfdcecb0bbc82, type: 3}
+  m_Sprite: {fileID: -210093272, guid: cd8dbecd2a224734982270508c295af0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
