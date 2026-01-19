@@ -14,14 +14,22 @@ public class MovimientoGD : MonoBehaviour
     [Header("Suelo")]
     public LayerMask capaSuelo;
 
-    [Header("Efectos y Muerte")] // ← NUEVA SECCIÓN
+    [Header("Efectos y Muerte")]
     public Animator anim;
-    public ParticleSystem sistemaParticulas; // ← AÑADIR ESTO
+    public ParticleSystem sistemaParticulas;
     public float tiempoEsperaMuerte = 1.0f;
-    
+
+    [Header("Modos Especiales")]
+    public GameObject objetoEscoba;   
+    public GameObject objetoBola;     
+    public GameObject objetoUFO;      // <-- AÑADIDO (Faltaba declarar)
+    public bool modoCohete = false;
+    public bool modoBola = false;     
+    public bool modoUFO = false;      // <-- AÑADIDO (Faltaba declarar)
+
     Rigidbody2D rb;
     BoxCollider2D col;
-    SpriteRenderer rend; // ← Para ocultar el cubo
+    SpriteRenderer rend;
 
     bool pedirSalto;
     float rotacionRestante;
@@ -32,13 +40,12 @@ public class MovimientoGD : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<BoxCollider2D>();
-        rend = GetComponent<SpriteRenderer>(); // ← Obtener el renderizador
+        rend = GetComponent<SpriteRenderer>(); 
         
         rb.gravityScale = gravedadEscala;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
-        // IMPORTANTE: Asegurar que el cubo sea visible al reiniciar
-        rend.enabled = true; 
+        DesactivarModos(); 
 
         puntoDeAparicion = transform.position;
         transform.position = new Vector3(puntoDeAparicion.x - distanciaAtras, puntoDeAparicion.y, puntoDeAparicion.z);
@@ -46,83 +53,147 @@ public class MovimientoGD : MonoBehaviour
 
     void Update()
     {
-        if (haMuerto) return; // Bloquea input si ha muerto
+        if (haMuerto) return;
 
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
-            pedirSalto = true;
+            if (modoBola) rb.gravityScale *= -1; 
+            
+            // <-- AÑADIDO: Lógica de salto UFO tipo Flappy Bird
+            if (modoUFO) 
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0); 
+                rb.AddForce(Vector2.up * (fuerzaSalto * 0.6f), ForceMode2D.Impulse);
+            }
         }
+
+        pedirSalto = Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0);
     }
 
     void FixedUpdate()
     {
-        if (haMuerto) return; // Bloquea movimiento si ha muerto
+        if (haMuerto) return;
 
         rb.linearVelocity = new Vector2(velocidad, rb.linearVelocity.y);
 
-        bool tocandoSuelo = Physics2D.OverlapBox(
-            col.bounds.center + Vector3.down * (col.bounds.extents.y + 0.05f),
-            new Vector2(col.bounds.size.x * 0.9f, 0.1f),
-            0f,
-            capaSuelo
-        );
-
-        if (pedirSalto && tocandoSuelo)
+        if (!modoCohete && !modoBola && !modoUFO) 
         {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, fuerzaSalto);
-            rotacionRestante = 180f;
+            bool tocandoSuelo = Physics2D.OverlapBox(
+                col.bounds.center + Vector3.down * (col.bounds.extents.y + 0.05f),
+                new Vector2(col.bounds.size.x * 0.9f, 0.1f),
+                0f,
+                capaSuelo
+            );
+
+            if (pedirSalto && tocandoSuelo)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, fuerzaSalto);
+                rotacionRestante = 180f;
+            }
+
+            if (rotacionRestante > 0f)
+            {
+                float paso = 720f * Time.fixedDeltaTime;
+                float rotar = Mathf.Min(paso, rotacionRestante);
+                rb.MoveRotation(rb.rotation - rotar);
+                rotacionRestante -= rotar;
+            }
         }
-
-        pedirSalto = false;
-
-        if (rotacionRestante > 0f)
+        else if (modoCohete) 
         {
-            float paso = 720f * Time.fixedDeltaTime;
-            float rotar = Mathf.Min(paso, rotacionRestante);
-            rb.MoveRotation(rb.rotation - rotar);
-            rotacionRestante -= rotar;
+            if (pedirSalto) 
+            {
+                rb.AddForce(Vector2.up * fuerzaSalto * 3.5f, ForceMode2D.Force);
+                if (rb.linearVelocity.y > velocidad) rb.linearVelocity = new Vector2(rb.linearVelocity.x, velocidad);
+            }
+            float anguloZ = Mathf.Clamp(rb.linearVelocity.y * 3f, -25f, 25f);
+            rb.MoveRotation(anguloZ);
+        }
+        else if (modoBola) 
+        {
+            float direccionRot = rb.gravityScale > 0 ? -1f : 1f;
+            rb.MoveRotation(rb.rotation + (direccionRot * 600f * Time.fixedDeltaTime));
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Obstaculo")) Morir();
+        if (collision.CompareTag("PortalCohete")) ActivarModoCohete();
+        if (collision.CompareTag("PortalBola")) ActivarModoBola(); 
+        if (collision.CompareTag("PortalUfo")) ActivarModoUfo(); 
+        if (collision.CompareTag("PortalCubo")) ActivarModoCubo();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    void ActivarModoCohete()
     {
-        foreach (ContactPoint2D punto in collision.contacts)
-        {
-            if (punto.normal.x < -0.9f) 
-            {
-                Morir();
-                break;
-            }
-        }
+        DesactivarModos(); 
+        modoCohete = true;
+        if (objetoEscoba != null) objetoEscoba.SetActive(true);
+        rb.gravityScale = 2.5f; 
+        rb.linearVelocity = new Vector2(velocidad, 0); 
+    }
+
+    void ActivarModoBola()
+    {
+        DesactivarModos(); 
+        modoBola = true;
+        rend.enabled = false; 
+        if (objetoBola != null) objetoBola.SetActive(true); 
+        rb.gravityScale = 4.5f; 
+        rb.linearVelocity = new Vector2(velocidad, 0);
+    }
+
+void ActivarModoUfo()
+{
+    DesactivarModos(); 
+    modoUFO = true; 
+
+    // ❌ NO apagamos el renderer del cubo
+    // rend.enabled = false;  ← ELIMINADA
+
+    if (objetoUFO != null)
+    {
+        objetoUFO.SetActive(true);
+    }
+
+    rb.gravityScale = 4.0f; 
+    rb.linearVelocity = new Vector2(velocidad, 0); 
+}
+
+void ActivarModoCubo()
+    {
+        DesactivarModos(); // Esto ya pone la gravedad normal, enciende el cubo y apaga todo lo demás
+        rb.linearVelocity = new Vector2(velocidad, 0); // Resetea la velocidad para que no salga disparado
+    }
+
+    void DesactivarModos() 
+    {
+        modoCohete = false;
+        modoBola = false;
+        modoUFO = false; // <-- AÑADIDO
+        rend.enabled = true; 
+        if (objetoEscoba != null) objetoEscoba.SetActive(false);
+        if (objetoBola != null) objetoBola.SetActive(false);
+        if (objetoUFO != null) objetoUFO.SetActive(false); // <-- AÑADIDO
+        rb.gravityScale = gravedadEscala; 
+        transform.rotation = Quaternion.identity;
     }
 
     void Morir()
     {
         if (haMuerto) return;
         haMuerto = true;
-
-        // 1. Detener y ocultar
         rb.linearVelocity = Vector2.zero;
         rb.isKinematic = true;
-        rend.enabled = false; // El cubo desaparece para que se vea la explosión
 
-        // 2. Partículas
-        if (sistemaParticulas != null)
-        {
-            sistemaParticulas.Play();
-        }
+        if(objetoEscoba != null) objetoEscoba.SetActive(false);
+        if(objetoBola != null) objetoBola.SetActive(false);
+        if(objetoUFO != null) objetoUFO.SetActive(false); // <-- AÑADIDO
+        rend.enabled = false; 
 
-        // 3. Animator
-        if (anim != null)
-        {
-            anim.SetTrigger("Murio");
-        }
-
+        if (sistemaParticulas != null) sistemaParticulas.Play();
+        if (anim != null) anim.SetTrigger("Murio");
         StartCoroutine(EsperarYReiniciar());
     }
 
@@ -132,13 +203,18 @@ public class MovimientoGD : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        foreach (ContactPoint2D punto in collision.contacts)
+        {
+            if (punto.normal.x < -0.9f) { Morir(); break; }
+        }
+    }
+
     void OnDrawGizmos()
     {
         if (!col) return;
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(
-            col.bounds.center + Vector3.down * (col.bounds.extents.y + 0.05f),
-            new Vector2(col.bounds.size.x * 0.9f, 0.1f)
-        );
+        Gizmos.DrawWireCube(col.bounds.center + Vector3.down * (col.bounds.extents.y + 0.05f), new Vector2(col.bounds.size.x * 0.9f, 0.1f));
     }
-}
+} 

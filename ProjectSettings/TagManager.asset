@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - PortalCohete
+  - PortalBola
+  - PortalUfo
   layers:
   - Default
   - TransparentFX
@@ -15,7 +18,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - Cosmeticos
   - 
   - 
   - 
@@ -40,6 +43,15 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Suelo
+    uniqueID: 1505437999
+    locked: 0
+  - name: Obstaculos
+    uniqueID: 2885810031
+    locked: 0
+  - name: Cosmeticos
+    uniqueID: 150692123
     locked: 0
   m_RenderingLayers:
   - Default
