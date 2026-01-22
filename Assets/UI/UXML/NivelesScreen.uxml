@@ -1,112 +1,91 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement name="Contenedor" style="flex-grow: 1; background-image: url('project://database/Assets/ASSETS_MENUS/fondo%20(1).png?fileID=2800000&amp;guid=0ae676ad7a14f814c9b9fbe500038b98&amp;type=3#fondo (1)'); width: 100%; height: 100%; position: absolute; -unity-background-scale-mode: scale-and-crop; align-items: center; justify-content: flex-start; padding-top: 20px;">
-        <Style src="project://database/Assets/UI/USS/NivelesStyle.uss" />
-        <!-- HEADER: BOTÓN ATRÁS Y TÍTULO -->
+    <ui:VisualElement name="Contenedor" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/ASSETS_MENUS/fondo%20(1).png?fileID=2800000&amp;guid=0ae676ad7a14f814c9b9fbe500038b98&amp;type=3#fondo (1)&quot;); width: 100%; height: 100%; position: absolute; -unity-background-scale-mode: scale-and-crop; align-items: center; justify-content: flex-start; padding-top: 20px; left: 0px; -unity-background-image-tint-color: rgb(108, 103, 103);">
+        <Style src="project://database/Assets/UI/USS/NivelesStyle.uss?fileID=7433441132597879392&amp;guid=6ad3e148e8570444d9d80d08d7050f4a&amp;type=3#NivelesStyle" />
         <ui:VisualElement name="Header" style="flex-direction: row; width: 95%; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <!-- Botón Atrás -->
             <ui:Button name="Boton_Atras" text="← ATRÁS" style="width: 150px; height: 50px; font-size: 20px; background-color: rgba(139, 69, 19, 0.9); color: rgb(255, 215, 0); border-radius: 10px; border-width: 2px; border-color: rgb(255, 215, 0); -unity-font-style: bold;" />
-            
-            <!-- Título -->
             <ui:Label text="SELECCIÓN DE MUNDOS" name="Titulo" style="font-size: 40px; color: rgb(255, 215, 0); -unity-font-style: bold; -unity-text-outline-width: 3px; -unity-text-outline-color: rgba(0, 0, 0, 0.8);" />
-            
-            <!-- Progreso -->
             <ui:Label name="Progreso" text="Progreso: 3/5 mundos" style="font-size: 18px; color: rgb(255, 215, 0); -unity-font-style: bold; -unity-text-outline-width: 2px; -unity-text-outline-color: rgba(0, 0, 0, 0.8);" />
         </ui:VisualElement>
-        
-        <!-- CONTENEDOR DE MUNDOS - PRIMERA FILA (3 MUNDOS) -->
-        <ui:VisualElement name="FilaMundos1" style="flex-direction: row; justify-content: center; align-items: flex-start; margin-bottom: 30px; width: 90%;">
-            
-            <!-- MUNDO 1 - GRAN COMEDOR -->
-            <ui:Button name="Mundo_1" class="tarjeta-mundo desbloqueado" style="width: 280px; height: 350px; margin: 15px; background-color: rgba(20, 20, 20, 0.85); border-width: 4px; border-color: rgb(255, 140, 0); border-radius: 20px; padding: 20px;">
+        <ui:VisualElement name="FilaMundos1" style="flex-direction: row; justify-content: center; align-items: flex-start; margin-bottom: 30px; width: 100%; gap: 10px;">
+            <ui:Button name="Mundo_1" class="tarjeta-mundo desbloqueado" style="width: 250px; height: 350px; margin: 15px; background-color: rgba(20, 20, 20, 0.85); border-width: 4px; border-color: rgb(255, 140, 0); border-radius: 20px; padding: 20px;">
                 <ui:Label text="MUNDO 1" style="font-size: 16px; color: rgb(180, 180, 180); margin-bottom: 10px;" />
                 <ui:Label text="Gran Comedor" style="font-size: 28px; color: white; -unity-font-style: bold; margin-bottom: 15px; -unity-text-outline-width: 2px; -unity-text-outline-color: rgba(0, 0, 0, 0.8);" />
                 <ui:Label text="El corazón del castillo. Mesas flotantes y velas encantadas marcan el ritmo." style="font-size: 14px; color: rgb(200, 200, 200); flex-wrap: wrap; white-space: normal; margin-bottom: 20px;" />
                 <ui:VisualElement style="flex-direction: row; justify-content: space-between; margin-top: auto;">
                     <ui:VisualElement style="flex-direction: row; align-items: center;">
-                        <ui:VisualElement style="width: 20px; height: 20px; background-image: url('project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/68.png'); -unity-background-scale-mode: scale-to-fit; margin-right: 5px;" />
+                        <ui:VisualElement style="width: 20px; height: 20px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/68.png?fileID=21300000&amp;guid=3bcd937835616de48b839d4c3394c651&amp;type=3#68&quot;); -unity-background-scale-mode: scale-to-fit; margin-right: 5px;" />
                         <ui:Label text="3/3" style="font-size: 16px; color: rgb(255, 215, 0); -unity-font-style: bold;" />
                     </ui:VisualElement>
                     <ui:VisualElement style="flex-direction: row; align-items: center;">
-                        <ui:VisualElement style="width: 20px; height: 20px; background-image: url('project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/122.png'); -unity-background-scale-mode: scale-to-fit; margin-right: 5px;" />
+                        <ui:VisualElement style="width: 20px; height: 20px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/122.png?fileID=21300000&amp;guid=f19245d751804bf4cb3de69c1a36c826&amp;type=3#122&quot;); -unity-background-scale-mode: scale-to-fit; margin-right: 5px;" />
                         <ui:Label text="100%" style="font-size: 16px; color: rgb(255, 215, 0); -unity-font-style: bold;" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:Button>
-            
-            <!-- MUNDO 2 - BOSQUE PROHIBIDO -->
-            <ui:Button name="Mundo_2" class="tarjeta-mundo desbloqueado" style="width: 280px; height: 350px; margin: 15px; background-color: rgba(20, 20, 20, 0.85); border-width: 4px; border-color: rgb(0, 200, 100); border-radius: 20px; padding: 20px;">
+            <ui:Button name="Mundo_2" class="tarjeta-mundo desbloqueado" style="width: 250px; height: 350px; margin: 15px; background-color: rgba(20, 20, 20, 0.85); border-width: 4px; border-color: rgb(0, 200, 100); border-radius: 20px; padding: 20px;">
                 <ui:Label text="MUNDO 2" style="font-size: 16px; color: rgb(180, 180, 180); margin-bottom: 10px;" />
                 <ui:Label text="Bosque Prohibido" style="font-size: 28px; color: white; -unity-font-style: bold; margin-bottom: 15px; -unity-text-outline-width: 2px; -unity-text-outline-color: rgba(0, 0, 0, 0.8);" />
                 <ui:Label text="Árboles oscuros y criaturas mágicas. La naturaleza tiene su propio compás." style="font-size: 14px; color: rgb(200, 200, 200); flex-wrap: wrap; white-space: normal; margin-bottom: 20px;" />
                 <ui:VisualElement style="flex-direction: row; justify-content: space-between; margin-top: auto;">
                     <ui:VisualElement style="flex-direction: row; align-items: center;">
-                        <ui:VisualElement style="width: 20px; height: 20px; background-image: url('project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/68.png'); -unity-background-scale-mode: scale-to-fit; margin-right: 5px;" />
+                        <ui:VisualElement style="width: 20px; height: 20px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/68.png?fileID=21300000&amp;guid=3bcd937835616de48b839d4c3394c651&amp;type=3#68&quot;); -unity-background-scale-mode: scale-to-fit; margin-right: 5px;" />
                         <ui:Label text="2/3" style="font-size: 16px; color: rgb(255, 215, 0); -unity-font-style: bold;" />
                     </ui:VisualElement>
                     <ui:VisualElement style="flex-direction: row; align-items: center;">
-                        <ui:VisualElement style="width: 20px; height: 20px; background-image: url('project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/122.png'); -unity-background-scale-mode: scale-to-fit; margin-right: 5px;" />
+                        <ui:VisualElement style="width: 20px; height: 20px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/122.png?fileID=21300000&amp;guid=f19245d751804bf4cb3de69c1a36c826&amp;type=3#122&quot;); -unity-background-scale-mode: scale-to-fit; margin-right: 5px;" />
                         <ui:Label text="67%" style="font-size: 16px; color: rgb(255, 215, 0); -unity-font-style: bold;" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:Button>
-            
-            <!-- MUNDO 3 - TORRE DE ASTRONOMÍA -->
-            <ui:Button name="Mundo_3" class="tarjeta-mundo desbloqueado" style="width: 280px; height: 350px; margin: 15px; background-color: rgba(20, 20, 20, 0.85); border-width: 4px; border-color: rgb(0, 140, 255); border-radius: 20px; padding: 20px;">
+            <ui:Button name="Mundo_3" class="tarjeta-mundo desbloqueado" style="width: 250px; height: 350px; margin: 15px; background-color: rgba(20, 20, 20, 0.85); border-width: 4px; border-color: rgb(0, 140, 255); border-radius: 20px; padding: 20px;">
                 <ui:Label text="MUNDO 3" style="font-size: 16px; color: rgb(180, 180, 180); margin-bottom: 10px;" />
                 <ui:Label text="Torre de Astronomía" style="font-size: 26px; color: white; -unity-font-style: bold; margin-bottom: 15px; -unity-text-outline-width: 2px; -unity-text-outline-color: rgba(0, 0, 0, 0.8);" />
                 <ui:Label text="Las estrellas guían tu camino. Gravedad inestable y ritmos celestiales." style="font-size: 14px; color: rgb(200, 200, 200); flex-wrap: wrap; white-space: normal; margin-bottom: 20px;" />
                 <ui:VisualElement style="flex-direction: row; justify-content: space-between; margin-top: auto;">
                     <ui:VisualElement style="flex-direction: row; align-items: center;">
-                        <ui:VisualElement style="width: 20px; height: 20px; background-image: url('project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/68.png'); -unity-background-scale-mode: scale-to-fit; margin-right: 5px;" />
+                        <ui:VisualElement style="width: 20px; height: 20px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/68.png?fileID=21300000&amp;guid=3bcd937835616de48b839d4c3394c651&amp;type=3#68&quot;); -unity-background-scale-mode: scale-to-fit; margin-right: 5px;" />
                         <ui:Label text="1/3" style="font-size: 16px; color: rgb(255, 215, 0); -unity-font-style: bold;" />
                     </ui:VisualElement>
                     <ui:VisualElement style="flex-direction: row; align-items: center;">
-                        <ui:VisualElement style="width: 20px; height: 20px; background-image: url('project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/122.png'); -unity-background-scale-mode: scale-to-fit; margin-right: 5px;" />
+                        <ui:VisualElement style="width: 20px; height: 20px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/122.png?fileID=21300000&amp;guid=f19245d751804bf4cb3de69c1a36c826&amp;type=3#122&quot;); -unity-background-scale-mode: scale-to-fit; margin-right: 5px;" />
                         <ui:Label text="33%" style="font-size: 16px; color: rgb(255, 215, 0); -unity-font-style: bold;" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:Button>
         </ui:VisualElement>
-        
-        <!-- CONTENEDOR DE MUNDOS - SEGUNDA FILA (2 MUNDOS) -->
-        <ui:VisualElement name="FilaMundos2" style="flex-direction: row; justify-content: center; align-items: flex-start; width: 90%;">
-            
-            <!-- MUNDO 4 - MAZMORRAS (BLOQUEADO) -->
-            <ui:Button name="Mundo_4" class="tarjeta-mundo bloqueado" style="width: 280px; height: 350px; margin: 15px; background-color: rgba(20, 20, 20, 0.5); border-width: 4px; border-color: rgb(80, 80, 80); border-radius: 20px; padding: 20px;">
+        <ui:VisualElement name="FilaMundos2" style="flex-direction: row; justify-content: center; align-items: flex-start; width: 100%; gap: 10px;">
+            <ui:Button name="Mundo_4" class="tarjeta-mundo bloqueado" style="width: 250px; height: 350px; margin: 15px; background-color: rgba(20, 20, 20, 0.5); border-width: 4px; border-color: rgb(80, 80, 80); border-radius: 20px; padding: 20px;">
                 <ui:Label text="MUNDO 4" style="font-size: 16px; color: rgb(120, 120, 120); margin-bottom: 10px;" />
-                <ui:VisualElement style="width: 60px; height: 60px; background-image: url('project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/55.png'); -unity-background-scale-mode: scale-to-fit; align-self: center; margin-bottom: 10px;" />
+                <ui:VisualElement style="width: 60px; height: 60px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/55.png?fileID=21300000&amp;guid=587f6cf8173862343bdcec2c98bdb00f&amp;type=3#55&quot;); -unity-background-scale-mode: scale-to-fit; align-self: center; margin-bottom: 10px;" />
                 <ui:Label text="Mazmorras" style="font-size: 28px; color: rgb(150, 150, 150); -unity-font-style: bold; margin-bottom: 15px; -unity-text-outline-width: 2px; -unity-text-outline-color: rgba(0, 0, 0, 0.8);" />
                 <ui:Label text="Oscuridad y peligros bajo el castillo. Solo para los más valientes." style="font-size: 14px; color: rgb(130, 130, 130); flex-wrap: wrap; white-space: normal; margin-bottom: 20px;" />
                 <ui:VisualElement style="flex-direction: row; justify-content: space-between; margin-top: auto;">
                     <ui:VisualElement style="flex-direction: row; align-items: center;">
-                        <ui:VisualElement style="width: 20px; height: 20px; background-image: url('project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/68.png'); -unity-background-scale-mode: scale-to-fit; margin-right: 5px; opacity: 0.5;" />
+                        <ui:VisualElement style="width: 20px; height: 20px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/68.png?fileID=21300000&amp;guid=3bcd937835616de48b839d4c3394c651&amp;type=3#68&quot;); -unity-background-scale-mode: scale-to-fit; margin-right: 5px; opacity: 0.5;" />
                         <ui:Label text="0/3" style="font-size: 16px; color: rgb(120, 120, 120); -unity-font-style: bold;" />
                     </ui:VisualElement>
                     <ui:VisualElement style="flex-direction: row; align-items: center;">
-                        <ui:VisualElement style="width: 20px; height: 20px; background-image: url('project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/122.png'); -unity-background-scale-mode: scale-to-fit; margin-right: 5px; opacity: 0.5;" />
+                        <ui:VisualElement style="width: 20px; height: 20px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/122.png?fileID=21300000&amp;guid=f19245d751804bf4cb3de69c1a36c826&amp;type=3#122&quot;); -unity-background-scale-mode: scale-to-fit; margin-right: 5px; opacity: 0.5;" />
                         <ui:Label text="0%" style="font-size: 16px; color: rgb(120, 120, 120); -unity-font-style: bold;" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:Button>
-            
-            <!-- MUNDO 5 - CÁMARA FINAL MÁGICA (BLOQUEADO) -->
-            <ui:Button name="Mundo_5" class="tarjeta-mundo bloqueado" style="width: 280px; height: 350px; margin: 15px; background-color: rgba(20, 20, 20, 0.5); border-width: 4px; border-color: rgb(80, 80, 80); border-radius: 20px; padding: 20px;">
+            <ui:Button name="Mundo_5" class="tarjeta-mundo bloqueado" style="width: 250px; height: 350px; margin: 15px; background-color: rgba(20, 20, 20, 0.5); border-width: 4px; border-color: rgb(80, 80, 80); border-radius: 20px; padding: 20px;">
                 <ui:Label text="MUNDO 5" style="font-size: 16px; color: rgb(120, 120, 120); margin-bottom: 10px;" />
-                <ui:VisualElement style="width: 60px; height: 60px; background-image: url('project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/55.png'); -unity-background-scale-mode: scale-to-fit; align-self: center; margin-bottom: 10px;" />
+                <ui:VisualElement style="width: 60px; height: 60px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/55.png?fileID=21300000&amp;guid=587f6cf8173862343bdcec2c98bdb00f&amp;type=3#55&quot;); -unity-background-scale-mode: scale-to-fit; align-self: center; margin-bottom: 10px;" />
                 <ui:Label text="Cámara Final Mágica" style="font-size: 24px; color: rgb(150, 150, 150); -unity-font-style: bold; margin-bottom: 15px; -unity-text-outline-width: 2px; -unity-text-outline-color: rgba(0, 0, 0, 0.8);" />
                 <ui:Label text="El desafío definitivo. La magia más antigua y poderosa te espera." style="font-size: 14px; color: rgb(130, 130, 130); flex-wrap: wrap; white-space: normal; margin-bottom: 20px;" />
                 <ui:VisualElement style="flex-direction: row; justify-content: space-between; margin-top: auto;">
                     <ui:VisualElement style="flex-direction: row; align-items: center;">
-                        <ui:VisualElement style="width: 20px; height: 20px; background-image: url('project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/68.png'); -unity-background-scale-mode: scale-to-fit; margin-right: 5px; opacity: 0.5;" />
+                        <ui:VisualElement style="width: 20px; height: 20px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/68.png?fileID=21300000&amp;guid=3bcd937835616de48b839d4c3394c651&amp;type=3#68&quot;); -unity-background-scale-mode: scale-to-fit; margin-right: 5px; opacity: 0.5;" />
                         <ui:Label text="0/3" style="font-size: 16px; color: rgb(120, 120, 120); -unity-font-style: bold;" />
                     </ui:VisualElement>
                     <ui:VisualElement style="flex-direction: row; align-items: center;">
-                        <ui:VisualElement style="width: 20px; height: 20px; background-image: url('project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/122.png'); -unity-background-scale-mode: scale-to-fit; margin-right: 5px; opacity: 0.5;" />
+                        <ui:VisualElement style="width: 20px; height: 20px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/122.png?fileID=21300000&amp;guid=f19245d751804bf4cb3de69c1a36c826&amp;type=3#122&quot;); -unity-background-scale-mode: scale-to-fit; margin-right: 5px; opacity: 0.5;" />
                         <ui:Label text="0%" style="font-size: 16px; color: rgb(120, 120, 120); -unity-font-style: bold;" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:Button>
         </ui:VisualElement>
-        
     </ui:VisualElement>
 </ui:UXML>

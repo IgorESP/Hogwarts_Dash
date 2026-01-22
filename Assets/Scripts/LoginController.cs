@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
-using System.Linq; // ← IMPORTANTE: Necesario para .Any()
+using System.Linq;
 
 public class LoginUIController : MonoBehaviour
 {
@@ -21,24 +21,78 @@ public class LoginUIController : MonoBehaviour
     
     void Start()
     {
+        Debug.Log("🎬 LoginUIController - Start() ejecutándose...");
+        
         // Obtener referencias
         uiDocument = GetComponent<UIDocument>();
+        
+        if (uiDocument == null)
+        {
+            Debug.LogError("❌ UIDocument no encontrado!");
+            return;
+        }
+        
         root = uiDocument.rootVisualElement;
         
-        // Obtener campos
+        if (root == null)
+        {
+            Debug.LogError("❌ Root VisualElement no encontrado!");
+            return;
+        }
+        
+        // Obtener campos CON VALIDACIÓN
         campoUsuario = root.Q<TextField>("Campo_Usuario");
         campoContrasena = root.Q<TextField>("Campo_Contrasena");
         
-        // Obtener botones
+        if (campoUsuario == null)
+        {
+            Debug.LogError("❌ Campo_Usuario no encontrado!");
+            return;
+        }
+        
+        if (campoContrasena == null)
+        {
+            Debug.LogError("❌ Campo_Contrasena no encontrado!");
+            return;
+        }
+        
+        Debug.Log("✅ Campos encontrados correctamente");
+        
+        // Obtener botones CON VALIDACIÓN
         botonIniciarSesion = root.Q<Button>("Boton_IniciarSesion");
         botonRegistrarse = root.Q<Button>("Boton_Registrarse");
         
-        // Obtener mensaje de error
+        if (botonIniciarSesion == null)
+        {
+            Debug.LogError("❌ Boton_IniciarSesion no encontrado!");
+            return;
+        }
+        
+        if (botonRegistrarse == null)
+        {
+            Debug.LogError("❌ Boton_Registrarse no encontrado!");
+            return;
+        }
+        
+        Debug.Log("✅ Botones encontrados correctamente");
+        
+        // Obtener mensaje de error CON VALIDACIÓN
         mensajeError = root.Q<Label>("Mensaje_Error");
         
-        // Registrar eventos - AMBOS VAN A MenuPrincipalT
+        if (mensajeError == null)
+        {
+            Debug.LogWarning("⚠️ Mensaje_Error no encontrado (crear manualmente si es necesario)");
+        }
+        else
+        {
+            Debug.Log("✅ Mensaje_Error encontrado");
+        }
+        
+        // Registrar eventos
         botonIniciarSesion.clicked += OnIniciarSesionClick;
         botonRegistrarse.clicked += OnRegistrarseClick;
+        
+        Debug.Log("✅ Eventos registrados");
         
         // Permitir Enter para iniciar sesión
         campoUsuario.RegisterCallback<KeyDownEvent>(OnKeyDown);
@@ -48,7 +102,7 @@ public class LoginUIController : MonoBehaviour
         campoUsuario.RegisterValueChangedCallback(evt => OcultarError());
         campoContrasena.RegisterValueChangedCallback(evt => OcultarError());
         
-        Debug.Log("🔐 Pantalla de Login lista");
+        Debug.Log("✅ Pantalla de Login lista completamente");
     }
     
     private void OnKeyDown(KeyDownEvent evt)
@@ -61,8 +115,20 @@ public class LoginUIController : MonoBehaviour
     
     private void OnIniciarSesionClick()
     {
+        Debug.Log("🔥🔥🔥 BOTÓN INICIAR SESIÓN CLICKEADO 🔥🔥🔥");
+        
+        // VALIDACIÓN EXTRA: Verificar que los campos existan
+        if (campoUsuario == null || campoContrasena == null)
+        {
+            Debug.LogError("❌ Los campos no están inicializados!");
+            return;
+        }
+        
         string usuario = campoUsuario.value;
         string contrasena = campoContrasena.value;
+        
+        Debug.Log($"📝 Usuario ingresado: {usuario}");
+        Debug.Log($"🔒 Contraseña ingresada: {'*'.ToString().PadLeft(contrasena.Length, '*')}");
         
         // Validar campos vacíos
         if (string.IsNullOrEmpty(usuario))
@@ -87,6 +153,8 @@ public class LoginUIController : MonoBehaviour
             PlayerPrefs.SetInt("SesionIniciada", 1);
             PlayerPrefs.Save();
             
+            Debug.Log("💾 Sesión guardada");
+            
             // IR A MENU PRINCIPAL
             Debug.Log("🎮 Cargando MenuPrincipalT...");
             SceneManager.LoadScene("MenuPrincipalT");
@@ -99,81 +167,17 @@ public class LoginUIController : MonoBehaviour
     
     private void OnRegistrarseClick()
     {
-        string usuario = campoUsuario.value;
-        string contrasena = campoContrasena.value;
+        Debug.Log("🔥🔥🔥 BOTÓN REGISTRARSE CLICKEADO 🔥🔥🔥");
+        Debug.Log("📝 Cargando pantalla de registro...");
         
-        // Validar campos vacíos
-        if (string.IsNullOrEmpty(usuario))
+        try
         {
-            MostrarError("⚠️ Por favor ingresa un usuario");
-            return;
+            SceneManager.LoadScene("RegistroScene");
         }
-        
-        if (string.IsNullOrEmpty(contrasena))
+        catch (System.Exception e)
         {
-            MostrarError("⚠️ Por favor ingresa una contraseña");
-            return;
-        }
-        
-        // Validar longitud
-        if (usuario.Length < 3)
-        {
-            MostrarError("⚠️ El usuario debe tener al menos 3 caracteres");
-            return;
-        }
-        
-        // Validar longitud mínima
-        if (contrasena.Length < 4)
-        {
-            MostrarError("⚠️La contraseña debe tener al menos 4 caracteres");
-            return;
-        }
-
-        // Validar que tenga al menos una mayúscula
-        if (!contrasena.Any(char.IsUpper))
-        {
-            MostrarError("⚠️La contraseña debe contener al menos una letra mayúscula");
-            return;
-        }
-
-        // Validar que tenga al menos una minúscula
-        if (!contrasena.Any(char.IsLower))
-        {
-            MostrarError("⚠️La contraseña debe contener al menos una letra minúscula");
-            return;
-        }
-
-        // Validar que tenga al menos un número
-        if (!contrasena.Any(char.IsDigit))
-        {
-            MostrarError("⚠️La contraseña debe contener al menos un número");
-            return;
-        }
-
-        // Validar que tenga al menos un símbolo
-        if (!contrasena.Any(c => !char.IsLetterOrDigit(c)))
-        {
-            MostrarError("⚠️La contraseña debe contener al menos un símbolo");
-            return;
-        }
-        
-        // Registrar usuario
-        if (RegistrarNuevoUsuario(usuario, contrasena))
-        {
-            Debug.Log($"✅ Usuario registrado: {usuario}");
-            
-            // Guardar sesión del nuevo usuario
-            PlayerPrefs.SetString("UsuarioActivo", usuario);
-            PlayerPrefs.SetInt("SesionIniciada", 1);
-            PlayerPrefs.Save();
-            
-            // IR A MENU PRINCIPAL DIRECTAMENTE
-            Debug.Log("🎮 Registro exitoso. Cargando MenuPrincipalT...");
-            SceneManager.LoadScene("MenuPrincipalT");
-        }
-        else
-        {
-            MostrarError("❌ El usuario ya existe. Intenta otro nombre.");
+            Debug.LogError($"❌ Error al cargar RegistroScene: {e.Message}");
+            Debug.LogError("⚠️ Verifica que 'RegistroScene' esté en Build Settings");
         }
     }
     
@@ -184,38 +188,44 @@ public class LoginUIController : MonoBehaviour
         
         if (string.IsNullOrEmpty(contrasenaGuardada))
         {
-            Debug.LogWarning("⚠️ Usuario no encontrado");
+            Debug.LogWarning($"⚠️ Usuario '{usuario}' no encontrado en el sistema");
             return false;
         }
         
-        return contrasena == contrasenaGuardada;
-    }
-    
-    private bool RegistrarNuevoUsuario(string usuario, string contrasena)
-    {
-        // Verificar si ya existe
-        if (PlayerPrefs.HasKey($"User_{usuario}_Pass"))
+        bool esValido = contrasena == contrasenaGuardada;
+        
+        if (esValido)
         {
-            Debug.LogWarning("⚠️ Usuario ya existe");
-            return false;
+            Debug.Log($"✅ Contraseña correcta para '{usuario}'");
+        }
+        else
+        {
+            Debug.LogWarning($"❌ Contraseña incorrecta para '{usuario}'");
         }
         
-        // Guardar usuario
-        PlayerPrefs.SetString($"User_{usuario}_Pass", contrasena);
-        PlayerPrefs.SetInt($"User_{usuario}_Creado", 1);
-        PlayerPrefs.Save();
-        
-        return true;
+        return esValido;
     }
     
     private void MostrarError(string mensaje)
     {
-        mensajeError.text = mensaje;
-        mensajeError.style.display = DisplayStyle.Flex;
+        if (mensajeError != null)
+        {
+            mensajeError.text = mensaje;
+            mensajeError.style.display = DisplayStyle.Flex;
+        }
+        else
+        {
+            Debug.LogWarning("⚠️ No se puede mostrar el error en UI (mensajeError es null)");
+        }
+        
+        Debug.LogWarning(mensaje);
     }
     
     private void OcultarError()
     {
-        mensajeError.style.display = DisplayStyle.None;
+        if (mensajeError != null)
+        {
+            mensajeError.style.display = DisplayStyle.None;
+        }
     }
 }

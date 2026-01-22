@@ -113,9 +113,9 @@ public class PerfilUIController : MonoBehaviour
                 root.AddToClassList("color-gryffindor");
                 ActualizarIconos(new AssetsCasa(
                     "Assets/ASSETS_CUBOS/CUBO1.png",
-                    "Assets/ASSETS_BOLA/Bola_1.png",
-                    "Assets/ASSETS_COHETO/Cohete1.png",
-                    "Assets/ASSETS_UFO/UFO1.png"
+                    "Assets/ASSETS_BOLA/Bola_4.png",
+                    "Assets/ASSETS_COHETO/Cohete4.png",
+                    "Assets/ASSETS_UFO/UFO4.png"
                 ));
                 break;
                 
@@ -124,8 +124,8 @@ public class PerfilUIController : MonoBehaviour
                 root.AddToClassList("color-hufflepuff");
                 ActualizarIconos(new AssetsCasa(
                     "Assets/ASSETS_CUBOS/CUBO2.png",
-                    "Assets/ASSETS_BOLA/Bola_2.png",
-                    "Assets/ASSETS_COHETO/Cohete2.png",
+                    "Assets/ASSETS_BOLA/Bola_3.png",
+                    "Assets/ASSETS_COHETO/Cohete3.png",
                     "Assets/ASSETS_UFO/UFO2.png"
                 ));
                 break;
@@ -135,8 +135,8 @@ public class PerfilUIController : MonoBehaviour
                 root.AddToClassList("color-ravenclaw");
                 ActualizarIconos(new AssetsCasa(
                     "Assets/ASSETS_CUBOS/CUBO3.png",
-                    "Assets/ASSETS_BOLA/Bola_3.png",
-                    "Assets/ASSETS_COHETO/Cohete3.png",
+                    "Assets/ASSETS_BOLA/Bola_2.png",
+                    "Assets/ASSETS_COHETO/Cohete2.png",
                     "Assets/ASSETS_UFO/UFO3.png"
                 ));
                 break;
@@ -146,9 +146,9 @@ public class PerfilUIController : MonoBehaviour
                 root.AddToClassList("color-slytherin");
                 ActualizarIconos(new AssetsCasa(
                     "Assets/ASSETS_CUBOS/CUBO4.png",
-                    "Assets/ASSETS_BOLA/Bola_4.png",
-                    "Assets/ASSETS_COHETO/Cohete4.png",
-                    "Assets/ASSETS_UFO/UFO4.png"
+                    "Assets/ASSETS_BOLA/Bola_1.png",
+                    "Assets/ASSETS_COHETO/Cohete1.png",
+                    "Assets/ASSETS_UFO/UFO1.png"
                 ));
                 break;
         }
