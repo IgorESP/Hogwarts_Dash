@@ -8,6 +8,7 @@ TagManager:
   - PortalBola
   - PortalUfo
   - PortalCubo
+  - Obstaculo
   layers:
   - Default
   - TransparentFX
