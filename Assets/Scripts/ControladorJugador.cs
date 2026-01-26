@@ -87,6 +87,9 @@ public class MovimientoGD : MonoBehaviour
 
             if (pedirSalto && tocandoSuelo)
             {
+
+                //Debug saltando si esta
+                // sout tocandosuelo
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, fuerzaSalto);
                 rotacionRestante = 180f;
             }
