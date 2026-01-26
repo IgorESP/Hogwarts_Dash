@@ -1,0 +1,124 @@
+/* ====================================
+   BOTÓN VOLVER
+   ==================================== */
+
+#Boton_Volver {
+    transition-duration: 0.3s;
+    transition-property: scale, background-color;
+}
+
+#Boton_Volver:hover {
+    scale: 1.15;
+    background-color: rgba(180, 90, 30, 0.95);
+}
+
+#Boton_Volver:active {
+    scale: 0.9;
+}
+
+/* ====================================
+   SECCIONES DE OPCIONES
+   ==================================== */
+
+.seccion-opciones {
+    transition-duration: 0.2s;
+}
+
+/* ====================================
+   SLIDERS
+   ==================================== */
+
+#Slider_Musica .unity-base-slider__dragger,
+#Slider_SFX .unity-base-slider__dragger {
+    background-color: rgb(255, 215, 0);
+    border-radius: 10px;
+    width: 20px;
+    height: 20px;
+}
+
+#Slider_Musica .unity-base-slider__tracker,
+#Slider_SFX .unity-base-slider__tracker {
+    background-color: rgba(100, 100, 100, 0.5);
+    height: 10px;
+    border-radius: 5px;
+}
+
+#Slider_Musica .unity-base-slider__dragger-border,
+#Slider_SFX .unity-base-slider__dragger-border {
+    border-width: 0;
+}
+
+/* ====================================
+   TOGGLES
+   ==================================== */
+
+#Toggle_AltoContraste .unity-toggle__checkmark,
+#Toggle_ReducirMovimiento .unity-toggle__checkmark {
+    background-color: rgba(100, 100, 100, 0.5);
+    border-radius: 10px;
+    border-width: 2px;
+    border-color: rgb(255, 215, 0);
+}
+
+#Toggle_AltoContraste:checked .unity-toggle__checkmark,
+#Toggle_ReducirMovimiento:checked .unity-toggle__checkmark {
+    background-color: rgb(255, 215, 0);
+}
+
+/* ====================================
+   BOTONES DE OPCIONES
+   ==================================== */
+
+.boton-opcion {
+    transition-duration: 0.3s;
+    transition-property: scale, background-color;
+}
+
+.boton-opcion:hover {
+    scale: 1.05;
+    border-width: 4px !important;
+}
+
+.boton-opcion:active {
+    scale: 0.98;
+}
+
+/* Botón de Créditos */
+#Boton_Creditos:hover {
+    background-color: rgba(160, 80, 20, 0.95);
+}
+
+/* Botón de Ranking */
+#Boton_Ranking:hover {
+    background-color: rgba(160, 80, 20, 0.95);
+}
+
+/* Botón de Perfil */
+#Boton_Perfil:hover {
+    background-color: rgba(160, 80, 20, 0.95);
+}
+
+/* Botón de Cerrar Sesión - Rojo */
+#Boton_CerrarSesion:hover {
+    background-color: rgba(220, 20, 20, 0.95);
+    border-color: white !important;
+}
+
+/* ====================================
+   SCROLLVIEW
+   ==================================== */
+
+#ContenedorScroll .unity-scroll-view__content-container {
+    padding: 10px;
+}
+
+#ContenedorScroll .unity-scroller--vertical .unity-scroller__slider {
+    width: 15px;
+    background-color: rgba(255, 215, 0, 0.3);
+    border-radius: 10px;
+}
+
+#ContenedorScroll .unity-scroller--vertical .unity-base-slider__dragger {
+    background-color: rgb(255, 215, 0);
+    border-radius: 10px;
+}
