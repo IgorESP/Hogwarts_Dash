@@ -2,6 +2,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
+/// <summary>
+/// Controla el movimiento principal, los cambios de modo (Cubo, Bola, UFO, Cohete) 
+/// y el sistema de muerte/reinicio para un juego estilo Geometry Dash.
+/// </summary>
 public class MovimientoGD : MonoBehaviour
 {
     [Header("Movimiento")]
@@ -38,7 +42,9 @@ public class MovimientoGD : MonoBehaviour
     bool haMuerto = false;
     private Vector3 puntoDeAparicion;
 
-
+    /// <summary>
+    /// Inicializa los componentes, configura la física y prepara el punto de spawn.
+    /// </summary>
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -56,7 +62,9 @@ public class MovimientoGD : MonoBehaviour
         Debug.Log("<color=green>Jugador Inicializado:</color> Esperando inicio de nivel.");
     }
 
-
+    /// <summary>
+    /// Gestiona la entrada del jugador (teclado/ratón) en cada frame.
+    /// </summary>
     void Update()
     {
         if (haMuerto) return;
@@ -85,7 +93,10 @@ public class MovimientoGD : MonoBehaviour
         pedirSalto = Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0);
     }
 
-
+    /// <summary>
+    /// Comprueba si el objeto Bola está tocando el techo o el suelo para permitir el cambio de gravedad.
+    /// </summary>
+    /// <returns>True si hay contacto arriba o abajo.</returns>
     bool EstaTocandoSuperficieBola()
     {
         float margen = 0.1f;
@@ -95,7 +106,9 @@ public class MovimientoGD : MonoBehaviour
         return tocandoAbajo || tocandoArriba;
     }
 
-
+    /// <summary>
+    /// Maneja el movimiento basado en física y las rotaciones visuales.
+    /// </summary>
     void FixedUpdate()
     {
         if (haMuerto) return;
@@ -141,7 +154,9 @@ public class MovimientoGD : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// Detecta disparadores para cambios de modo o colisiones con objetos especiales.
+    /// </summary>
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Obstaculo")) Morir();
@@ -193,7 +208,9 @@ public class MovimientoGD : MonoBehaviour
         rb.linearVelocity = new Vector2(velocidad, 0);
     }
 
-
+    /// <summary>
+    /// Limpia todos los estados especiales y resetea la visualización del jugador.
+    /// </summary>
     void DesactivarModos() 
     {
         modoCohete = false;
@@ -207,6 +224,9 @@ public class MovimientoGD : MonoBehaviour
         transform.rotation = Quaternion.identity;
     }
 
+    /// <summary>
+    /// Ejecuta la secuencia de muerte, detiene la física y reinicia el nivel.
+    /// </summary>
     void Morir()
     {
         if (haMuerto) return;
@@ -233,7 +253,9 @@ public class MovimientoGD : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-
+    /// <summary>
+    /// Detecta colisiones frontales con paredes para activar la muerte.
+    /// </summary>
     private void OnCollisionEnter2D(Collision2D collision)
     {
         foreach (ContactPoint2D punto in collision.contacts)
@@ -248,7 +270,9 @@ public class MovimientoGD : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// Dibuja el área de detección del suelo en el editor de Unity.
+    /// </summary>
     void OnDrawGizmos()
     {
         if (!col) return;
