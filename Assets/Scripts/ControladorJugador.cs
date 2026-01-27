@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 /// <summary>
 /// Controla el movimiento principal, los cambios de modo (Cubo, Bola, UFO, Cohete) 
