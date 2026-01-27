@@ -46,14 +46,20 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Suelo
-    uniqueID: 1505437999
+  - name: Cosmeticos
+    uniqueID: 150692123
     locked: 0
   - name: Obstaculos
     uniqueID: 2885810031
     locked: 0
-  - name: Cosmeticos
-    uniqueID: 150692123
+  - name: Suelo
+    uniqueID: 1505437999
+    locked: 0
+  - name: Jugador
+    uniqueID: 2197068613
+    locked: 0
+  - name: Interactuables
+    uniqueID: 1753838049
     locked: 0
   m_RenderingLayers:
   - Default
