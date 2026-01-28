@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
-
 public class MovimientoGD : MonoBehaviour
 {
     [Header("Movimiento")]
@@ -10,18 +9,15 @@ public class MovimientoGD : MonoBehaviour
     public float fuerzaSalto = 20f;
     public float gravedadEscala = 9f;
 
-
     [Header("Detección (Raycast y Layers)")]
     public LayerMask capaSuelo;
     public LayerMask capaMuerte;
     public float distanciaRayo = 0.6f;
 
-
     [Header("Efectos y Muerte")]
     public Animator anim;
     public ParticleSystem sistemaParticulas;
     public float tiempoEsperaMuerte = 1.0f;
-
 
     [Header("Modos Especiales")]
     public GameObject objetoEscoba;  
@@ -31,16 +27,14 @@ public class MovimientoGD : MonoBehaviour
     public bool modoBola = false;    
     public bool modoUFO = false;      
 
-
     Rigidbody2D rb;
     BoxCollider2D col;
     SpriteRenderer rend;
 
-
     bool pedirSalto;
+    bool intentoCambioGravedadBola = false; // NUEVA VARIABLE PARA EL BUFFER
     [HideInInspector] public float rotacionRestante;
     bool haMuerto = false;
-
 
     void Start()
     {
@@ -51,21 +45,19 @@ public class MovimientoGD : MonoBehaviour
         rb.gravityScale = gravedadEscala;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
-
         DesactivarModos();
     }
-
 
     void Update()
     {
         if (haMuerto) return;
 
-
+        // DETECCIÓN DE CLICK ÚNICO (GetKeyDown)
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
-            if (modoBola && EstaTocandoSuperficieBola())
+            if (modoBola)
             {
-                rb.gravityScale *= -1;
+                intentoCambioGravedadBola = true; // Guardamos la intención de cambiar gravedad
             }
            
             if (modoUFO)
@@ -75,43 +67,43 @@ public class MovimientoGD : MonoBehaviour
             }
         }
 
-
+        // DETECCIÓN MANTENIDA (Para el Cubo y Cohete)
         pedirSalto = Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0);
-    }
 
+        // Si soltamos el botón, limpiamos el buffer de la bola para que no cambie sola al tocar el suelo después
+        if (Input.GetKeyUp(KeyCode.Space) || Input.GetMouseButtonUp(0))
+        {
+            intentoCambioGravedadBola = false;
+        }
+    }
 
     bool EstaTocandoSuperficieBola()
     {
+        // Lanzamos rayos en ambas direcciones según la gravedad actual
         bool abajo = Physics2D.Raycast(transform.position, Vector2.down, distanciaRayo, capaSuelo);
         bool arriba = Physics2D.Raycast(transform.position, Vector2.up, distanciaRayo, capaSuelo);
         return abajo || arriba;
     }
 
-
     void FixedUpdate()
     {
         if (haMuerto) return;
 
-
         rb.linearVelocity = new Vector2(velocidad, rb.linearVelocity.y);
-
 
         if (!modoCohete && !modoBola && !modoUFO)
         {
-            // Raycasts en las esquinas inferiores para evitar bugs en uniones de bloques
             Vector2 rayoIzquierdo = new Vector2(col.bounds.min.x, col.bounds.center.y);
             Vector2 rayoDerecho = new Vector2(col.bounds.max.x, col.bounds.center.y);
            
             bool tocandoSuelo = Physics2D.Raycast(rayoIzquierdo, Vector2.down, distanciaRayo, capaSuelo) ||
                                 Physics2D.Raycast(rayoDerecho, Vector2.down, distanciaRayo, capaSuelo);
 
-
             if (pedirSalto && tocandoSuelo)
             {
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, fuerzaSalto);
                 rotacionRestante = 180f;
             }
-
 
             if (rotacionRestante > 0f)
             {
@@ -132,14 +124,20 @@ public class MovimientoGD : MonoBehaviour
         }
         else if (modoBola)
         {
+            // LÓGICA DE BOLA CORREGIDA: Cambia solo si hay intención Y contacto
+            if (intentoCambioGravedadBola && EstaTocandoSuperficieBola())
+            {
+                rb.gravityScale *= -1;
+                intentoCambioGravedadBola = false; // Consumimos el click
+            }
+
             float direccionRot = rb.gravityScale > 0 ? -1f : 1f;
             rb.MoveRotation(rb.rotation + (direccionRot * 600f * Time.fixedDeltaTime));
         }
         else if (modoUFO)
         {
-            // Forzamos a que el UFO siempre esté "derecho"
             rb.MoveRotation(0f);
-            rotacionRestante = 0f; // Cancelamos cualquier rotación de salto previa
+            rotacionRestante = 0f;
         }
     }
 
@@ -228,14 +226,23 @@ public class MovimientoGD : MonoBehaviour
     }
 
 
-    void OnDrawGizmos()
+void OnDrawGizmos()
     {
         if (!col) return;
         Gizmos.color = Color.cyan;
-        // Dibujamos los rayos para que los ajustes en el Inspector
+        
+        // Rayos para el Cubo (abajo)
         Vector2 rIzquierda = new Vector2(col.bounds.min.x, col.bounds.center.y);
         Vector2 rDerecha = new Vector2(col.bounds.max.x, col.bounds.center.y);
         Gizmos.DrawLine(rIzquierda, rIzquierda + Vector2.down * distanciaRayo);
         Gizmos.DrawLine(rDerecha, rDerecha + Vector2.down * distanciaRayo);
+
+        // Rayo central para la Bola (arriba y abajo)
+        if (modoBola)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(transform.position, (Vector2)transform.position + Vector2.up * distanciaRayo);
+            Gizmos.DrawLine(transform.position, (Vector2)transform.position + Vector2.down * distanciaRayo);
+        }
     }
 }

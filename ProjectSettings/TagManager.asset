@@ -9,6 +9,7 @@ TagManager:
   - PortalUfo
   - PortalCubo
   - Obstaculo
+  - Moneda
   layers:
   - Default
   - TransparentFX
@@ -48,6 +49,9 @@ TagManager:
     locked: 0
   - name: Cosmeticos
     uniqueID: 150692123
+    locked: 0
+  - name: Decoracion
+    uniqueID: 2783086317
     locked: 0
   - name: Obstaculos
     uniqueID: 2885810031
