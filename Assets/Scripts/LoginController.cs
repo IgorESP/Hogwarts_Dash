@@ -1,87 +1,52 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
-using System.Linq;
 
 public class LoginUIController : MonoBehaviour
 {
-    private UIDocument uiDocument;
     private VisualElement root;
-    private TextField campoUsuario;
-    private TextField campoContrasena;
-    private Button botonIniciarSesion;
-    private Button botonRegistrarse;
+    private TextField campoUsuario, campoContrasena;
+    private Button botonLogin, botonRegistrarse;
     private Label mensajeError;
-    
-    void Start()
-    {
-        Debug.Log("LoginUIController iniciado");
-        uiDocument = GetComponent<UIDocument>();
-        if (uiDocument == null) { Debug.LogError("UIDocument faltante"); return; }
-        
-        root = uiDocument.rootVisualElement;
+
+    void Start() {
+        var uiDoc = GetComponent<UIDocument>();
+        root = uiDoc.rootVisualElement;
+
+        // --- APLICAR AJUSTES DE ACCESIBILIDAD ---
+        // 1. Solo aplica el color si está activado (ModoDaltonico == 1)
+        if (PlayerPrefs.GetInt("ModoDaltonico", 0) == 1) {
+            root.AddToClassList("modo-daltonico-activado");
+        }
+
+        // 2. Solo cambia el tamaño si el usuario movió el slider
+        float porcentaje = PlayerPrefs.GetFloat("TamanoLetra", 100f);
+        float escala = porcentaje / 100f;
+        root.Query<Label>().ForEach(label => {
+            label.style.fontSize = 24f * escala; // 24px es el tamaño base
+        });
+
         campoUsuario = root.Q<TextField>("Campo_Usuario");
         campoContrasena = root.Q<TextField>("Campo_Contrasena");
-        botonIniciarSesion = root.Q<Button>("Boton_IniciarSesion");
+        botonLogin = root.Q<Button>("Boton_IniciarSesion");
         botonRegistrarse = root.Q<Button>("Boton_Registrarse");
         mensajeError = root.Q<Label>("Mensaje_Error");
-        
-        if (campoUsuario == null || campoContrasena == null || botonIniciarSesion == null) 
-            return;
-            
-        botonIniciarSesion.clicked += OnIniciarSesionClick;
-        botonRegistrarse.clicked += OnRegistrarseClick;
-        campoUsuario.RegisterValueChangedCallback(evt => OcultarError());
-        campoContrasena.RegisterValueChangedCallback(evt => OcultarError());
+
+        botonLogin.clicked += OnLoginClick;
+        botonRegistrarse.clicked += () => SceneManager.LoadScene("RegistroScene");
     }
-    
-    private void OnIniciarSesionClick()
-    {
-        string usuario = campoUsuario.value;
-        string contrasena = campoContrasena.value;
-        
-        if (string.IsNullOrEmpty(usuario) || string.IsNullOrEmpty(contrasena)) 
-        {
-            MostrarError("Usuario y contraseña requeridos");
-            return;
-        }
-        
-        if (ValidarLogin(usuario, contrasena))
-        {
-            PlayerPrefs.SetString("UsuarioActivo", usuario);
-            PlayerPrefs.SetInt("SesionIniciada", 1);
-            PlayerPrefs.Save();
-            SceneManager.LoadScene("MenuPrincipalT");
-        }
-        else
-        {
-            MostrarError("Usuario o contraseña incorrectos");
-        }
+
+    private void OnLoginClick() {
+        if (string.IsNullOrEmpty(campoUsuario.value)) return;
+        botonLogin.SetEnabled(false);
+        ApiManager.Instance.Login(campoUsuario.value, campoContrasena.value, (exito, msg, datos) => {
+            botonLogin.SetEnabled(true);
+            if (exito) SceneManager.LoadScene("MenuPrincipalT");
+            else MostrarError(msg);
+        });
     }
-    
-    private void OnRegistrarseClick()
-    {
-        SceneManager.LoadScene("RegistroScene");
-    }
-    
-    private bool ValidarLogin(string usuario, string contrasena)
-    {
-        string contrasenaGuardada = PlayerPrefs.GetString($"User_{usuario}_Pass", "");
-        return contrasena == contrasenaGuardada && !string.IsNullOrEmpty(contrasenaGuardada);
-    }
-    
-    private void MostrarError(string mensaje)
-    {
-        if (mensajeError != null)
-        {
-            mensajeError.text = $"✗ {mensaje}";
-            mensajeError.style.display = DisplayStyle.Flex;
-        }
-    }
-    
-    private void OcultarError()
-    {
-        if (mensajeError != null)
-            mensajeError.style.display = DisplayStyle.None;
+
+    private void MostrarError(string msg) {
+        if (mensajeError != null) { mensajeError.text = "✗ " + msg; mensajeError.style.display = DisplayStyle.Flex; }
     }
 }

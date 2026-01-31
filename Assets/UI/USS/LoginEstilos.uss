@@ -1,49 +1,59 @@
-/* FORZAR NEGRO EN TODO */
+/* ESTILO PARA LOS CAMPOS DE TEXTO (CONTENEDORES) */
 #Campo_Usuario, #Campo_Contrasena, #Campo_Nombre, #Campo_Apellido, #Campo_Confirmar {
     background-color: rgb(255, 255, 255) !important;
-    color: rgb(0, 0, 0) !important;
-    -unity-text-color: rgb(0, 0, 0) !important;
     height: 55px !important;
     border-radius: 12px !important;
     border-width: 2px !important;
     border-color: rgba(139, 69, 19, 0.6) !important;
+    margin-bottom: 10px;
+    padding: 0; /* Quitamos padding del padre para dárselo al input */
 }
 
-/* NÚCLEO DEL TEXTO */
-.unity-text-field__input, .unity-base-text-field__input {
+/* ESTILO PARA EL TEXTO INTERNO (LO QUE SE ESCRIBE) */
+/* Aquí es donde arreglamos la borrosidad */
+.unity-text-field__input {
     color: rgb(0, 0, 0) !important;
     background-color: transparent !important;
-    font-size: 20px !important;
+    font-size: 22px !important; /* Un poco más grande para que sea nítido */
+    -unity-font-style: bold;
+    -unity-text-align: middle-left; /* Centra el texto verticalmente */
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    border-width: 0 !important; /* Quitamos bordes internos que ensucian */
+    margin: 0 !important;
 }
 
-/* PANEL PRINCIPAL */
+/* ESTILO PARA LAS ETIQUETAS (LABELS) */
+.campo-input Label {
+    color: gold !important;
+    -unity-font-style: bold;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+/* PANEL PRINCIPAL (PARA QUE NO SE VEA PEQUEÑO) */
 #PanelLogin, #PanelRegistro {
-    max-width: 420px; width: 90%; min-width: 320px;
+    width: 450px; 
     background-color: rgba(25, 20, 15, 0.95);
-    border-radius: 25px; padding: 30px;
-    border-width: 4px; border-color: rgb(139, 69, 19);
+    border-radius: 25px; 
+    padding: 40px;
+    border-width: 4px; 
+    border-color: rgb(139, 69, 19);
 }
 
-#Contenedor { padding: 20px; flex-grow: 1; justify-content: center; align-items: center; }
+/* EL BOTÓN CUANDO PASAS EL RATÓN */
+.boton-login:hover {
+    scale: 1.05;
+    transition-duration: 0.1s;
+}
 
-.campo-input:hover { border-color: rgb(255, 215, 0) !important; scale: 1.02; }
-
-.boton-login { transition-duration: 0.25s; width: 100%; }
-.boton-login:hover { scale: 1.05; }
-#Boton_IniciarSesion:hover, #Boton_Crear:hover { background-color: rgb(20, 170, 60); }
-#Boton_Registrarse:hover, #Boton_Volver:hover { background-color: rgb(200, 115, 50); }
-
+/* MENSAJE DE ERROR */
 #Mensaje_Error {
-    color: rgb(255, 255, 255) !important;
-    background-color: rgb(200, 40, 40) !important;
-    border-width: 3px !important;
-    border-color: rgb(255, 80, 80) !important;
-    padding: 18px 25px !important;
-    border-radius: 15px !important;
-    font-size: 20px !important;
-    -unity-font-style: bold !important;
-    margin-top: 25px !important;
-    opacity: 1 !important;
-    display: none !important;
-    text-align: center;
+    color: white !important;
+    background-color: rgba(200, 40, 40, 0.9);
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 15px;
+    -unity-text-align: middle-center;
+    font-size: 16px;
 }

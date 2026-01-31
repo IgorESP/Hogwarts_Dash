@@ -2,293 +2,90 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
 using System;
+using System.Text;
 
-/// <summary>
-/// Gestor centralizado para comunicación con API
-/// Maneja todas las peticiones HTTP (POST, GET, etc.)
-/// </summary>
 public class ApiManager : MonoBehaviour
 {
-    // ====================================
-    // SINGLETON
-    // ====================================
-    
     public static ApiManager Instance { get; private set; }
-    
-    // ====================================
-    // CONFIGURACIÓN DE API
-    // ====================================
-    
-    [Header("⚙️ Configuración de API")]
-    [Tooltip("https://hogwartsdashapi.onrender.com/docs")]
-    public string apiBaseUrl = "http://localhost:3000/api";
-    
-    [Tooltip("Tiempo máximo de espera para peticiones (segundos)")]
-    public int timeoutSeconds = 10;
-    
-    // ====================================
-    // ENDPOINTS
-    // ====================================
-    
-    private string loginEndpoint => $"{apiBaseUrl}/login";
-    private string registerEndpoint => $"{apiBaseUrl}/register";
-    private string getUserEndpoint => $"{apiBaseUrl}/user";
-    
-    // ====================================
-    // INICIALIZACIÓN
-    // ====================================
-    
-    void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
+
+    [Header("⚙️ Configuración")]
+    public string apiBaseUrl = "https://hogwartsdashapi.onrender.com/api/v1/jugadores"; 
+    public int timeoutSeconds = 90; 
+
+    void Awake() {
+        if (Instance == null) { 
+            Instance = this; 
             DontDestroyOnLoad(gameObject);
-            Debug.Log("🌐 ApiManager inicializado");
+            apiBaseUrl = "https://hogwartsdashapi.onrender.com/api/v1/jugadores";
         }
-        else
-        {
-            Destroy(gameObject);
-        }
+        else { Destroy(gameObject); }
     }
-    
-    // ====================================
-    // REGISTRO DE USUARIO
-    // ====================================
-    
-    public void Registrar(string usuario, string nombre, string apellido, string contrasena, Action<bool, string> callback)
-    {
-        StartCoroutine(RegistrarCoroutine(usuario, nombre, apellido, contrasena, callback));
+
+    public void Login(string user, string pass, Action<bool, string, UserData> callback) {
+        var requestData = new LoginRequest { username = user, password = pass };
+        StartCoroutine(PostRequest<LoginResponse>("/login", requestData, (exito, res) => {
+            if (exito && res != null) callback(true, "¡Bienvenido!", res.usuario);
+            else callback(false, res?.mensaje ?? res?.detail ?? "Error de credenciales", null);
+        }));
     }
-    
-    private IEnumerator RegistrarCoroutine(string usuario, string nombre, string apellido, string contrasena, Action<bool, string> callback)
-    {
-        Debug.Log($"📝 Intentando registrar usuario: {usuario}");
-        
-        // Crear JSON con los datos
-        var registroData = new RegistroRequest
-        {
-            usuario = usuario,
-            nombre = nombre,
-            apellido = apellido,
-            contrasena = contrasena
-        };
-        
-        string jsonData = JsonUtility.ToJson(registroData);
-        
-        // Crear petición POST
-        using (UnityWebRequest request = new UnityWebRequest(registerEndpoint, "POST"))
-        {
-            byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonData);
-            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            request.SetRequestHeader("Content-Type", "application/json");
-            request.timeout = timeoutSeconds;
-            
-            // Enviar petición
-            yield return request.SendWebRequest();
-            
-            // Procesar respuesta
-            if (request.result == UnityWebRequest.Result.Success)
-            {
-                Debug.Log($"✅ Registro exitoso: {request.downloadHandler.text}");
-                
-                // Parsear respuesta
-                try
-                {
-                    var response = JsonUtility.FromJson<ApiResponse>(request.downloadHandler.text);
-                    callback?.Invoke(true, response.mensaje);
-                }
-                catch
-                {
-                    callback?.Invoke(true, "Usuario registrado correctamente");
-                }
-            }
-            else
-            {
-                Debug.LogError($"❌ Error en registro: {request.error}");
-                string errorMsg = ObtenerMensajeError(request);
-                callback?.Invoke(false, errorMsg);
+
+    public void Registrar(string user, string nom, string ape, string pass, Action<bool, string> callback) {
+        var data = new RegistroRequest { username = user, nombre = nom, apellido = ape, password = pass };
+        StartCoroutine(PostRequest<ApiResponse>("/register", data, (exito, res) => {
+            if (exito) callback(true, "Registro exitoso");
+            else callback(false, res?.mensaje ?? res?.detail ?? "Error al registrar");
+        }));
+    }
+
+    // --- CORRECCIÓN DEL RANKING (Ruta /top) ---
+    public void ObtenerRanking(Action<bool, RankingEntry[]> callback) {
+        // Cambiado /ranking por /top según tu Swagger
+        StartCoroutine(GetRequest<RankingEntry[]>("/top", (exito, res) => {
+            callback(exito, res);
+        }));
+    }
+
+    private IEnumerator PostRequest<T>(string endpoint, object data, Action<bool, T> callback) {
+        string json = JsonUtility.ToJson(data);
+        string url = apiBaseUrl.TrimEnd('/') + endpoint;
+        using (UnityWebRequest req = new UnityWebRequest(url, "POST")) {
+            byte[] body = Encoding.UTF8.GetBytes(json);
+            req.uploadHandler = new UploadHandlerRaw(body);
+            req.downloadHandler = new DownloadHandlerBuffer();
+            req.SetRequestHeader("Content-Type", "application/json");
+            req.timeout = timeoutSeconds; 
+            yield return req.SendWebRequest();
+            if (req.result == UnityWebRequest.Result.Success) {
+                callback(true, JsonUtility.FromJson<T>(req.downloadHandler.text));
+            } else {
+                T errorRes = default;
+                try { errorRes = JsonUtility.FromJson<T>(req.downloadHandler.text); } catch { }
+                callback(false, errorRes);
             }
         }
     }
-    
-    // ====================================
-    // LOGIN DE USUARIO
-    // ====================================
-    
-    public void Login(string usuario, string contrasena, Action<bool, string, UserData> callback)
-    {
-        StartCoroutine(LoginCoroutine(usuario, contrasena, callback));
-    }
-    
-    private IEnumerator LoginCoroutine(string usuario, string contrasena, Action<bool, string, UserData> callback)
-    {
-        Debug.Log($"🔐 Intentando login: {usuario}");
-        
-        // Crear JSON con credenciales
-        var loginData = new LoginRequest
-        {
-            usuario = usuario,
-            contrasena = contrasena
-        };
-        
-        string jsonData = JsonUtility.ToJson(loginData);
-        
-        // Crear petición POST
-        using (UnityWebRequest request = new UnityWebRequest(loginEndpoint, "POST"))
-        {
-            byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonData);
-            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            request.SetRequestHeader("Content-Type", "application/json");
-            request.timeout = timeoutSeconds;
-            
-            // Enviar petición
-            yield return request.SendWebRequest();
-            
-            // Procesar respuesta
-            if (request.result == UnityWebRequest.Result.Success)
-            {
-                Debug.Log($"✅ Login exitoso: {request.downloadHandler.text}");
-                
-                try
-                {
-                    var response = JsonUtility.FromJson<LoginResponse>(request.downloadHandler.text);
-                    
-                    // Guardar token si existe
-                    if (!string.IsNullOrEmpty(response.token))
-                    {
-                        PlayerPrefs.SetString("AuthToken", response.token);
-                        PlayerPrefs.Save();
-                    }
-                    
-                    callback?.Invoke(true, response.mensaje, response.usuario);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"Error al parsear respuesta: {e.Message}");
-                    callback?.Invoke(false, "Error al procesar respuesta del servidor", null);
-                }
-            }
-            else
-            {
-                Debug.LogError($"❌ Error en login: {request.error}");
-                string errorMsg = ObtenerMensajeError(request);
-                callback?.Invoke(false, errorMsg, null);
+
+    private IEnumerator GetRequest<T>(string endpoint, Action<bool, T> callback) {
+        using (UnityWebRequest req = UnityWebRequest.Get(apiBaseUrl + endpoint)) {
+            req.timeout = timeoutSeconds;
+            yield return req.SendWebRequest();
+            if (req.result == UnityWebRequest.Result.Success) {
+                // Truco para leer listas [] en Unity
+                string json = "{ \"ranking\": " + req.downloadHandler.text + " }";
+                RankingList wrapper = JsonUtility.FromJson<RankingList>(json);
+                callback(true, (T)(object)wrapper.ranking);
+            } else {
+                Debug.LogError("Error en Ranking: " + req.error);
+                callback(false, default);
             }
         }
     }
-    
-    // ====================================
-    // OBTENER DATOS DE USUARIO
-    // ====================================
-    
-    public void ObtenerUsuario(string token, Action<bool, UserData> callback)
-    {
-        StartCoroutine(ObtenerUsuarioCoroutine(token, callback));
-    }
-    
-    private IEnumerator ObtenerUsuarioCoroutine(string token, Action<bool, UserData> callback)
-    {
-        using (UnityWebRequest request = UnityWebRequest.Get(getUserEndpoint))
-        {
-            request.SetRequestHeader("Authorization", $"Bearer {token}");
-            request.timeout = timeoutSeconds;
-            
-            yield return request.SendWebRequest();
-            
-            if (request.result == UnityWebRequest.Result.Success)
-            {
-                try
-                {
-                    var userData = JsonUtility.FromJson<UserData>(request.downloadHandler.text);
-                    callback?.Invoke(true, userData);
-                }
-                catch
-                {
-                    callback?.Invoke(false, null);
-                }
-            }
-            else
-            {
-                callback?.Invoke(false, null);
-            }
-        }
-    }
-    
-    // ====================================
-    // UTILIDADES
-    // ====================================
-    
-    private string ObtenerMensajeError(UnityWebRequest request)
-    {
-        if (request.result == UnityWebRequest.Result.ConnectionError)
-        {
-            return "No se pudo conectar con el servidor. Verifica tu conexión a internet.";
-        }
-        else if (request.result == UnityWebRequest.Result.ProtocolError)
-        {
-            // Intentar obtener mensaje del servidor
-            try
-            {
-                var errorResponse = JsonUtility.FromJson<ApiResponse>(request.downloadHandler.text);
-                return errorResponse.mensaje;
-            }
-            catch
-            {
-                return $"Error del servidor: {request.responseCode}";
-            }
-        }
-        else
-        {
-            return "Error desconocido. Intenta de nuevo.";
-        }
-    }
-    
-    // ====================================
-    // CLASES DE DATOS
-    // ====================================
-    
-    [Serializable]
-    public class RegistroRequest
-    {
-        public string usuario;
-        public string nombre;
-        public string apellido;
-        public string contrasena;
-    }
-    
-    [Serializable]
-    public class LoginRequest
-    {
-        public string usuario;
-        public string contrasena;
-    }
-    
-    [Serializable]
-    public class ApiResponse
-    {
-        public bool exito;
-        public string mensaje;
-    }
-    
-    [Serializable]
-    public class LoginResponse
-    {
-        public bool exito;
-        public string mensaje;
-        public string token;
-        public UserData usuario;
-    }
-    
-    [Serializable]
-    public class UserData
-    {
-        public string id;
-        public string usuario;
-        public string nombre;
-        public string apellido;
-        public string email;
-    }
+
+    [Serializable] public class LoginRequest { public string username; public string password; }
+    [Serializable] public class RegistroRequest { public string nombre; public string apellido; public string username; public string password; }
+    [Serializable] public class ApiResponse { public bool exito; public string mensaje; public string detail; }
+    [Serializable] public class LoginResponse { public bool exito; public string mensaje; public string detail; public string token; public UserData usuario; }
+    [Serializable] public class UserData { public string id; public string username; public string nombre; public string apellido; }
+    [Serializable] public class RankingEntry { public string username; public int puntos; }
+    [Serializable] public class RankingList { public RankingEntry[] ranking; }
 }

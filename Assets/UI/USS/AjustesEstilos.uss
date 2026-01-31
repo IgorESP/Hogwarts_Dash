@@ -138,3 +138,17 @@
     background-color: rgba(220, 20, 20, 0.95);
     border-color: white !important;
 }*/
+/* CLASE MAESTRA DE DALTONISMO */
+.modo-daltonico-activado Label {
+    color: white !important; /* Cambiamos el oro por blanco puro */
+}
+
+.modo-daltonico-activado .seccion-opciones, 
+.modo-daltonico-activado .boton-opcion {
+    border-color: #0077FF !important; /* Cambiamos el marrón por un azul vibrante */
+    background-color: #111111 !important; /* Fondo más oscuro para contraste */
+}
+
+.modo-daltonico-activado #Titulo {
+    color: #00FFFF !important; /* Título en Cyan */
+}
