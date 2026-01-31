@@ -1,0 +1,111 @@
+/* ====================================
+   BOTONES DE PAUSA
+   ==================================== */
+
+.boton-pausa {
+    transition-duration: 0.3s;
+    transition-property: scale, border-color, background-color;
+}
+
+.boton-pausa:hover {
+    scale: 1.15;
+}
+
+.boton-pausa:active {
+    scale: 0.95;
+}
+
+/* ====================================
+   BOTÓN PLAY DESTACADO
+   ==================================== */
+
+.boton-play-destacado:hover {
+    scale: 1.2;
+    border-color: rgb(255, 255, 255);
+    border-width: 6px;
+    background-color: rgba(255, 215, 0, 0.5);
+}
+
+.boton-play-destacado:active {
+    scale: 1.05;
+}
+
+/* ====================================
+   SLIDERS
+   ==================================== */
+
+#Slider_Musica .unity-base-slider__dragger,
+#Slider_SFX .unity-base-slider__dragger {
+    background-color: rgb(255, 215, 0);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    border-width: 3px;
+    border-color: rgb(139, 69, 19);
+    transition-duration: 0.2s;
+}
+
+#Slider_Musica .unity-base-slider__dragger:hover,
+#Slider_SFX .unity-base-slider__dragger:hover {
+    scale: 1.2;
+    background-color: rgb(255, 255, 255);
+}
+
+#Slider_Musica .unity-base-slider__tracker,
+#Slider_SFX .unity-base-slider__tracker {
+    background-color: rgba(80, 80, 80, 0.8);
+    height: 12px;
+    border-radius: 6px;
+    border-width: 2px;
+    border-color: rgba(139, 69, 19, 0.5);
+}
+
+#Slider_Musica .unity-base-slider__dragger-border,
+#Slider_SFX .unity-base-slider__dragger-border {
+    border-width: 0;
+}
+
+/* ====================================
+   BOTÓN PAUSA ESQUINA
+   ==================================== */
+
+#Boton_Pausa_Esquina {
+    transition-duration: 0.3s;
+    transition-property: scale, -unity-background-image-tint-color;
+}
+
+#Boton_Pausa_Esquina:hover {
+    scale: 1.2;
+    -unity-background-image-tint-color: rgb(255, 215, 0);
+}
+
+#Boton_Pausa_Esquina:active {
+    scale: 0.9;
+}
+
+/* ====================================
+   CONTENEDOR SLIDERS
+   ==================================== */
+
+#ContenedorSliders {
+    transition-duration: 0.3s;
+    transition-property: scale;
+}
+
+#ContenedorSliders:hover {
+    scale: 1.02;
+}
+
+/* ====================================
+   LABELS
+   ==================================== */
+
+#ControlMusica Label,
+#ControlSFX Label {
+    transition-duration: 0.2s;
+}
+
+#ControlMusica:hover Label,
+#ControlSFX:hover Label {
+    color: rgb(255, 255, 255);
+}

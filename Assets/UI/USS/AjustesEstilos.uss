@@ -1,4 +1,9 @@
 /* ====================================
+   ARCHIVO: AjustesEstilos.uss
+   DESCRIPCIÓN: Estilos para la pantalla de Ajustes/Opciones
+   ==================================== */
+
+/* ====================================
    BOTÓN VOLVER
    ==================================== */
 
@@ -25,9 +30,10 @@
 }
 
 /* ====================================
-   SLIDERS
+   SLIDERS DE AUDIO
    ==================================== */
 
+/* Estilo del handle (dragger) del slider */
 #Slider_Musica .unity-base-slider__dragger,
 #Slider_SFX .unity-base-slider__dragger {
     background-color: rgb(255, 215, 0);
@@ -36,6 +42,7 @@
     height: 20px;
 }
 
+/* Estilo de la barra del slider */
 #Slider_Musica .unity-base-slider__tracker,
 #Slider_SFX .unity-base-slider__tracker {
     background-color: rgba(100, 100, 100, 0.5);
@@ -43,82 +50,91 @@
     border-radius: 5px;
 }
 
+/* Remover borde del dragger */
 #Slider_Musica .unity-base-slider__dragger-border,
 #Slider_SFX .unity-base-slider__dragger-border {
     border-width: 0;
 }
 
 /* ====================================
-   TOGGLES
+   TOGGLES DE ACCESIBILIDAD
    ==================================== */
 
-#Toggle_AltoContraste .unity-toggle__checkmark,
-#Toggle_ReducirMovimiento .unity-toggle__checkmark {
+/* Estilo del checkbox (checkmark) del toggle */
+#Toggle_Daltonicos .unity-toggle__checkmark {
     background-color: rgba(100, 100, 100, 0.5);
     border-radius: 10px;
     border-width: 2px;
     border-color: rgb(255, 215, 0);
 }
 
-#Toggle_AltoContraste:checked .unity-toggle__checkmark,
-#Toggle_ReducirMovimiento:checked .unity-toggle__checkmark {
+/* Estilo del checkbox cuando está activado */
+#Toggle_Daltonicos:checked .unity-toggle__checkmark {
     background-color: rgb(255, 215, 0);
+}
+
+/* ====================================
+   SLIDER DE ACCESIBILIDAD (TAMAÑO LETRA)
+   ==================================== */
+
+/* Estilo del handle del slider de tamaño de letra */
+#Slider_TamanoLetra .unity-base-slider__dragger {
+    background-color: rgb(255, 215, 0);
+    border-radius: 10px;
+    width: 20px;
+    height: 20px;
+}
+
+/* Estilo de la barra del slider de tamaño de letra */
+#Slider_TamanoLetra .unity-base-slider__tracker {
+    background-color: rgba(100, 100, 100, 0.5);
+    height: 10px;
+    border-radius: 5px;
+}
+
+/* Remover borde del dragger */
+#Slider_TamanoLetra .unity-base-slider__dragger-border {
+    border-width: 0;
 }
 
 /* ====================================
    BOTONES DE OPCIONES
    ==================================== */
 
+/* Transiciones para todos los botones de opciones */
 .boton-opcion {
     transition-duration: 0.3s;
     transition-property: scale, background-color;
 }
 
-.boton-opcion:hover {
+/* Efecto hover general para botones */
+/*.boton-opcion:hover {
     scale: 1.05;
     border-width: 4px !important;
-}
+}*/
 
+/* Efecto click para botones */
 .boton-opcion:active {
     scale: 0.98;
 }
 
-/* Botón de Créditos */
+/* Botón de Créditos - Hover */
 #Boton_Creditos:hover {
     background-color: rgba(160, 80, 20, 0.95);
 }
 
-/* Botón de Ranking */
+/* Botón de Ranking - Hover */
 #Boton_Ranking:hover {
     background-color: rgba(160, 80, 20, 0.95);
 }
 
-/* Botón de Perfil */
+/* Botón de Perfil - Hover */
 #Boton_Perfil:hover {
     background-color: rgba(160, 80, 20, 0.95);
 }
 
-/* Botón de Cerrar Sesión - Rojo */
-#Boton_CerrarSesion:hover {
+/* Botón de Cerrar Sesión - Hover (color rojo) */
+/*#Boton_CerrarSesion:hover {
     background-color: rgba(220, 20, 20, 0.95);
     border-color: white !important;
-}
-
-/* ====================================
-   SCROLLVIEW
-   ==================================== */
-
-#ContenedorScroll .unity-scroll-view__content-container {
-    padding: 10px;
-}
-
-#ContenedorScroll .unity-scroller--vertical .unity-scroller__slider {
-    width: 15px;
-    background-color: rgba(255, 215, 0, 0.3);
-    border-radius: 10px;
-}
-
-#ContenedorScroll .unity-scroller--vertical .unity-base-slider__dragger {
-    background-color: rgb(255, 215, 0);
-    border-radius: 10px;
-}
+}*/

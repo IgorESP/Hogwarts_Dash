@@ -8,6 +8,42 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/EscenaSlytherin.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/EscenaComedor.unity
+    guid: 7acc3d6284ac25e44a55033923e319db
+  - enabled: 1
+    path: Assets/Scenes/EscenaGryffindor.unity
+    guid: cc2ff0740e00fb549b0f3e6a2aab3021
+  - enabled: 1
+    path: Assets/Scenes/EscenaRavenclaw.unity
+    guid: 7f21a91773e32d2408f3642914bb7e8f
+  - enabled: 1
+    path: Assets/Scenes/LoginScene.unity
+    guid: 75568f471e4072c4385188cea44c0ea3
+  - enabled: 1
+    path: Assets/Scenes/RegistroScene.unity
+    guid: 9213e6eee32a1b84e88b343a71a28e5c
+  - enabled: 1
+    path: Assets/Scenes/MenuPrincipalT.unity
+    guid: c039e0d90a6e19a4baccee79f1d33e6b
+  - enabled: 1
+    path: Assets/Scenes/PlayScene.unity
+    guid: 61ce0c5dfd0e7384cbbf66676e7922e4
+  - enabled: 1
+    path: Assets/Scenes/MainScene.unity
+    guid: 77113c77f96713e419278f36fa168e81
+  - enabled: 1
+    path: Assets/Scenes/EscenaHufflepuff.unity
+    guid: 4070969a77fcd3240b771fb42f651603
+  - enabled: 1
+    path: Assets/Scenes/AjustesScene.unity
+    guid: 6c4853b7062bfa148ade235422a71355
+  - enabled: 1
+    path: Assets/Scenes/PerfilScene.unity
+    guid: 346e99336a3027c46a3ed39c12a3acf7
+  - enabled: 1
+    path: Assets/Scenes/PausaScena.unity
+    guid: ec8eca3d1ed39fb4ba518ec797303771
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

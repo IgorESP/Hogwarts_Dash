@@ -1,66 +1,49 @@
-/* ====================================
-   PANEL DE LOGIN
-   ==================================== */
-
-#PanelLogin {
-    transition-duration: 0.3s;
+/* FORZAR NEGRO EN TODO */
+#Campo_Usuario, #Campo_Contrasena, #Campo_Nombre, #Campo_Apellido, #Campo_Confirmar {
+    background-color: rgb(255, 255, 255) !important;
+    color: rgb(0, 0, 0) !important;
+    -unity-text-color: rgb(0, 0, 0) !important;
+    height: 55px !important;
+    border-radius: 12px !important;
+    border-width: 2px !important;
+    border-color: rgba(139, 69, 19, 0.6) !important;
 }
 
-/* ====================================
-   CAMPOS DE INPUT
-   ==================================== */
-
-.campo-input {
-    transition-duration: 0.25s;
-    transition-property: border-color, background-color, scale;
+/* NÚCLEO DEL TEXTO */
+.unity-text-field__input, .unity-base-text-field__input {
+    color: rgb(0, 0, 0) !important;
+    background-color: transparent !important;
+    font-size: 20px !important;
 }
 
-.campo-input:hover {
-    border-color: rgb(255, 215, 0) !important;
-    background-color: rgba(50, 45, 35, 0.95);
-    scale: 1.02;
+/* PANEL PRINCIPAL */
+#PanelLogin, #PanelRegistro {
+    max-width: 420px; width: 90%; min-width: 320px;
+    background-color: rgba(25, 20, 15, 0.95);
+    border-radius: 25px; padding: 30px;
+    border-width: 4px; border-color: rgb(139, 69, 19);
 }
 
-/* TextField styling */
-#Campo_Usuario .unity-text-field__input,
-#Campo_Contrasena .unity-text-field__input {
-    background-color: rgba(0, 0, 0, 0);
-    border-width: 0;
-    color: white;
-    font-size: 18px;
-}
+#Contenedor { padding: 20px; flex-grow: 1; justify-content: center; align-items: center; }
 
-/* ====================================
-   BOTONES
-   ==================================== */
+.campo-input:hover { border-color: rgb(255, 215, 0) !important; scale: 1.02; }
 
-.boton-login {
-    transition-duration: 0.25s;
-    transition-property: scale, background-color;
-}
-
-.boton-login:hover {
-    scale: 1.05;
-}
-
-.boton-login:active {
-    scale: 0.97;
-}
-
-/* Botón Verde - Iniciar Sesión */
-#Boton_IniciarSesion:hover {
-    background-color: rgb(20, 170, 60);
-}
-
-/* Botón Naranja - Registrarse */
-#Boton_Registrarse:hover {
-    background-color: rgb(200, 115, 50);
-}
-
-/* ====================================
-   MENSAJE DE ERROR
-   ==================================== */
+.boton-login { transition-duration: 0.25s; width: 100%; }
+.boton-login:hover { scale: 1.05; }
+#Boton_IniciarSesion:hover, #Boton_Crear:hover { background-color: rgb(20, 170, 60); }
+#Boton_Registrarse:hover, #Boton_Volver:hover { background-color: rgb(200, 115, 50); }
 
 #Mensaje_Error {
-    opacity: 1;
+    color: rgb(255, 255, 255) !important;
+    background-color: rgb(200, 40, 40) !important;
+    border-width: 3px !important;
+    border-color: rgb(255, 80, 80) !important;
+    padding: 18px 25px !important;
+    border-radius: 15px !important;
+    font-size: 20px !important;
+    -unity-font-style: bold !important;
+    margin-top: 25px !important;
+    opacity: 1 !important;
+    display: none !important;
+    text-align: center;
 }
