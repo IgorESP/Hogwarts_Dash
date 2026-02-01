@@ -23,8 +23,18 @@ public class FinishLevel : MonoBehaviour
     
     private void FinalizarNivel()
     {
-        Debug.Log("¡Nivel completado!");
-        Invoke("CargarMenuFinal", tiempoEspera);
+        Debug.Log(" ¡Nivel completado!");
+        
+        //  LLAMAR AL PROGRESSMANAGER para que muestre el panel de resultados
+        if (ProgressManager.Instance != null)
+        {
+            ProgressManager.Instance.TerminarNivel();
+        }
+        else
+        {
+            Debug.LogError(" ProgressManager no encontrado - Cargando escena directamente");
+            Invoke("CargarMenuFinal", tiempoEspera);
+        }
     }
     
     private void CargarMenuFinal()

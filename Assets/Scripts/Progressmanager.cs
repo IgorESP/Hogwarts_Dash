@@ -17,9 +17,12 @@ public class ProgressManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
+            Debug.Log("ProgressManager inicializado");
         }
         else
         {
+            Debug.Log(" ProgressManager ya existe, destruyendo duplicado");
             Destroy(gameObject);
         }
     }
@@ -36,7 +39,7 @@ public class ProgressManager : MonoBehaviour
     private int respuestasIncorrectas;
     private float tiempoInicio;
     
-    // ⭐ NUEVAS ESTADÍSTICAS
+    // NUEVAS ESTADÍSTICAS
     private int intentos = 0;
     private int snitchesRecogidos = 0;
     
@@ -65,11 +68,11 @@ public class ProgressManager : MonoBehaviour
         respuestasIncorrectas = 0;
         tiempoInicio = Time.time;
         
-        // ⭐ INICIALIZAR NUEVAS ESTADÍSTICAS
+        // INICIALIZAR NUEVAS ESTADÍSTICAS
         intentos = 0;
         snitchesRecogidos = 0;
         
-        Debug.Log("✅ [ProgressManager] Partida iniciada");
+        Debug.Log(" [ProgressManager] Partida iniciada");
     }
     
     // ====================================
@@ -88,12 +91,12 @@ public class ProgressManager : MonoBehaviour
                 if (!NivelesManager.Instance.MundoEstaDesbloqueado(siguienteMundo))
                 {
                     NivelesManager.Instance.DesbloquearMundo(siguienteMundo);
-                    Debug.Log($"✅ [ProgressManager] Mundo {siguienteMundo} desbloqueado (solo por entrar)");
+                    Debug.Log($"[ProgressManager] Mundo {siguienteMundo} desbloqueado (solo por entrar)");
                     siguienteMundoDesbloqueado = true;
                 }
                 else
                 {
-                    Debug.Log($"ℹ️ [ProgressManager] Mundo {siguienteMundo} ya estaba desbloqueado");
+                    Debug.Log($"[ProgressManager] Mundo {siguienteMundo} ya estaba desbloqueado");
                 }
             }
             else
@@ -101,13 +104,13 @@ public class ProgressManager : MonoBehaviour
                 // Sistema legacy
                 PlayerPrefs.SetInt($"Mundo_{siguienteMundo}_Desbloqueado", 1);
                 PlayerPrefs.Save();
-                Debug.Log($"✅ [ProgressManager] Mundo {siguienteMundo} desbloqueado (legacy)");
+                Debug.Log($"[ProgressManager] Mundo {siguienteMundo} desbloqueado (legacy)");
                 siguienteMundoDesbloqueado = true;
             }
         }
         else
         {
-            Debug.Log("🏆 [ProgressManager] ¡Último mundo! No hay más para desbloquear");
+            Debug.Log("[ProgressManager] ¡Último mundo! No hay más para desbloquear");
         }
     }
     
@@ -121,17 +124,17 @@ public class ProgressManager : MonoBehaviour
         if (esCorrecta)
         {
             respuestasCorrectas++;
-            Debug.Log($"✅ [ProgressManager] Correcta ({respuestasCorrectas}/{preguntasTotales})");
+            Debug.Log($"[ProgressManager] Correcta ({respuestasCorrectas}/{preguntasTotales})");
         }
         else
         {
             respuestasIncorrectas++;
-            Debug.Log($"❌ [ProgressManager] Incorrecta ({respuestasIncorrectas}/{preguntasTotales})");
+            Debug.Log($" [ProgressManager] Incorrecta ({respuestasIncorrectas}/{preguntasTotales})");
         }
     }
     
     // ====================================
-    // ⭐ NUEVOS MÉTODOS PARA ESTADÍSTICAS
+    // NUEVOS MÉTODOS PARA ESTADÍSTICAS
     // ====================================
     
     /// <summary>
@@ -140,7 +143,7 @@ public class ProgressManager : MonoBehaviour
     public void RegistrarIntento()
     {
         intentos++;
-        Debug.Log($"💀 Intento #{intentos}");
+        Debug.Log($"Intento #{intentos}");
     }
     
     /// <summary>
@@ -149,7 +152,7 @@ public class ProgressManager : MonoBehaviour
     public void RecogerSnitch()
     {
         snitchesRecogidos++;
-        Debug.Log($"⚡ Snitch recogido! Total: {snitchesRecogidos}");
+        Debug.Log($"Snitch recogido! Total: {snitchesRecogidos}");
     }
     
     public int GetIntentos() => intentos;
@@ -173,7 +176,7 @@ public class ProgressManager : MonoBehaviour
     }
     
     // ====================================
-    // ⭐ TERMINAR NIVEL (MODIFICADO)
+    // TERMINAR NIVEL (CORREGIDO)
     // ====================================
     public void TerminarNivel()
     {
@@ -183,19 +186,19 @@ public class ProgressManager : MonoBehaviour
         
         Debug.Log("═══════════════════════════════════");
         Debug.Log($"🏁 [ProgressManager] NIVEL TERMINADO");
-        Debug.Log($"📊 Estadísticas:");
-        Debug.Log($"   • Mundo: {mundoActual} ({ObtenerNombreMundo()})");
-        Debug.Log($"   • Preguntas: {preguntasTotales}");
-        Debug.Log($"   • Correctas: {respuestasCorrectas}");
-        Debug.Log($"   • Porcentaje: {porcentaje:F1}%");
-        Debug.Log($"   • Intentos: {intentos}");
-        Debug.Log($"   • Snitches: {snitchesRecogidos}");
-        Debug.Log($"   • Estrellas: {estrellas}");
-        Debug.Log($"   • Tiempo: {tiempoTotal:F1}s");
+        Debug.Log($" Estadísticas:");
+        Debug.Log($"    Mundo: {mundoActual} ({ObtenerNombreMundo()})");
+        Debug.Log($"    Preguntas: {preguntasTotales}");
+        Debug.Log($"    Correctas: {respuestasCorrectas}");
+        Debug.Log($"   Porcentaje: {porcentaje:F1}%");
+        Debug.Log($"   Intentos: {intentos}");
+        Debug.Log($"   Snitches: {snitchesRecogidos}");
+        Debug.Log($"   Estrellas: {estrellas}");
+        Debug.Log($"   Tiempo: {tiempoTotal:F1}s");
         
         if (siguienteMundoDesbloqueado)
         {
-            Debug.Log($"✅ Mundo {mundoActual + 1} fue desbloqueado al entrar");
+            Debug.Log($"Mundo {mundoActual + 1} fue desbloqueado al entrar");
         }
         
         Debug.Log("═══════════════════════════════════");
@@ -214,15 +217,19 @@ public class ProgressManager : MonoBehaviour
         PlayerPrefs.SetFloat("UltimoTiempo", tiempoTotal);
         PlayerPrefs.Save();
         
-        // ⭐ MOSTRAR PANTALLA DE RESULTADOS
+        // MOSTRAR PANTALLA DE RESULTADOS (CORREGIDO)
         var resultadosController = FindObjectOfType<ResultadosController>();
         if (resultadosController != null)
         {
-            resultadosController.MostrarResultados(porcentaje, intentos, snitchesRecogidos, estrellas);
+            // CORRECCIÓN: Convertir float a int y usar bool en lugar de int
+            int porcentajeInt = Mathf.RoundToInt(porcentaje); // float → int
+            bool victoria = estrellas > 0; // Determinar si ganó basado en estrellas
+            
+            resultadosController.MostrarResultados(porcentajeInt, intentos, snitchesRecogidos, victoria);
         }
         else
         {
-            Debug.LogError("❌ No se encontró ResultadosController - Volviendo al menú en 2s");
+            Debug.LogError("No se encontró ResultadosController - Volviendo al menú en 2s");
             Invoke("VolverANiveles", 2f);
         }
     }
@@ -258,7 +265,7 @@ public class ProgressManager : MonoBehaviour
     // ====================================
     public void SalirSinGuardar()
     {
-        Debug.Log("🚪 [ProgressManager] Saliendo sin guardar");
+        Debug.Log("[ProgressManager] Saliendo sin guardar");
         SceneManager.LoadScene("PlayScene"); 
     }
 }

@@ -28,10 +28,10 @@ public class TestResultados : MonoBehaviour
             Debug.Log("✅ ResultadosController encontrado, mostrando menú...");
             
             resultados.MostrarResultados(
-                porcentaje: 85f,
+                porcentaje: 85,
                 intentos: 3,
                 snitches: 5,
-                estrellas: 2
+                victoria: true
             );
         }
         else
