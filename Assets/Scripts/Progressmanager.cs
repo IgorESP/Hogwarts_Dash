@@ -1,15 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// <summary>
-/// ProgressManager para Hogwarts Dash
-/// Registra progreso y desbloquea mundos
-/// </summary>
 public class ProgressManager : MonoBehaviour
 {
-    // ====================================
-    // SINGLETON
-    // ====================================
     public static ProgressManager Instance { get; private set; }
     
     private void Awake()
@@ -18,46 +11,34 @@ public class ProgressManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            Debug.Log("ProgressManager inicializado");
+            Debug.Log("✅ ProgressManager inicializado");
         }
         else
         {
-            Debug.Log(" ProgressManager ya existe, destruyendo duplicado");
+            Debug.Log("⚠️ ProgressManager ya existe, destruyendo duplicado");
             Destroy(gameObject);
         }
     }
     
-    // ====================================
-    // DATOS DEL JUEGO ACTUAL
-    // ====================================
     private int mundoActual;
     private int nivelActual = 1;
     
-    // Estadísticas
     private int preguntasTotales;
     private int respuestasCorrectas;
     private int respuestasIncorrectas;
     private float tiempoInicio;
     
-    // NUEVAS ESTADÍSTICAS
     private int intentos = 0;
     private int snitchesRecogidos = 0;
     
     private bool siguienteMundoDesbloqueado = false;
     
-    // ====================================
-    // INICIAR
-    // ====================================
     void Start()
     {
-        // Obtener mundo seleccionado
         mundoActual = PlayerPrefs.GetInt("MundoSeleccionado", 1);
-        
         Debug.Log($"🎮 [ProgressManager] Jugando: Mundo {mundoActual} ({ObtenerNombreMundo()})");
         
         IniciarPartida();
-        
-        // DESBLOQUEAR SIGUIENTE MUNDO AL ENTRAR
         DesbloquearSiguienteMundoAlEntrar();
     }
     
@@ -67,56 +48,37 @@ public class ProgressManager : MonoBehaviour
         respuestasCorrectas = 0;
         respuestasIncorrectas = 0;
         tiempoInicio = Time.time;
-        
-        // INICIALIZAR NUEVAS ESTADÍSTICAS
         intentos = 0;
         snitchesRecogidos = 0;
         
-        Debug.Log(" [ProgressManager] Partida iniciada");
+        Debug.Log("[ProgressManager] Partida iniciada");
     }
     
-    // ====================================
-    //  DESBLOQUEAR SIGUIENTE MUNDO AL ENTRAR
-    // ====================================
     private void DesbloquearSiguienteMundoAlEntrar()
     {
-        // Si no es el último mundo, desbloquear el siguiente
         if (mundoActual < 5)
         {
             int siguienteMundo = mundoActual + 1;
             
             if (NivelesManager.Instance != null)
             {
-                // Verificar si ya está desbloqueado
                 if (!NivelesManager.Instance.MundoEstaDesbloqueado(siguienteMundo))
                 {
                     NivelesManager.Instance.DesbloquearMundo(siguienteMundo);
-                    Debug.Log($"[ProgressManager] Mundo {siguienteMundo} desbloqueado (solo por entrar)");
+                    Debug.Log($"[ProgressManager] Mundo {siguienteMundo} desbloqueado");
                     siguienteMundoDesbloqueado = true;
-                }
-                else
-                {
-                    Debug.Log($"[ProgressManager] Mundo {siguienteMundo} ya estaba desbloqueado");
                 }
             }
             else
             {
-                // Sistema legacy
                 PlayerPrefs.SetInt($"Mundo_{siguienteMundo}_Desbloqueado", 1);
                 PlayerPrefs.Save();
                 Debug.Log($"[ProgressManager] Mundo {siguienteMundo} desbloqueado (legacy)");
                 siguienteMundoDesbloqueado = true;
             }
         }
-        else
-        {
-            Debug.Log("[ProgressManager] ¡Último mundo! No hay más para desbloquear");
-        }
     }
     
-    // ====================================
-    // REGISTRAR RESPUESTA
-    // ====================================
     public void RegistrarRespuesta(bool esCorrecta)
     {
         preguntasTotales++;
@@ -124,31 +86,21 @@ public class ProgressManager : MonoBehaviour
         if (esCorrecta)
         {
             respuestasCorrectas++;
-            Debug.Log($"[ProgressManager] Correcta ({respuestasCorrectas}/{preguntasTotales})");
+            Debug.Log($"Correcta ({respuestasCorrectas}/{preguntasTotales})");
         }
         else
         {
             respuestasIncorrectas++;
-            Debug.Log($" [ProgressManager] Incorrecta ({respuestasIncorrectas}/{preguntasTotales})");
+            Debug.Log($"Incorrecta ({respuestasIncorrectas}/{preguntasTotales})");
         }
     }
     
-    // ====================================
-    // NUEVOS MÉTODOS PARA ESTADÍSTICAS
-    // ====================================
-    
-    /// <summary>
-    /// Registra un intento fallido (muerte, caída, etc.)
-    /// </summary>
     public void RegistrarIntento()
     {
         intentos++;
         Debug.Log($"Intento #{intentos}");
     }
     
-    /// <summary>
-    /// Registra un snitch recogido
-    /// </summary>
     public void RecogerSnitch()
     {
         snitchesRecogidos++;
@@ -158,9 +110,6 @@ public class ProgressManager : MonoBehaviour
     public int GetIntentos() => intentos;
     public int GetSnitches() => snitchesRecogidos;
     
-    // ====================================
-    // CALCULAR PORCENTAJE
-    // ====================================
     public float CalcularPorcentaje()
     {
         if (preguntasTotales == 0) return 0f;
@@ -175,9 +124,9 @@ public class ProgressManager : MonoBehaviour
         return 0;
     }
     
-    // ====================================
-    // TERMINAR NIVEL (CORREGIDO)
-    // ====================================
+    // ============================================
+    // TERMINAR NIVEL (MEJORADO)
+    // ============================================
     public void TerminarNivel()
     {
         float tiempoTotal = Time.time - tiempoInicio;
@@ -185,25 +134,19 @@ public class ProgressManager : MonoBehaviour
         int estrellas = CalcularEstrellas(porcentaje);
         
         Debug.Log("═══════════════════════════════════");
-        Debug.Log($"🏁 [ProgressManager] NIVEL TERMINADO");
-        Debug.Log($" Estadísticas:");
+        Debug.Log($"[ProgressManager] NIVEL TERMINADO");
+        Debug.Log($"Estadísticas:");
         Debug.Log($"    Mundo: {mundoActual} ({ObtenerNombreMundo()})");
-        Debug.Log($"    Preguntas: {preguntasTotales}");
-        Debug.Log($"    Correctas: {respuestasCorrectas}");
+        Debug.Log($"   Preguntas: {preguntasTotales}");
+        Debug.Log($"   Correctas: {respuestasCorrectas}");
         Debug.Log($"   Porcentaje: {porcentaje:F1}%");
         Debug.Log($"   Intentos: {intentos}");
         Debug.Log($"   Snitches: {snitchesRecogidos}");
         Debug.Log($"   Estrellas: {estrellas}");
-        Debug.Log($"   Tiempo: {tiempoTotal:F1}s");
-        
-        if (siguienteMundoDesbloqueado)
-        {
-            Debug.Log($"Mundo {mundoActual + 1} fue desbloqueado al entrar");
-        }
-        
+        Debug.Log($"    Tiempo: {tiempoTotal:F1}s");
         Debug.Log("═══════════════════════════════════");
         
-        // Actualizar progreso con NivelesManager
+        // Actualizar progreso
         if (NivelesManager.Instance != null)
         {
             NivelesManager.Instance.CompletarNivel(mundoActual, nivelActual, porcentaje);
@@ -217,31 +160,36 @@ public class ProgressManager : MonoBehaviour
         PlayerPrefs.SetFloat("UltimoTiempo", tiempoTotal);
         PlayerPrefs.Save();
         
-        // MOSTRAR PANTALLA DE RESULTADOS (CORREGIDO)
-        var resultadosController = FindObjectOfType<ResultadosController>();
+        // BUSCAR ResultadosController (MEJORADO)
+        Debug.Log("Buscando ResultadosController...");
+        
+        ResultadosController resultadosController = FindObjectOfType<ResultadosController>();
+        
         if (resultadosController != null)
         {
-            // CORRECCIÓN: Convertir float a int y usar bool en lugar de int
-            int porcentajeInt = Mathf.RoundToInt(porcentaje); // float → int
-            bool victoria = estrellas > 0; // Determinar si ganó basado en estrellas
+            Debug.Log("ResultadosController encontrado!");
+            
+            int porcentajeInt = Mathf.RoundToInt(porcentaje);
+            bool victoria = estrellas > 0;
             
             resultadosController.MostrarResultados(porcentajeInt, intentos, snitchesRecogidos, victoria);
         }
         else
         {
-            Debug.LogError("No se encontró ResultadosController - Volviendo al menú en 2s");
+            Debug.LogError("ResultadosController NO encontrado en la escena");
+            Debug.LogError("Verifica que el GameObject UIResultado esté activo y tenga el componente ResultadosController");
+            Debug.LogError("Volviendo al menú en 2 segundos...");
+            
             Invoke("VolverANiveles", 2f);
         }
     }
     
     private void VolverANiveles()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene("PlayScene"); 
     }
     
-    // ====================================
-    // OBTENER ESTADÍSTICAS (Para UI)
-    // ====================================
     public int GetPreguntasTotales() => preguntasTotales;
     public int GetRespuestasCorrectas() => respuestasCorrectas;
     public int GetRespuestasIncorrectas() => respuestasIncorrectas;
@@ -260,12 +208,10 @@ public class ProgressManager : MonoBehaviour
         };
     }
     
-    // ====================================
-    // SALIR SIN GUARDAR
-    // ====================================
     public void SalirSinGuardar()
     {
         Debug.Log("[ProgressManager] Saliendo sin guardar");
+        Time.timeScale = 1f;
         SceneManager.LoadScene("PlayScene"); 
     }
 }
