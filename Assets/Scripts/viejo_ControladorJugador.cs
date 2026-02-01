@@ -29,10 +29,14 @@ public class MovimientoGD : MonoBehaviour
 
     Rigidbody2D rb;
     BoxCollider2D col;
+    CircleCollider2D circleCol; // NUEVO
     SpriteRenderer rend;
 
     bool pedirSalto;
-    bool intentoCambioGravedadBola = false; // NUEVA VARIABLE PARA EL BUFFER
+    // bool intentoCambioGravedadBola = false; // REEMPLAZADO POR BUFFER
+    float jumpBufferCounter; 
+    public float jumpBufferTime = 0.15f; 
+
     [HideInInspector] public float rotacionRestante;
     bool haMuerto = false;
 
@@ -41,6 +45,26 @@ public class MovimientoGD : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<BoxCollider2D>();
         rend = GetComponent<SpriteRenderer>();
+
+        // Crear/Buscar Collider Circular
+        circleCol = GetComponent<CircleCollider2D>();
+        if (circleCol == null)
+        {
+            circleCol = gameObject.AddComponent<CircleCollider2D>();
+            // MATEMÁTICAS: Radio = Altura / 2. Así ocupan lo mismo.
+            // Si el cubo mide 0.88 (por ejemplo ajustado visualmente), la bola será 0.44.
+            // Usamos el tamaño del collider para ser exactos.
+            if(col != null) 
+            {
+                circleCol.radius = col.size.y / 2f;
+                circleCol.offset = col.offset; 
+            }
+            else
+            {
+               circleCol.radius = 0.5f; // Fallback si no hay box
+            }
+            circleCol.enabled = false; 
+        }
        
         rb.gravityScale = gravedadEscala;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
@@ -57,7 +81,7 @@ public class MovimientoGD : MonoBehaviour
         {
             if (modoBola)
             {
-                intentoCambioGravedadBola = true; // Guardamos la intención de cambiar gravedad
+                jumpBufferCounter = jumpBufferTime; // Buffer de tiempo real
             }
            
             if (modoUFO)
@@ -70,11 +94,8 @@ public class MovimientoGD : MonoBehaviour
         // DETECCIÓN MANTENIDA (Para el Cubo y Cohete)
         pedirSalto = Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0);
 
-        // Si soltamos el botón, limpiamos el buffer de la bola para que no cambie sola al tocar el suelo después
-        if (Input.GetKeyUp(KeyCode.Space) || Input.GetMouseButtonUp(0))
-        {
-            intentoCambioGravedadBola = false;
-        }
+        // Decrementar buffer
+        if (jumpBufferCounter > 0) jumpBufferCounter -= Time.deltaTime;
     }
 
     bool EstaTocandoSuperficieBola()
@@ -124,15 +145,17 @@ public class MovimientoGD : MonoBehaviour
         }
         else if (modoBola)
         {
-            // LÓGICA DE BOLA CORREGIDA: Cambia solo si hay intención Y contacto
-            if (intentoCambioGravedadBola && EstaTocandoSuperficieBola())
+            // LÓGICA DE BOLA MEJORADA
+            if (jumpBufferCounter > 0 && EstaTocandoSuperficieBola())
             {
                 rb.gravityScale *= -1;
-                intentoCambioGravedadBola = false; // Consumimos el click
+                jumpBufferCounter = 0; // Consumimos el click
             }
 
+            // Rotación Visual
             float direccionRot = rb.gravityScale > 0 ? -1f : 1f;
-            rb.MoveRotation(rb.rotation + (direccionRot * 600f * Time.fixedDeltaTime));
+            float velocidadRot = 800f; // Más rápido para efecto visual
+            transform.Rotate(Vector3.forward * direccionRot * velocidadRot * Time.fixedDeltaTime);
         }
         else if (modoUFO)
         {
@@ -144,23 +167,33 @@ public class MovimientoGD : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // MUERTE POR LAYER
-        if (((1 << collision.gameObject.layer) & capaMuerte) != 0) Morir();
+        // 1. Prioridad: Portales (Para evitar morir si el portal está en capa incorrecta)
+        if (collision.CompareTag("PortalCohete")) { Debug.Log("Portal Cohete Tocado"); ActivarModoCohete(); return; }
+        if (collision.CompareTag("PortalBola")) { Debug.Log("Portal Bola Tocado"); ActivarModoBola(); return; }
+        if (collision.CompareTag("PortalUfo")) { Debug.Log("Portal UFO Tocado"); ActivarModoUfo(); return; }
+        if (collision.CompareTag("PortalCubo")) { Debug.Log("Portal Cubo Tocado"); ActivarModoCubo(); return; }
 
-
-        // Portales
-        if (collision.CompareTag("PortalCohete")) ActivarModoCohete();
-        if (collision.CompareTag("PortalBola")) ActivarModoBola();
-        if (collision.CompareTag("PortalUfo")) ActivarModoUfo();
-        if (collision.CompareTag("PortalCubo")) ActivarModoCubo();
+        // 2. Muerte por Layer (solo si no es portal)
+        if (((1 << collision.gameObject.layer) & capaMuerte) != 0)
+        {
+             Debug.Log($"Muerte por Trigger con: {collision.gameObject.name} (Layer: {collision.gameObject.layer})");
+             Morir();
+        }
     }
 
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        // 0. FAILSAFE: Si el portal NO es trigger por error, lo atendemos aquí para no morir
+        if (collision.gameObject.CompareTag("PortalCohete")) { ActivarModoCohete(); return; }
+        if (collision.gameObject.CompareTag("PortalBola")) { ActivarModoBola(); return; }
+        if (collision.gameObject.CompareTag("PortalUfo")) { ActivarModoUfo(); return; }
+        if (collision.gameObject.CompareTag("PortalCubo")) { ActivarModoCubo(); return; }
+
         // 1. Muerte si chocamos contra algo en la capa de muerte
         if (((1 << collision.gameObject.layer) & capaMuerte) != 0)
         {
+            Debug.Log($"Muerte por Colisión con: {collision.gameObject.name}");
             Morir();
             return;
         }
@@ -171,7 +204,9 @@ public class MovimientoGD : MonoBehaviour
         {
             if (punto.normal.x < -0.9f)
             {
-                Debug.Log("Colisión frontal detectada.");
+                // Ignorar colisiones frontales con "ground" si se detectan erróneamente en rampas suaves
+                // Pero aquí asumimos muro.
+                Debug.Log($"Colisión frontal detectada con {collision.gameObject.name}");
                 Morir();
                 break;
             }
@@ -181,9 +216,25 @@ public class MovimientoGD : MonoBehaviour
 
     // --- MÉTODOS DE MODOS ---
     void ActivarModoCohete() { DesactivarModos(); modoCohete = true; if (objetoEscoba != null) objetoEscoba.SetActive(true); rb.gravityScale = 2.5f; rb.linearVelocity = new Vector2(velocidad, 0); }
-    void ActivarModoBola() { DesactivarModos(); modoBola = true; rend.enabled = false; if (objetoBola != null) objetoBola.SetActive(true); rb.gravityScale = 4.5f; rb.linearVelocity = new Vector2(velocidad, 0); }
+    void ActivarModoBola() 
+    { 
+        DesactivarModos(); 
+        modoBola = true; 
+        rend.enabled = false; 
+        if (objetoBola != null) objetoBola.SetActive(true); 
+        rb.gravityScale = 4.5f; 
+        rb.linearVelocity = new Vector2(velocidad, 0);
+        
+        // Cambio de Collider
+        if(col) col.enabled = false;
+        if(circleCol) circleCol.enabled = true;
+    }
     void ActivarModoUfo() { DesactivarModos(); modoUFO = true; if (objetoUFO != null) objetoUFO.SetActive(true); rb.gravityScale = 4.0f; rb.linearVelocity = new Vector2(velocidad, 0); }
-    void ActivarModoCubo() { DesactivarModos(); rb.linearVelocity = new Vector2(velocidad, 0); }
+    void ActivarModoCubo() 
+    { 
+        DesactivarModos(); 
+        rb.linearVelocity = new Vector2(velocidad, 0); 
+    }
 
 
     void DesactivarModos()
@@ -195,12 +246,17 @@ public class MovimientoGD : MonoBehaviour
         if (objetoUFO != null) objetoUFO.SetActive(false);
         rb.gravityScale = gravedadEscala;
         transform.rotation = Quaternion.identity;
+        
+        // Restaurar Collider
+        if(col) col.enabled = true;
+        if(circleCol) circleCol.enabled = false;
     }
 
 
     void Morir()
     {
         if (haMuerto) return;
+
         haMuerto = true;
         rb.linearVelocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Static;
