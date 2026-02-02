@@ -158,8 +158,19 @@ public class MovimientoGD : MonoBehaviour
                 audioSource.PlayOneShot(sonidoMoneda);
             }
 
-            // 2. Desactivamos el objeto DESPUÉS de enviar la señal de audio
-            collision.gameObject.SetActive(false);
+            // 2. Comprobamos si tiene la animación de la Snitch
+            AnimacionSnitch animSnitch = collision.GetComponent<AnimacionSnitch>();
+            if (animSnitch != null)
+            {
+                // Si tiene el script de animación, NO lo desactivamos aquí.
+                // El propio script AnimacionSnitch se encargará de ocultarlo/destruirlo.
+                Debug.Log("Snitch detectada: Dejando que AnimacionSnitch maneje la recolección.");
+            }
+            else
+            {
+                // Si es una moneda normal, la desactivamos tal cual (comportamiento original)
+                collision.gameObject.SetActive(false);
+            }
             
             Debug.Log("Moneda recogida y sonido enviado");
             return; 
