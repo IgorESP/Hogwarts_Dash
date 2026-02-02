@@ -10,6 +10,12 @@ public class RecoleccionMoneda : MonoBehaviour
         {
             // Aquí llamarías a tu GameManager para guardar el progreso
             Debug.Log("¡Snitch " + coinID + " recogida!");
+
+            // Si tiene el script AnimacionSnitch, NO destruyas aquí, deja que la animación termine
+            if (GetComponent<AnimacionSnitch>() != null) 
+            {
+                return; 
+            }
             
             // Efecto visual o sonido antes de destruir
             Destroy(gameObject);

@@ -47,6 +47,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: FondoTrasero
+    uniqueID: 1692299519
+    locked: 0
   - name: Cosmeticos
     uniqueID: 150692123
     locked: 0
