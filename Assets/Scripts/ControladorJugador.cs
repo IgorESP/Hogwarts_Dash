@@ -30,13 +30,7 @@ public class MovimientoGD : MonoBehaviour
     public GameObject objetoUFO;      
     public bool modoCohete = false;
     public bool modoBola = false;    
-    public bool modoUFO = false;
-
-    // ============================================
-    // ⬇️ AGREGADO: Sistema de Progreso
-    // ============================================
-    private float distanciaInicial;
-    // ============================================
+    public bool modoUFO = false;      
 
     Rigidbody2D rb;
     BoxCollider2D col;
@@ -56,55 +50,44 @@ public class MovimientoGD : MonoBehaviour
         col = GetComponent<BoxCollider2D>();
         rend = GetComponent<SpriteRenderer>();
 
-        // Si no asignaste el AudioSource en el Inspector, lo busca automáticamente
+        // Si no asignaste el AudioSource en el inspector, intentamos buscarlo
         if (audioSource == null) audioSource = GetComponent<AudioSource>();
 
-        // Crear/Buscar Collider Circular
         circleCol = GetComponent<CircleCollider2D>();
         if (circleCol == null)
         {
             circleCol = gameObject.AddComponent<CircleCollider2D>();
-            float radioCalculado = col.size.y / 2f;
-            circleCol.radius = radioCalculado;
+            if(col != null) 
+            {
+                circleCol.radius = col.size.y / 2f;
+                circleCol.offset = col.offset; 
+            }
+            circleCol.enabled = false; 
         }
-        circleCol.enabled = false;
-        circleCol.isTrigger = true;
+       
+        rb.gravityScale = gravedadEscala;
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
-        // ============================================
-        // ⬇️ AGREGADO: Inicializar sistema de progreso
-        // ============================================
-        distanciaInicial = transform.position.x;
-        if (GameManager.Instance != null) 
-        {
-            GameManager.Instance.InicializarDistanciaMeta(distanciaInicial);
-        }
-        // ============================================
+        DesactivarModos();
     }
 
     void Update()
     {
         if (haMuerto) return;
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
-            pedirSalto = true;
-            jumpBufferCounter = jumpBufferTime;
-        }
-        else
-        {
-            jumpBufferCounter -= Time.deltaTime;
-            if (jumpBufferCounter < 0) pedirSalto = false;
+            if (modoBola) jumpBufferCounter = jumpBufferTime;
+           
+            if (modoUFO)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
+                rb.AddForce(Vector2.up * (fuerzaSalto * 0.6f), ForceMode2D.Impulse);
+            }
         }
 
-        // ============================================
-        // ⬇️ AGREGADO: Actualizar progreso de distancia
-        // ============================================
-        if (GameManager.Instance != null) 
-        {
-            float distanciaRecorrida = transform.position.x - distanciaInicial;
-            GameManager.Instance.ActualizarDistanciaRecorrida(distanciaRecorrida);
-        }
-        // ============================================
+        pedirSalto = Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0);
+        if (jumpBufferCounter > 0) jumpBufferCounter -= Time.deltaTime;
     }
 
     bool EstaTocandoSuperficieBola()
@@ -167,86 +150,39 @@ public class MovimientoGD : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // 1. PORTALES
+        if (collision.CompareTag("Moneda"))
+        {
+            // 1. Primero lanzamos el sonido
+            if (audioSource != null && sonidoMoneda != null) 
+            {
+                audioSource.PlayOneShot(sonidoMoneda);
+            }
+// 2. Comprobamos si tiene la animación de la Snitch
+            AnimacionSnitch animSnitch = collision.GetComponent<AnimacionSnitch>();
+            if (animSnitch != null)
+            {
+                // Si tiene el script de animación, NO lo desactivamos aquí.
+                // El propio script AnimacionSnitch se encargará de ocultarlo/destruirlo.
+                Debug.Log("Snitch detectada: Dejando que AnimacionSnitch maneje la recolección.");
+            }
+            else
+            {
+                // Si es una moneda normal, la desactivamos tal cual (comportamiento original)
+                collision.gameObject.SetActive(false);
+            }
+            
+            Debug.Log("Moneda recogida y sonido enviado");
+            return; 
+        }
+
         if (collision.CompareTag("PortalCohete")) { ActivarModoCohete(); return; }
         if (collision.CompareTag("PortalBola")) { ActivarModoBola(); return; }
         if (collision.CompareTag("PortalUfo")) { ActivarModoUfo(); return; }
         if (collision.CompareTag("PortalCubo")) { ActivarModoCubo(); return; }
 
-        // ============================================
-        // ⬇️ DETECCIÓN DE MONEDA (con sonido)
-        // ============================================
-        if (collision.CompareTag("Moneda"))
-        {
-            // Reproducir sonido
-            if (audioSource != null && sonidoMoneda != null) 
-            {
-                audioSource.PlayOneShot(sonidoMoneda);
-            }
-
-            // Registrar en GameManager
-            if (GameManager.Instance != null) 
-            {
-                GameManager.Instance.IncrementarProgreso(1);
-            }
-
-            // Comprobar si tiene animación de Snitch
-            AnimacionSnitch animSnitch = collision.GetComponent<AnimacionSnitch>();
-            if (animSnitch != null)
-            {
-                Debug.Log("Snitch detectada");
-            }
-            else
-            {
-                collision.gameObject.SetActive(false);
-            }
-            
-            return; 
-        }
-
-        // ============================================
-        // ⬇️ DETECCIÓN DE COIN (alternativa sin sonido)
-        // ============================================
-        if (collision.CompareTag("Coin"))
-        {
-            if (GameManager.Instance != null) 
-            {
-                GameManager.Instance.IncrementarProgreso(1);
-            }
-            Destroy(collision.gameObject);
-            return;
-        }
-        
-        // ============================================
-        // ⬇️ DETECCIÓN DE SNITCH DORADA (bonus)
-        // ============================================
-        if (collision.CompareTag("Snitch"))
-        {
-            if (GameManager.Instance != null) 
-            {
-                GameManager.Instance.RegistrarSnitchRecogida();
-            }
-            Destroy(collision.gameObject);
-            return;
-        }
-
-        // ============================================
-        // ⬇️ META DEL NIVEL (finalizar)
-        // ============================================
-        if (collision.CompareTag("Finish"))
-        {
-            if (GameManager.Instance != null) 
-            {
-                GameManager.Instance.FinalizarNivel();
-            }
-            return;
-        }
-        // ============================================
-
-        // 2. Muerte si colisiona con capa de muerte
         if (((1 << collision.gameObject.layer) & capaMuerte) != 0)
         {
-            Morir();
+             Morir();
         }
     }
 
@@ -257,20 +193,16 @@ public class MovimientoGD : MonoBehaviour
         if (collision.gameObject.CompareTag("PortalUfo")) { ActivarModoUfo(); return; }
         if (collision.gameObject.CompareTag("PortalCubo")) { ActivarModoCubo(); return; }
 
-        // Muerte si chocamos contra algo en la capa de muerte
         if (((1 << collision.gameObject.layer) & capaMuerte) != 0)
         {
-            Debug.Log($"Muerte por Colisión con: {collision.gameObject.name}");
             Morir();
             return;
         }
 
-        // Muerte por choque frontal contra paredes (capaSuelo)
         foreach (ContactPoint2D punto in collision.contacts)
         {
             if (punto.normal.x < -0.9f)
             {
-                Debug.Log($"Colisión frontal detectada con {collision.gameObject.name}");
                 Morir();
                 break;
             }
@@ -278,57 +210,20 @@ public class MovimientoGD : MonoBehaviour
     }
 
     // --- MÉTODOS DE MODOS ---
-    void ActivarModoCohete() 
-    { 
-        DesactivarModos(); 
-        modoCohete = true; 
-        if (objetoEscoba != null) objetoEscoba.SetActive(true); 
-        rb.gravityScale = 2.5f; 
-        rb.linearVelocity = new Vector2(velocidad, 0); 
-    }
-
-    void ActivarModoBola() 
-    { 
-        DesactivarModos(); 
-        modoBola = true; 
-        rend.enabled = false; 
-        if (objetoBola != null) objetoBola.SetActive(true); 
-        rb.gravityScale = 4.5f; 
-        rb.linearVelocity = new Vector2(velocidad, 0);
-        
-        if(col) col.enabled = false;
-        if(circleCol) circleCol.enabled = true;
-    }
-
-    void ActivarModoUfo() 
-    { 
-        DesactivarModos(); 
-        modoUFO = true; 
-        if (objetoUFO != null) objetoUFO.SetActive(true); 
-        rb.gravityScale = 4.0f; 
-        rb.linearVelocity = new Vector2(velocidad, 0); 
-    }
-
-    void ActivarModoCubo() 
-    { 
-        DesactivarModos(); 
-        rb.linearVelocity = new Vector2(velocidad, 0); 
-    }
+    void ActivarModoCohete() { DesactivarModos(); modoCohete = true; if (objetoEscoba != null) objetoEscoba.SetActive(true); rb.gravityScale = 2.5f; rb.linearVelocity = new Vector2(velocidad, 0); }
+    void ActivarModoBola() { DesactivarModos(); modoBola = true; rend.enabled = false; if (objetoBola != null) objetoBola.SetActive(true); rb.gravityScale = 4.5f; rb.linearVelocity = new Vector2(velocidad, 0); if(col) col.enabled = false; if(circleCol) circleCol.enabled = true; }
+    void ActivarModoUfo() { DesactivarModos(); modoUFO = true; if (objetoUFO != null) objetoUFO.SetActive(true); rb.gravityScale = 4.0f; rb.linearVelocity = new Vector2(velocidad, 0); }
+    void ActivarModoCubo() { DesactivarModos(); rb.linearVelocity = new Vector2(velocidad, 0); }
 
     void DesactivarModos()
     {
-        modoCohete = false; 
-        modoBola = false; 
-        modoUFO = false;
+        modoCohete = false; modoBola = false; modoUFO = false;
         rend.enabled = true;
-        
         if (objetoEscoba != null) objetoEscoba.SetActive(false);
         if (objetoBola != null) objetoBola.SetActive(false);
         if (objetoUFO != null) objetoUFO.SetActive(false);
-        
         rb.gravityScale = gravedadEscala;
         transform.rotation = Quaternion.identity;
-        
         if(col) col.enabled = true;
         if(circleCol) circleCol.enabled = false;
     }
@@ -338,12 +233,6 @@ public class MovimientoGD : MonoBehaviour
         if (haMuerto) return;
 
         haMuerto = true;
-
-        // ============================================
-        // ⬇️ AGREGADO: Registrar intento
-        // ============================================
-        if (GameManager.Instance != null) GameManager.Instance.RegistrarIntento();
-        // ============================================
         
         // --- NUEVO: SONIDO DE MUERTE ---
         if (audioSource && sonidoMuerte) audioSource.PlayOneShot(sonidoMuerte);
