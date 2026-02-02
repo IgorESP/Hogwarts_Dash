@@ -149,6 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   apiBaseUrl: https://hogwartsdashapi.onrender.com/docs
+  apiKey: hogwarts_dash_2026_admin
   timeoutSeconds: 15
 --- !u!4 &749029136
 Transform:
@@ -176,6 +177,7 @@ GameObject:
   - component: {fileID: 812025081}
   - component: {fileID: 812025080}
   - component: {fileID: 812025079}
+  - component: {fileID: 812025082}
   m_Layer: 5
   m_Name: UIRegistro
   m_TagString: Untagged
@@ -229,6 +231,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &812025082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 812025078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c9f35c668450644881a97ee8f86561d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2087753405
 GameObject:
   m_ObjectHideFlags: 0

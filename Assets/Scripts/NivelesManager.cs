@@ -10,12 +10,15 @@ public class NivelesManager : MonoBehaviour
     public void SincronizarAccesibilidad(VisualElement root) {
         if (root == null) return;
         // Modo Daltónico
-        if (PlayerPrefs.GetInt("ModoDaltonico", 0) == 1) root.AddToClassList("modo-daltonico-activado");
-        else root.RemoveFromClassList("modo-daltonico-activado");
-        // Tamaño Letra
-        float escala = PlayerPrefs.GetFloat("TamanoLetra", 100f) / 100f;
-        root.Query<Label>().ForEach(l => {
-            l.style.fontSize = 24f * escala; // 24 es un tamaño base sugerido
+         if (PlayerPrefs.GetInt("ModoDaltonico", 0) == 1) {
+            root.AddToClassList("modo-daltonico-activado");
+        }
+
+        // 2. Solo cambia el tamaño si el usuario movió el slider
+        float porcentaje = PlayerPrefs.GetFloat("TamanoLetra", 100f);
+        float escala = porcentaje / 100f;
+        root.Query<Label>().ForEach(label => {
+            label.style.fontSize = 24f * escala; // 24px es el tamaño base
         });
     }
 

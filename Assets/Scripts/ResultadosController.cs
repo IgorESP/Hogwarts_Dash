@@ -56,7 +56,7 @@ public class ResultadosController : MonoBehaviour
         // IMPORTANTE: Ocultar el panel al inicio
         OcultarPanel();
         
-        Debug.Log("ResultadosController inicializado");
+        Debug.Log("✅ ResultadosController inicializado");
     }
     
     // ============================================
@@ -64,7 +64,7 @@ public class ResultadosController : MonoBehaviour
     // ============================================
     public void MostrarResultados(int porcentaje, int intentos, int snitches, bool victoria = true)
     {
-        Debug.Log($"Mostrando resultados: {porcentaje}%, {intentos} intentos, {snitches} snitches");
+        Debug.Log($"📊 Mostrando resultados: {porcentaje}%, {intentos} intentos, {snitches} snitches");
         
         // Pausar el juego
         Time.timeScale = 0f;
@@ -91,8 +91,8 @@ public class ResultadosController : MonoBehaviour
         // Mostrar el panel con animación
         MostrarPanel();
         
-        // Guardar progreso
-        GuardarProgreso();
+        // Guardar progreso en API
+        StartCoroutine(GuardarProgresoEnAPI());
     }
     
     // ============================================
@@ -106,11 +106,11 @@ public class ResultadosController : MonoBehaviour
         estrella3.style.opacity = 0.3f;
         
         // Activar estrellas según porcentaje
-        if (porcentaje >= 33) // 1 estrella
+        if (porcentaje >= 40) // 1 estrella (40% mínimo)
         {
             estrella1.style.opacity = 1f;
         }
-        if (porcentaje >= 66) // 2 estrellas
+        if (porcentaje >= 70) // 2 estrellas
         {
             estrella2.style.opacity = 1f;
         }
@@ -118,6 +118,16 @@ public class ResultadosController : MonoBehaviour
         {
             estrella3.style.opacity = 1f;
         }
+        
+        Debug.Log($"⭐ Estrellas: {CalcularNumeroEstrellas(porcentaje)}/3");
+    }
+    
+    private int CalcularNumeroEstrellas(int porcentaje)
+    {
+        if (porcentaje >= 90) return 3;
+        if (porcentaje >= 70) return 2;
+        if (porcentaje >= 40) return 1;
+        return 0;
     }
     
     // ============================================
@@ -138,11 +148,11 @@ public class ResultadosController : MonoBehaviour
                 }).StartingIn(50);
             }
             
-            Debug.Log("Panel de resultados mostrado");
+            Debug.Log("✅ Panel de resultados mostrado");
         }
         else
         {
-            Debug.LogError("panelResultados es null");
+            Debug.LogError("❌ panelResultados es null");
         }
     }
     
@@ -151,7 +161,7 @@ public class ResultadosController : MonoBehaviour
         if (panelResultados != null)
         {
             panelResultados.style.display = DisplayStyle.None;
-            Debug.Log("Panel de resultados oculto");
+            Debug.Log("✅ Panel de resultados oculto");
         }
     }
     
@@ -160,52 +170,47 @@ public class ResultadosController : MonoBehaviour
     // ============================================
     private void Reintentar()
     {
+        Debug.Log("🔄 Reintentando nivel...");
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     
     private void VolverAlMenu()
     {
+        Debug.Log("🏠 Volviendo al menú de mundos...");
         Time.timeScale = 1f;
-        SceneManager.LoadScene("MenulPrincipalT");
+        SceneManager.LoadScene("SeleccionMundosScene");
     }
     
     // ============================================
-    // Guardar progreso (PlayerPrefs y API)
+    // Guardar progreso en API
     // ============================================
-    private void GuardarProgreso()
-    {
-        string nombreNivel = SceneManager.GetActiveScene().name;
-        
-        // Guardar en PlayerPrefs
-        PlayerPrefs.SetInt(nombreNivel + "_Porcentaje", porcentajeCompletado);
-        PlayerPrefs.SetInt(nombreNivel + "_Intentos", totalIntentos);
-        PlayerPrefs.SetInt(nombreNivel + "_Snitches", snitchesRecogidas);
-        PlayerPrefs.SetInt(nombreNivel + "_Completado", 1);
-        PlayerPrefs.Save();
-        
-        Debug.Log("Progreso guardado localmente: " + nombreNivel);
-        
-        // Guardar en la API
-        StartCoroutine(EnviarProgresoAPI());
-    }
-    
-    private IEnumerator EnviarProgresoAPI()
+    private IEnumerator GuardarProgresoEnAPI()
     {
         string playerId = PlayerPrefs.GetString("player_id", "");
         if (string.IsNullOrEmpty(playerId))
         {
-            Debug.LogWarning("No hay player_id guardado, no se puede enviar a la API");
+            Debug.LogWarning("⚠️ No hay player_id guardado, no se puede enviar a la API");
             yield break;
         }
         
+        int mundoActual = PlayerPrefs.GetInt("MundoSeleccionado", 1);
+        int nivelActual = PlayerPrefs.GetInt("NivelSeleccionado", 1);
+        
+        // Construir URL y datos
         string url = $"https://hogwartsdashapi.onrender.com/api/v1/jugadores/{playerId}/progreso";
         
         string json = $"{{" +
             $"\"player_id\": \"{playerId}\"," +
-            $"\"nivel\": \"{SceneManager.GetActiveScene().name}\"," +
-            $"\"porcentaje\": {porcentajeCompletado}" +
+            $"\"mundo\": {mundoActual}," +
+            $"\"nivel\": {nivelActual}," +
+            $"\"porcentaje\": {porcentajeCompletado}," +
+            $"\"intentos\": {totalIntentos}," +
+            $"\"snitches\": {snitchesRecogidas}," +
+            $"\"estrellas\": {CalcularNumeroEstrellas(porcentajeCompletado)}" +
             $"}}";
+        
+        Debug.Log($"📤 Enviando progreso a API: {json}");
         
         UnityEngine.Networking.UnityWebRequest request = new UnityEngine.Networking.UnityWebRequest(url, "POST");
         byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
@@ -213,15 +218,24 @@ public class ResultadosController : MonoBehaviour
         request.downloadHandler = new UnityEngine.Networking.DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
         
+        // Agregar API Key si está disponible
+        string apiKey = PlayerPrefs.GetString("ApiKey", "hogwarts_dash_2026_admin");
+        if (!string.IsNullOrEmpty(apiKey))
+        {
+            request.SetRequestHeader("X-API-Key", apiKey);
+            request.SetRequestHeader("api-key", apiKey);
+        }
+        
         yield return request.SendWebRequest();
         
         if (request.result == UnityEngine.Networking.UnityWebRequest.Result.Success)
         {
-            Debug.Log("Progreso enviado a la API exitosamente");
+            Debug.Log("✅ Progreso enviado a la API exitosamente");
         }
         else
         {
-            Debug.LogError($"Error al enviar progreso a la API: {request.error}");
+            Debug.LogError($"❌ Error al enviar progreso a la API: {request.error}");
+            Debug.LogError($"❌ Response: {request.downloadHandler.text}");
         }
     }
 }

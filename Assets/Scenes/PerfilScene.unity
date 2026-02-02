@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 1616321770}
   - component: {fileID: 1616321769}
   - component: {fileID: 1616321771}
+  - component: {fileID: 1616321772}
   m_Layer: 5
   m_Name: PerfilUI
   m_TagString: Untagged
@@ -181,6 +182,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 455ea8fb99453d248b9d79d4c1940e86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1616321772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1616321768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c9f35c668450644881a97ee8f86561d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2063595251

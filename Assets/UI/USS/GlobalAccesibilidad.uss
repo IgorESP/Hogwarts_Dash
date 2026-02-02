@@ -1,80 +1,182 @@
-/* ============================================================
-   ARCHIVO: GlobalAccesibilidad.uss
-   Este archivo debe estar vinculado en el UIDocument de 
-   TODAS las escenas (Login, Registro, Menu, Ajustes).
-   ============================================================ */
+/* ============================================
+   SISTEMA DE ACCESIBILIDAD GLOBAL
+   ============================================ */
 
-/* ------------------------------------------------------------
-   1. MODO DALTÓNICO (ALTO CONTRASTE)
-   Se activa añadiendo la clase 'modo-daltonico-activado' al root
-   ------------------------------------------------------------ */
-
-/* Colores de texto: De Oro/Amarillo a Blanco Puro */
-.modo-daltonico-activado Label {
-    color: rgb(255, 255, 255) !important;
-    -unity-text-outline-color: rgb(0, 0, 0) !important;
-    -unity-text-outline-width: 1px;
+/* --------------------------------------------
+   TAMAÑO DE LETRA BASE
+   -------------------------------------------- */
+:root {
+    font-size: 108%; /* Por defecto 100% */
 }
 
-/* Paneles y Secciones: De Marrón a Azul Intenso */
-.modo-daltonico-activado .seccion-opciones,
-.modo-daltonico-activado #PanelLogin,
-.modo-daltonico-activado #PanelRegistro,
-.modo-daltonico-activado .panel-ui {
-    border-color: rgb(0, 150, 255) !important; /* Azul Eléctrico */
-    background-color: rgb(15, 15, 20) !important; /* Fondo casi negro */
-    border-width: 5px !important;
+/* --------------------------------------------
+   MODO DALTÓNICO (Deuteranopia/Protanopia)
+   Colores: Azul #0000FF y Cian #00FFFF
+   -------------------------------------------- */
+
+/* === LOGIN Y REGISTRO === */
+.modo-daltonico .error-label {
+    color: rgb(0, 150, 255) !important; /* Azul claro para errores */
 }
 
-/* Botones: De Marrón/Verde a Azul y Cian */
-.modo-daltonico-activado Button,
-.modo-daltonico-activado .boton-opcion,
-.modo-daltonico-activado .boton-login {
-    background-color: rgb(0, 90, 210) !important;
-    border-color: rgb(255, 255, 255) !important;
-    color: rgb(255, 255, 255) !important;
+.modo-daltonico .btn-login,
+.modo-daltonico .btn-registro {
+    background-color: rgb(0, 100, 200) !important;
+    border-color: rgb(0, 200, 255) !important;
 }
 
-.modo-daltonico-activado Button:hover,
-.modo-daltonico-activado .boton-login:hover {
-    background-color: rgb(0, 180, 255) !important;
-    scale: 1.05;
+.modo-daltonico .btn-login:hover,
+.modo-daltonico .btn-registro:hover {
+    background-color: rgb(0, 150, 255) !important;
 }
 
-/* Títulos: De Dorado a Cian brillante */
-.modo-daltonico-activado #Titulo, 
-.modo-daltonico-activated .titulo-escena {
-    color: rgb(0, 255, 255) !important; 
-    -unity-text-outline-color: rgb(0, 0, 0) !important;
-}
-
-/* Campos de texto (Input) */
-.modo-daltonico-activado .unity-text-field__input {
-    background-color: rgb(255, 255, 255) !important;
-    color: rgb(0, 0, 0) !important;
+.modo-daltonico .input-field {
     border-color: rgb(0, 150, 255) !important;
 }
 
-/* Sliders y Toggles */
-.modo-daltonico-activado .unity-base-slider__dragger,
-.modo-daltonico-activado .unity-toggle__checkmark {
-    background-color: rgb(0, 255, 255) !important;
+.modo-daltonico .input-field:focus {
+    border-color: rgb(0, 255, 255) !important;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
 }
 
-
-/* ------------------------------------------------------------
-   2. FIX DE TAMAÑO DE TEXTO (ACCESIBILIDAD)
-   Ayuda a que los textos grandes no desaparezcan
-   ------------------------------------------------------------ */
-
-/* Clase para permitir que el texto crezca y se ajuste */
-.texto-accesible Label {
-    white-space: normal !important; /* Permite saltos de línea */
-    overflow: visible !important;   /* No corta el texto */
-    -unity-text-align: middle-center;
+/* === SELECCIÓN DE CASAS === */
+.modo-daltonico .casa-card {
+    border-color: rgb(0, 100, 200) !important;
 }
 
-/* Ajuste específico para sliders cuando el texto es grande */
-.texto-accesible .unity-base-slider__label {
-    min-width: 150px;
+.modo-daltonico .casa-card:hover {
+    border-color: rgb(0, 200, 255) !important;
+    box-shadow: 0 0 20px rgba(0, 200, 255, 0.6);
+}
+
+.modo-daltonico .casa-selected {
+    border-color: rgb(0, 255, 255) !important;
+    background-color: rgba(0, 100, 200, 0.3) !important;
+}
+
+/* === SELECCIÓN DE MUNDOS === */
+.modo-daltonico .mundo-card {
+    background-color: rgba(0, 50, 100, 0.8) !important;
+    border-color: rgb(0, 150, 255) !important;
+}
+
+.modo-daltonico .mundo-card:hover {
+    border-color: rgb(0, 255, 255) !important;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.7);
+}
+
+.modo-daltonico .mundo-bloqueado {
+    background-color: rgba(50, 50, 100, 0.5) !important;
+    border-color: rgb(100, 100, 150) !important;
+}
+
+/* === AJUSTES === */
+.modo-daltonico .slider {
+    background-color: rgba(0, 100, 200, 0.3) !important;
+}
+
+.modo-daltonico .unity-slider__dragger {
+    background-color: rgb(0, 200, 255) !important;
+    border-color: rgb(0, 255, 255) !important;
+}
+
+.modo-daltonico .toggle-checkmark {
+    background-color: rgb(0, 200, 255) !important;
+}
+
+/* === RANKING Y CRÉDITOS === */
+.modo-daltonico .ranking-panel,
+.modo-daltonico .creditos-panel {
+    background-color: rgba(0, 30, 80, 0.9) !important;
+    border-color: rgb(0, 150, 255) !important;
+}
+
+.modo-daltonico .ranking-item:hover {
+    background-color: rgba(0, 100, 200, 0.4) !important;
+}
+
+/* === MENÚ PRINCIPAL === */
+.modo-daltonico .menu-button {
+    background-color: rgb(0, 80, 160) !important;
+    border-color: rgb(0, 150, 255) !important;
+}
+
+.modo-daltonico .menu-button:hover {
+    background-color: rgb(0, 120, 200) !important;
+    border-color: rgb(0, 255, 255) !important;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+}
+
+/* === MENÚ DE PAUSA === */
+.modo-daltonico .pausa-panel {
+    background-color: rgba(0, 20, 60, 0.95) !important;
+    border-color: rgb(0, 200, 255) !important;
+}
+
+.modo-daltonico .pausa-button {
+    background-color: rgb(0, 100, 200) !important;
+}
+
+.modo-daltonico .pausa-button:hover {
+    background-color: rgb(0, 150, 255) !important;
+}
+
+/* === INPUTS Y TEXTFIELDS === */
+.modo-daltonico .unity-text-field__input {
+    border-color: rgb(0, 150, 255) !important;
+}
+
+.modo-daltonico .unity-text-field__input:focus {
+    border-color: rgb(0, 255, 255) !important;
+}
+
+.modo-daltonico TextField:focus {
+    border-color: rgb(0, 255, 255) !important;
+}
+/* ============================================
+   TEXTO EN NEGRO OSCURO PARA INPUTS
+   ============================================ */
+
+/* === TEXTO QUE ESCRIBE EL USUARIO === */
+.unity-text-field__input {
+    color: rgb(20, 20, 20) !important; /* Negro oscuro */
+    background-color: rgb(240, 240, 240) !important; /* Fondo gris claro */
+    font-size: 18px !important;
+    -unity-font-style: normal !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    border-radius: 5px !important;
+}
+
+/* === PLACEHOLDER (texto de ayuda) === */
+.unity-text-field__input::placeholder {
+    color: rgba(100, 100, 100, 0.7) !important; /* Gris medio */
+    font-size: 16px !important;
+}
+
+/* === CUANDO EL USUARIO ESTÁ ESCRIBIENDO === */
+.unity-text-field__input:focus {
+    color: rgb(0, 0, 0) !important; /* Negro puro al escribir */
+    background-color: rgb(255, 255, 255) !important; /* Fondo blanco al escribir */
+    border-color: rgb(139, 69, 19) !important; /* Borde dorado/marrón estilo HP */
+}
+
+/* === CAMPOS DE CONTRASEÑA === */
+.unity-text-field__input[type="password"] {
+    color: rgb(20, 20, 20) !important;
+    font-size: 18px !important;
+}
+
+/* === MODO DALTÓNICO - Mantener negro pero con fondo azul claro === */
+.modo-daltonico .unity-text-field__input {
+    color: rgb(0, 0, 0) !important; /* Negro */
+    background-color: rgb(200, 230, 255) !important; /* Fondo azul muy claro */
+}
+
+.modo-daltonico .unity-text-field__input:focus {
+    color: rgb(0, 0, 0) !important;
+    background-color: rgb(255, 255, 255) !important;
+    border-color: rgb(0, 255, 255) !important; /* Borde cian */
 }

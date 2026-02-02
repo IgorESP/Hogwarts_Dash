@@ -25,7 +25,14 @@ public class MovimientoGD : MonoBehaviour
     public GameObject objetoUFO;      
     public bool modoCohete = false;
     public bool modoBola = false;    
-    public bool modoUFO = false;      
+    public bool modoUFO = false;
+
+    // ============================================
+    // ⬇️ AGREGADO: Sistema de Progreso
+    // ============================================
+    [Header("Sistema de Progreso")]
+    private float distanciaInicial;
+    // ============================================
 
     Rigidbody2D rb;
     BoxCollider2D col;
@@ -70,6 +77,16 @@ public class MovimientoGD : MonoBehaviour
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
         DesactivarModos();
+
+        // ============================================
+        // ⬇️ AGREGADO: Inicializar sistema de progreso
+        // ============================================
+        distanciaInicial = transform.position.x;
+       if (GameManager.Instance != null) 
+        {
+            GameManager.Instance.objetivosTotales = 100; // Ajusta según tu nivel
+        }
+        // ============================================
     }
 
     void Update()
@@ -96,6 +113,16 @@ public class MovimientoGD : MonoBehaviour
 
         // Decrementar buffer
         if (jumpBufferCounter > 0) jumpBufferCounter -= Time.deltaTime;
+
+        // ============================================
+        // ⬇️ AGREGADO: Actualizar progreso en tiempo real
+        // ============================================
+        float distanciaRecorrida = transform.position.x - distanciaInicial;
+        if (GameManager.Instance != null) 
+        {
+            GameManager.Instance.ActualizarProgreso((int)distanciaRecorrida);
+        }
+        // ============================================
     }
 
     bool EstaTocandoSuperficieBola()
@@ -172,6 +199,33 @@ public class MovimientoGD : MonoBehaviour
         if (collision.CompareTag("PortalBola")) { Debug.Log("Portal Bola Tocado"); ActivarModoBola(); return; }
         if (collision.CompareTag("PortalUfo")) { Debug.Log("Portal UFO Tocado"); ActivarModoUfo(); return; }
         if (collision.CompareTag("PortalCubo")) { Debug.Log("Portal Cubo Tocado"); ActivarModoCubo(); return; }
+
+        // ============================================
+        // ⬇️ AGREGADO: Coleccionables y meta
+        // ============================================
+        // Recoger monedas
+        if (collision.CompareTag("Coin"))
+        {
+            if (GameManager.Instance != null) GameManager.Instance.IncrementarProgreso(1);
+            Destroy(collision.gameObject);
+            return;
+        }
+        
+        // Recoger Snitch dorada (bonus)
+        if (collision.CompareTag("Snitch"))
+        {
+            if (GameManager.Instance != null) GameManager.Instance.RegistrarSnitchRecogida();
+            Destroy(collision.gameObject);
+            return;
+        }
+
+        // Meta del nivel
+        if (collision.CompareTag("Finish"))
+        {
+            if (GameManager.Instance != null) GameManager.Instance.FinalizarNivel();
+            return;
+        }
+        // ============================================
 
         // 2. Muerte por Layer (solo si no es portal)
         if (((1 << collision.gameObject.layer) & capaMuerte) != 0)
@@ -261,6 +315,11 @@ public class MovimientoGD : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Static;
 
+        // ============================================
+        // ⬇️ AGREGADO: Registrar intento (muerte)
+        // ============================================
+        if (GameManager.Instance != null) GameManager.Instance.RegistrarIntento();
+        // ============================================
 
         if(objetoEscoba != null) objetoEscoba.SetActive(false);
         if(objetoBola != null) objetoBola.SetActive(false);

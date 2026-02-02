@@ -1,187 +1,302 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic;
 
+/// <summary>
+/// Controlador de la pantalla de ajustes
+/// Gestiona audio, accesibilidad, ranking y créditos
+/// </summary>
 public class AjustesController : MonoBehaviour
 {
+    // ====================================
+    // REFERENCIAS UI
+    // ====================================
     private VisualElement root;
     
-    // Referencias UI
-    private Slider sliderMusica, sliderSFX, sliderTamanoLetra;
-    private Label labelMusica, labelSFX, labelTamanoLetra;
+    // Audio
+    private Slider sliderMusica, sliderSFX;
+    private Label labelMusica, labelSFX;
+    
+    // Accesibilidad
+    private Slider sliderTamanoLetra;
+    private Label labelTamanoLetra;
     private Toggle toggleDaltonicos;
+    
+    // Botones
     private Button botonRanking, botonAtras, botonCerrarSesion, botonCreditos, botonPerfil;
 
-    // --- PANEL DE RANKING ---
+    // Ranking
     private VisualElement panelRankingOverlay;
     private ScrollView listaRanking;
     private Button botonCerrarRanking;
     private Label mensajeVacio;
 
-    // --- PANEL DE CRÉDITOS ---
+    // Créditos
     private VisualElement panelCreditosOverlay;
     private Button botonCerrarCreditos;
 
-    void Start() {
+    // ====================================
+    // INICIALIZACIÓN
+    // ====================================
+    void Start() 
+    {
         var uiDoc = GetComponent<UIDocument>();
         root = uiDoc.rootVisualElement;
 
-        // --- 1. CAPTURAR ELEMENTOS ---
+        ObtenerReferencias();
+        RegistrarEventos();
+        CargarConfiguracion();
+    }
+
+    // ====================================
+    // OBTENER REFERENCIAS
+    // ====================================
+    private void ObtenerReferencias()
+    {
+        // Audio
         sliderMusica = root.Q<Slider>("Slider_Musica");
         sliderSFX = root.Q<Slider>("Slider_SFX");
         labelMusica = root.Q<Label>("Label_Musica");
         labelSFX = root.Q<Label>("Label_SFX");
 
+        // Accesibilidad
         sliderTamanoLetra = root.Q<Slider>("Slider_TamanoLetra");
         labelTamanoLetra = root.Q<Label>("Label_TamanoLetra");
         toggleDaltonicos = root.Q<Toggle>("Toggle_Daltonicos");
 
+        // Botones
         botonRanking = root.Q<Button>("Boton_Ranking");
         botonAtras = root.Q<Button>("Boton_Atras");
         botonCerrarSesion = root.Q<Button>("Boton_CerrarSesion");
         botonCreditos = root.Q<Button>("Boton_Creditos");
         botonPerfil = root.Q<Button>("Boton_Perfil");
 
+        // Ranking
         panelRankingOverlay = root.Q<VisualElement>("PanelRankingOverlay");
         listaRanking = root.Q<ScrollView>("ListaRanking");
         botonCerrarRanking = root.Q<Button>("Boton_CerrarRanking");
         mensajeVacio = root.Q<Label>("MensajeVacio");
 
+        // Créditos
         panelCreditosOverlay = root.Q<VisualElement>("PanelCreditosOverlay");
         botonCerrarCreditos = root.Q<Button>("Boton_CerrarCreditos");
-
-        // --- 2. REGISTRAR EVENTOS (TODO SE APLICA AUTOMÁTICAMENTE) ---
-        if (sliderMusica != null) sliderMusica.RegisterValueChangedCallback(OnMusicaChanged);
-        if (sliderSFX != null) sliderSFX.RegisterValueChangedCallback(OnSFXChanged);
-        if (sliderTamanoLetra != null) sliderTamanoLetra.RegisterValueChangedCallback(OnTamanoLetraChanged);
-        if (toggleDaltonicos != null) toggleDaltonicos.RegisterValueChangedCallback(OnDaltonicosChanged);
-
-        if (botonRanking != null) botonRanking.clicked += OnRankingClick;
-        if (botonCreditos != null) botonCreditos.clicked += OnCreditosClick;
-        if (botonAtras != null) botonAtras.clicked += () => SceneManager.LoadScene("MenuPrincipalT");
-        if (botonPerfil != null) botonPerfil.clicked += () => SceneManager.LoadScene("PerfilScene");
-        if (botonCerrarSesion != null) botonCerrarSesion.clicked += OnCerrarSesionClick;
-        if (botonCerrarRanking != null) botonCerrarRanking.clicked += CerrarRanking;
-        if (botonCerrarCreditos != null) botonCerrarCreditos.clicked += CerrarCreditos;
-
-        // --- 3. CARGAR CONFIGURACIÓN ---
-        CargarConfiguracion();
     }
 
     // ====================================
-    // LÓGICA DE AUDIO
+    // REGISTRAR EVENTOS
     // ====================================
-    private void OnMusicaChanged(ChangeEvent<float> evt) {
+    private void RegistrarEventos()
+    {
+        // Audio
+        if (sliderMusica != null) 
+            sliderMusica.RegisterValueChangedCallback(OnMusicaChanged);
+        if (sliderSFX != null) 
+            sliderSFX.RegisterValueChangedCallback(OnSFXChanged);
+
+        // Accesibilidad
+        if (sliderTamanoLetra != null) 
+            sliderTamanoLetra.RegisterValueChangedCallback(OnTamanoLetraChanged);
+        if (toggleDaltonicos != null) 
+            toggleDaltonicos.RegisterValueChangedCallback(OnDaltonicosChanged);
+
+        // Botones
+        if (botonRanking != null) 
+            botonRanking.clicked += OnRankingClick;
+        if (botonCreditos != null) 
+            botonCreditos.clicked += OnCreditosClick;
+        if (botonAtras != null) 
+            botonAtras.clicked += () => SceneManager.LoadScene("MenuPrincipalT");
+        if (botonPerfil != null) 
+            botonPerfil.clicked += () => SceneManager.LoadScene("PerfilScene");
+        if (botonCerrarSesion != null) 
+            botonCerrarSesion.clicked += OnCerrarSesionClick;
+        if (botonCerrarRanking != null) 
+            botonCerrarRanking.clicked += CerrarRanking;
+        if (botonCerrarCreditos != null) 
+            botonCerrarCreditos.clicked += CerrarCreditos;
+    }
+
+    // ====================================
+    // AUDIO
+    // ====================================
+    
+    private void OnMusicaChanged(ChangeEvent<float> evt) 
+    {
         float vol = evt.newValue;
-        if (labelMusica != null) labelMusica.text = $"{vol:F0}%";
-        PlayerPrefs.SetFloat("VolumenMusica", vol);
-        if (AudioManager.Instance != null) AudioManager.Instance.SetVolumenMusica(vol / 100f);
-    }
-
-    private void OnSFXChanged(ChangeEvent<float> evt) {
-        float vol = evt.newValue;
-        if (labelSFX != null) labelSFX.text = $"{vol:F0}%";
-        PlayerPrefs.SetFloat("VolumenSFX", vol);
-        if (AudioManager.Instance != null) AudioManager.Instance.SetVolumenSFX(vol / 100f);
-    }
-
-    // ====================================
-    // LÓGICA DE ACCESIBILIDAD (SE APLICA AUTOMÁTICAMENTE)
-    // ====================================
-    private void OnTamanoLetraChanged(ChangeEvent<float> evt) {
-        float tam = evt.newValue;
-        if (labelTamanoLetra != null) labelTamanoLetra.text = $"{tam:F0}%";
         
-        // Guardar y aplicar inmediatamente
+        if (labelMusica != null) 
+            labelMusica.text = vol.ToString("F0") + "%";
+        
+        PlayerPrefs.SetFloat("VolumenMusica", vol);
+        PlayerPrefs.Save();
+        
+        if (AudioManager.Instance != null) 
+            AudioManager.Instance.SetVolumenMusica(vol / 100f);
+    }
+
+    private void OnSFXChanged(ChangeEvent<float> evt) 
+    {
+        float vol = evt.newValue;
+        
+        if (labelSFX != null) 
+            labelSFX.text = vol.ToString("F0") + "%";
+        
+        PlayerPrefs.SetFloat("VolumenSFX", vol);
+        PlayerPrefs.Save();
+        
+        if (AudioManager.Instance != null) 
+            AudioManager.Instance.SetVolumenSFX(vol / 100f);
+    }
+
+    // ====================================
+    // ACCESIBILIDAD
+    // ====================================
+    
+    private void OnTamanoLetraChanged(ChangeEvent<float> evt) 
+    {
+        float tam = evt.newValue;
+        
+        if (labelTamanoLetra != null) 
+            labelTamanoLetra.text = tam.ToString("F0") + "%";
+        
         PlayerPrefs.SetFloat("TamanoLetra", tam);
         PlayerPrefs.Save();
+        
         AplicarTamanoLetraUI(tam);
     }
 
-    private void AplicarTamanoLetraUI(float porcentaje) {
+    private void AplicarTamanoLetraUI(float porcentaje) 
+    {
         float escala = porcentaje / 100f;
-        var todosLosLabels = root.Query<Label>().ToList();
-        foreach (var label in todosLosLabels) {
-            // Guardamos el tamaño original la primera vez
-            if (!PlayerPrefs.HasKey($"BaseSize_{label.name}_{label.text.Length}")) {
-                float baseSize = label.resolvedStyle.fontSize;
-                if (baseSize > 0) PlayerPrefs.SetFloat($"BaseSize_{label.name}_{label.text.Length}", baseSize);
-                else continue;
+        
+        root.Query<Label>().ForEach(label => {
+            if (label.name != "Label_Musica" && 
+                label.name != "Label_SFX" && 
+                label.name != "Label_TamanoLetra")
+            {
+                float baseSize = DeterminarTamanoBase(label.text);
+                label.style.fontSize = baseSize * escala;
             }
-            float originalSize = PlayerPrefs.GetFloat($"BaseSize_{label.name}_{label.text.Length}");
-            label.style.fontSize = originalSize * escala;
-        }
+        });
+        
+        Debug.Log("📏 Tamaño de letra ajustado a " + porcentaje + "%");
     }
 
-    private void OnDaltonicosChanged(ChangeEvent<bool> evt) {
+    private float DeterminarTamanoBase(string texto)
+    {
+        if (string.IsNullOrEmpty(texto))
+            return 22f;
+
+        if (texto.Contains("OPCIONES") || texto.Contains("HOGWARTS"))
+            return 50f;
+
+        if (texto.Contains("AUDIO") || texto.Contains("ACCESIBILIDAD") ||
+            texto.Contains("CRÉDITOS") || texto.Contains("RANKING") ||
+            texto.Contains("SELECCIONA") || texto.Contains("SELECCIÓN"))
+            return 32f;
+
+        if (texto.Contains("ENTRAR") || texto.Contains("VER PERFIL") ||
+            texto.Contains("CERRAR SESIÓN") || texto.Contains("CREAR CUENTA") ||
+            texto.Contains("REGISTRARSE"))
+            return 26f;
+
+        return 22f;
+    }
+
+    private void OnDaltonicosChanged(ChangeEvent<bool> evt) 
+    {
         bool activado = evt.newValue;
         
-        // Guardar y aplicar inmediatamente
         PlayerPrefs.SetInt("ModoDaltonico", activado ? 1 : 0);
         PlayerPrefs.Save();
+        
         AplicarModoDaltonico(activado);
     }
 
-    private void AplicarModoDaltonico(bool activado) {
-        if (activado) root.AddToClassList("modo-daltonico-activado");
-        else root.RemoveFromClassList("modo-daltonico-activado");
-        
-        Debug.Log("🎨 Modo daltónico: " + (activado ? "Activado" : "Desactivado"));
+    private void AplicarModoDaltonico(bool activado) 
+    {
+        if (activado) 
+        {
+            root.AddToClassList("modo-daltonico-activado");
+            Debug.Log("🎨 Modo daltónico ACTIVADO");
+        }
+        else 
+        {
+            root.RemoveFromClassList("modo-daltonico-activado");
+            Debug.Log("🎨 Modo daltónico DESACTIVADO");
+        }
     }
 
     // ====================================
-    // LÓGICA DE RANKING (API)
+    // RANKING
     // ====================================
-    private void OnRankingClick() {
-        if (ApiManager.Instance == null) {
-            Debug.LogError("⚠️ No existe ApiManager. Empieza desde el Login.");
+    
+    private void OnRankingClick() 
+    {
+        if (ApiManager.Instance == null) 
+        {
+            Debug.LogError("⚠️ ApiManager no encontrado");
             return;
         }
 
-        Debug.Log("📊 Consultando Ranking...");
+        Debug.Log("📊 Abriendo ranking...");
         MostrarPanelRanking();
         
         ApiManager.Instance.ObtenerRanking((exito, lista) => {
-            if (exito && lista != null && lista.Length > 0) {
-                Debug.Log($"✅ Ranking recibido. Total: {lista.Length}");
+            if (exito && lista != null && lista.Length > 0) 
+            {
+                Debug.Log("✅ Ranking recibido: " + lista.Length + " jugadores");
                 MostrarRankingEnUI(lista);
-            } else {
-                Debug.LogError("❌ Error al obtener ranking o ranking vacío");
+            } 
+            else 
+            {
+                Debug.LogError("❌ Error al obtener ranking");
                 MostrarMensajeVacio();
             }
         });
     }
 
-    private void MostrarPanelRanking() {
-        if (panelRankingOverlay != null) {
+    private void MostrarPanelRanking() 
+    {
+        if (panelRankingOverlay != null) 
+        {
             panelRankingOverlay.style.display = DisplayStyle.Flex;
         }
     }
 
-    private void CerrarRanking() {
-        if (panelRankingOverlay != null) {
+    private void CerrarRanking() 
+    {
+        if (panelRankingOverlay != null) 
+        {
             panelRankingOverlay.style.display = DisplayStyle.None;
         }
-        if (listaRanking != null) {
+        
+        if (listaRanking != null) 
+        {
             listaRanking.Clear();
         }
     }
 
-    private void MostrarRankingEnUI(ApiManager.RankingEntry[] ranking) {
+    private void MostrarRankingEnUI(ApiManager.RankingEntry[] ranking) 
+    {
         if (listaRanking == null) return;
         
         listaRanking.Clear();
-        if (mensajeVacio != null) mensajeVacio.style.display = DisplayStyle.None;
+        
+        if (mensajeVacio != null) 
+            mensajeVacio.style.display = DisplayStyle.None;
 
-        for (int i = 0; i < ranking.Length; i++) {
+        for (int i = 0; i < ranking.Length; i++) 
+        {
             var entrada = ranking[i];
             
             var fila = new VisualElement();
             fila.style.flexDirection = FlexDirection.Row;
             fila.style.justifyContent = Justify.SpaceBetween;
             fila.style.alignItems = Align.Center;
-            fila.style.backgroundColor = i % 2 == 0 ? new Color(0.1f, 0.1f, 0.1f, 0.5f) : new Color(0.15f, 0.15f, 0.15f, 0.5f);
+            fila.style.backgroundColor = i % 2 == 0 ? 
+                new Color(0.1f, 0.1f, 0.1f, 0.5f) : 
+                new Color(0.15f, 0.15f, 0.15f, 0.5f);
             fila.style.paddingTop = 12;
             fila.style.paddingBottom = 12;
             fila.style.paddingLeft = 15;
@@ -194,7 +309,8 @@ public class AjustesController : MonoBehaviour
             fila.style.borderBottomRightRadius = 8;
             fila.style.marginBottom = 8;
 
-            string medalla = i == 0 ? "🥇" : i == 1 ? "🥈" : i == 2 ? "🥉" : $"{i + 1}.";
+            string medalla = i == 0 ? "🥇" : i == 1 ? "🥈" : i == 2 ? "🥉" : (i + 1) + ".";
+            
             var labelPosicion = new Label(medalla);
             labelPosicion.style.fontSize = 24;
             labelPosicion.style.color = Color.white;
@@ -207,7 +323,8 @@ public class AjustesController : MonoBehaviour
             labelNombre.style.flexGrow = 1;
             labelNombre.style.unityTextAlign = TextAnchor.MiddleLeft;
 
-            var labelPuntos = new Label($"{entrada.puntos} pts");
+            // ✅ CORREGIDO: Cambiado de .puntos a .puntuacion
+            var labelPuntos = new Label(entrada.puntuacion + " pts");
             labelPuntos.style.fontSize = 22;
             labelPuntos.style.color = new Color(1f, 0.84f, 0f);
             labelPuntos.style.unityFontStyleAndWeight = FontStyle.Bold;
@@ -219,24 +336,35 @@ public class AjustesController : MonoBehaviour
         }
     }
 
-    private void MostrarMensajeVacio() {
-        if (listaRanking != null) listaRanking.Clear();
-        if (mensajeVacio != null) mensajeVacio.style.display = DisplayStyle.Flex;
+    private void MostrarMensajeVacio() 
+    {
+        if (listaRanking != null) 
+            listaRanking.Clear();
+        
+        if (mensajeVacio != null) 
+            mensajeVacio.style.display = DisplayStyle.Flex;
     }
 
     // ====================================
-    // LÓGICA DE CRÉDITOS
+    // CRÉDITOS
     // ====================================
-    private void OnCreditosClick() {
-        Debug.Log("🎬 Abriendo Créditos...");
-        if (panelCreditosOverlay != null) {
+    
+    private void OnCreditosClick() 
+    {
+        Debug.Log("🎬 Abriendo créditos...");
+        
+        if (panelCreditosOverlay != null) 
+        {
             panelCreditosOverlay.style.display = DisplayStyle.Flex;
         }
     }
 
-    private void CerrarCreditos() {
-        Debug.Log("❌ Cerrando Créditos...");
-        if (panelCreditosOverlay != null) {
+    private void CerrarCreditos() 
+    {
+        Debug.Log("❌ Cerrando créditos...");
+        
+        if (panelCreditosOverlay != null) 
+        {
             panelCreditosOverlay.style.display = DisplayStyle.None;
         }
     }
@@ -244,34 +372,67 @@ public class AjustesController : MonoBehaviour
     // ====================================
     // CARGAR CONFIGURACIÓN
     // ====================================
-    private void CargarConfiguracion() {
+    
+    private void CargarConfiguracion() 
+    {
         // Audio
         float vMus = PlayerPrefs.GetFloat("VolumenMusica", 75f);
-        if (sliderMusica != null) sliderMusica.value = vMus;
+        if (sliderMusica != null) 
+        {
+            sliderMusica.value = vMus;
+            if (labelMusica != null) 
+                labelMusica.text = vMus.ToString("F0") + "%";
+        }
 
         float vSFX = PlayerPrefs.GetFloat("VolumenSFX", 75f);
-        if (sliderSFX != null) sliderSFX.value = vSFX;
+        if (sliderSFX != null) 
+        {
+            sliderSFX.value = vSFX;
+            if (labelSFX != null) 
+                labelSFX.text = vSFX.ToString("F0") + "%";
+        }
 
-        // Tamaño Letra - VALOR POR DEFECTO: 100%
+        // Tamaño de letra - VALOR POR DEFECTO: 100%
         float tLet = PlayerPrefs.GetFloat("TamanoLetra", 100f);
-        if (sliderTamanoLetra != null) sliderTamanoLetra.value = tLet;
-        Invoke("DelayedFontScale", 0.1f);
+        if (sliderTamanoLetra != null) 
+        {
+            sliderTamanoLetra.value = tLet;
+            if (labelTamanoLetra != null) 
+                labelTamanoLetra.text = tLet.ToString("F0") + "%";
+        }
+        
+        Invoke("AplicarTamanoInicial", 0.1f);
 
-        // Daltonismo - VALOR POR DEFECTO: Desactivado (0)
+        // Modo daltónico - VALOR POR DEFECTO: 0 (DESACTIVADO)
         bool mDal = PlayerPrefs.GetInt("ModoDaltonico", 0) == 1;
-        if (toggleDaltonicos != null) toggleDaltonicos.value = mDal;
+        if (toggleDaltonicos != null) 
+        {
+            toggleDaltonicos.value = mDal;
+        }
         AplicarModoDaltonico(mDal);
+        
+        Debug.Log("✅ Configuración cargada - Daltónico: " + mDal + ", Letra: " + tLet + "%");
     }
 
-    private void DelayedFontScale() {
-        AplicarTamanoLetraUI(PlayerPrefs.GetFloat("TamanoLetra", 100f));
+    private void AplicarTamanoInicial() 
+    {
+        float tam = PlayerPrefs.GetFloat("TamanoLetra", 100f);
+        AplicarTamanoLetraUI(tam);
     }
 
-    private void OnCerrarSesionClick() {
-        PlayerPrefs.DeleteKey("UsuarioActivo");
-        PlayerPrefs.DeleteKey("UserId");
-        PlayerPrefs.DeleteKey("Username");
+    // ====================================
+    // CERRAR SESIÓN
+    // ====================================
+    
+    private void OnCerrarSesionClick() 
+    {
+        Debug.Log("🚪 Cerrando sesión...");
+        
+        PlayerPrefs.DeleteKey("player_id");
+        PlayerPrefs.DeleteKey("username");
+        PlayerPrefs.DeleteKey("nombre");
         PlayerPrefs.Save();
+        
         SceneManager.LoadScene("LoginScene");
     }
 }
