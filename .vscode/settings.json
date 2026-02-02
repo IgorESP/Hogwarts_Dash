@@ -67,5 +67,6 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "Hogwarts_Dash.slnx"
+    "dotnet.defaultSolution": "Hogwarts_Dash.slnx",
+    "DockerRun.DisableDockerrc": true
 }

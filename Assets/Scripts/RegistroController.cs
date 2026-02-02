@@ -1,191 +1,55 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
-using System.Linq;
+using System.Text.RegularExpressions;
 
 public class RegistroUIController : MonoBehaviour
 {
-    private UIDocument uiDocument;
     private VisualElement root;
-    
-    // Campos de texto
-    private TextField campoNombre;
-    private TextField campoApellido;
-    private TextField campoContrasena;
-    private TextField campoConfirmar;
-    
-    // Botones
-    private Button botonCrear;
-    private Button botonVolver;
-    
-    // Mensaje de error
+    private TextField campoNom, campoApe, campoPass, campoConf;
+    private Button botonCrear, botonVolver;
     private Label mensajeError;
-    
-    void Start()
-    {
-        Debug.Log("🎬 RegistroUIController - Start() ejecutándose...");
-        
-        // Obtener referencias
-        uiDocument = GetComponent<UIDocument>();
-        root = uiDocument.rootVisualElement;
-        
-        // Obtener campos
-        campoNombre = root.Q<TextField>("Campo_Nombre");
-        campoApellido = root.Q<TextField>("Campo_Apellido");
-        campoContrasena = root.Q<TextField>("Campo_Contrasena");
-        campoConfirmar = root.Q<TextField>("Campo_Confirmar");
-        
-        // Obtener botones
+
+    void Start() {
+        var uiDoc = GetComponent<UIDocument>();
+        root = uiDoc.rootVisualElement;
+
+        // --- ACCESIBILIDAD ---
+        if (PlayerPrefs.GetInt("ModoDaltonico", 0) == 1) root.AddToClassList("modo-daltonico-activado");
+        float escala = PlayerPrefs.GetFloat("TamanoLetra", 100f) / 100f;
+        root.Query<Label>().ForEach(l => l.style.fontSize = 25f * escala);
+
+        campoNom = root.Q<TextField>("Campo_Nombre");
+        campoApe = root.Q<TextField>("Campo_Apellido");
+        campoPass = root.Q<TextField>("Campo_Contrasena");
+        campoConf = root.Q<TextField>("Campo_Confirmar");
         botonCrear = root.Q<Button>("Boton_Crear");
         botonVolver = root.Q<Button>("Boton_Volver");
-        
-        // Obtener mensaje de error
         mensajeError = root.Q<Label>("Mensaje_Error");
-        
-        // Registrar eventos
+
         botonCrear.clicked += OnCrearClick;
-        botonVolver.clicked += OnVolverClick;
-        
-        // Ocultar error al escribir
-        campoNombre.RegisterValueChangedCallback(evt => OcultarError());
-        campoApellido.RegisterValueChangedCallback(evt => OcultarError());
-        campoContrasena.RegisterValueChangedCallback(evt => OcultarError());
-        campoConfirmar.RegisterValueChangedCallback(evt => OcultarError());
-        
-        Debug.Log("✅ Pantalla de Registro lista");
+        botonVolver.clicked += () => SceneManager.LoadScene("LoginScene");
     }
-    
-    private void OnCrearClick()
-    {
-        Debug.Log("🔥🔥🔥 BOTÓN CREAR CUENTA CLICKEADO 🔥🔥🔥");
-        
-        string nombre = campoNombre.value;
-        string apellido = campoApellido.value;
-        string contrasena = campoContrasena.value;
-        string confirmar = campoConfirmar.value;
-        
-        // VALIDACIÓN 1: Campos vacíos
-        if (string.IsNullOrEmpty(nombre))
-        {
-            MostrarError("⚠️ Por favor ingresa tu nombre");
-            return;
+
+    private void OnCrearClick() {
+        if (campoNom.value.Length < 2) { MostrarError("Nombre muy corto"); return; }
+        if (campoApe.value.Length < 2) { MostrarError("Apellido muy corto"); return; }
+        if (campoPass.value.Length < 6) { MostrarError("Contraseña mínimo 6 caracteres"); return; }
+        if (!Regex.IsMatch(campoPass.value, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$")) {
+            MostrarError("Falta Mayúscula, Minúscula o Número"); return;
         }
-        
-        if (string.IsNullOrEmpty(apellido))
-        {
-            MostrarError("⚠️ Por favor ingresa tu apellido");
-            return;
-        }
-        
-        if (string.IsNullOrEmpty(contrasena))
-        {
-            MostrarError("⚠️ Por favor ingresa una contraseña");
-            return;
-        }
-        
-        if (string.IsNullOrEmpty(confirmar))
-        {
-            MostrarError("⚠️ Por favor confirma tu contraseña");
-            return;
-        }
-        
-        // VALIDACIÓN 2: Longitud mínima
-        if (nombre.Length < 2)
-        {
-            MostrarError("⚠️ El nombre debe tener al menos 2 caracteres");
-            return;
-        }
-        
-        if (apellido.Length < 2)
-        {
-            MostrarError("⚠️ El apellido debe tener al menos 2 caracteres");
-            return;
-        }
-        
-        if (contrasena.Length < 4)
-        {
-            MostrarError("⚠️ La contraseña debe tener al menos 4 caracteres");
-            return;
-        }
-        
-        // VALIDACIÓN 3: Contraseñas coinciden
-        if (contrasena != confirmar)
-        {
-            MostrarError("❌ Las contraseñas no coinciden");
-            return;
-        }
-        
-        // VALIDACIÓN 4: Seguridad de contraseña
-        if (!contrasena.Any(char.IsUpper))
-        {
-            MostrarError("⚠️ La contraseña debe contener al menos una MAYÚSCULA");
-            return;
-        }
-        
-        if (!contrasena.Any(char.IsLower))
-        {
-            MostrarError("⚠️ La contraseña debe contener al menos una minúscula");
-            return;
-        }
-        
-        if (!contrasena.Any(char.IsDigit))
-        {
-            MostrarError("⚠️ La contraseña debe contener al menos un NÚMERO");
-            return;
-        }
-        
-        if (!contrasena.Any(c => !char.IsLetterOrDigit(c)))
-        {
-            MostrarError("⚠️ La contraseña debe contener al menos un SÍMBOLO (@, #, $, etc.)");
-            return;
-        }
-        
-        // Crear el nombre de usuario combinando nombre y apellido
-        string usuario = $"{nombre}.{apellido}".ToLower();
-        
-        // VALIDACIÓN 5: Usuario ya existe
-        if (PlayerPrefs.HasKey($"User_{usuario}_Pass"))
-        {
-            MostrarError($"❌ El usuario '{usuario}' ya existe");
-            return;
-        }
-        
-        // REGISTRAR USUARIO
-        Debug.Log($"✅ Registrando usuario: {usuario}");
-        PlayerPrefs.SetString($"User_{usuario}_Pass", contrasena);
-        PlayerPrefs.SetString($"User_{usuario}_Nombre", nombre);
-        PlayerPrefs.SetString($"User_{usuario}_Apellido", apellido);
-        PlayerPrefs.SetInt($"User_{usuario}_Creado", 1);
-        PlayerPrefs.Save();
-        
-        // Iniciar sesión automáticamente
-        PlayerPrefs.SetString("UsuarioActivo", usuario);
-        PlayerPrefs.SetInt("SesionIniciada", 1);
-        PlayerPrefs.Save();
-        
-        Debug.Log($"🎉 ¡Registro exitoso! Usuario: {usuario}");
-        Debug.Log("🎮 Cargando MenuPrincipalT...");
-        
-        // Ir al menú principal
-        SceneManager.LoadScene("MenuPrincipalT");
+        if (campoPass.value != campoConf.value) { MostrarError("No coinciden"); return; }
+
+        botonCrear.SetEnabled(false);
+        string user = campoNom.value.ToLower().Replace(" ", "");
+        ApiManager.Instance.Registrar(user, campoNom.value, campoApe.value, campoPass.value, (exito, msg) => {
+            botonCrear.SetEnabled(true);
+            if (exito) SceneManager.LoadScene("LoginScene");
+            else MostrarError(msg);
+        });
     }
-    
-    private void OnVolverClick()
-    {
-        Debug.Log("🔥🔥🔥 BOTÓN VOLVER CLICKEADO 🔥🔥🔥");
-        Debug.Log("⬅️ Volviendo al Login...");
-        SceneManager.LoadScene("LoginScene");
-    }
-    
-    private void MostrarError(string mensaje)
-    {
-        mensajeError.text = mensaje;
-        mensajeError.style.display = DisplayStyle.Flex;
-        Debug.LogWarning(mensaje);
-    }
-    
-    private void OcultarError()
-    {
-        mensajeError.style.display = DisplayStyle.None;
+
+    private void MostrarError(string msg) {
+        if (mensajeError != null) { mensajeError.text = "✗ " + msg; mensajeError.style.display = DisplayStyle.Flex; }
     }
 }

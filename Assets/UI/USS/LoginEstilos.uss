@@ -1,66 +1,59 @@
-/* ====================================
-   PANEL DE LOGIN
-   ==================================== */
-
-#PanelLogin {
-    transition-duration: 0.3s;
+/* ESTILO PARA LOS CAMPOS DE TEXTO (CONTENEDORES) */
+#Campo_Usuario, #Campo_Contrasena, #Campo_Nombre, #Campo_Apellido, #Campo_Confirmar {
+    background-color: rgb(255, 255, 255) !important;
+    height: 55px !important;
+    border-radius: 12px !important;
+    border-width: 2px !important;
+    border-color: rgba(139, 69, 19, 0.6) !important;
+    margin-bottom: 10px;
+    padding: 0; /* Quitamos padding del padre para dárselo al input */
 }
 
-/* ====================================
-   CAMPOS DE INPUT
-   ==================================== */
-
-.campo-input {
-    transition-duration: 0.25s;
-    transition-property: border-color, background-color, scale;
+/* ESTILO PARA EL TEXTO INTERNO (LO QUE SE ESCRIBE) */
+/* Aquí es donde arreglamos la borrosidad */
+.unity-text-field__input {
+    color: rgb(0, 0, 0) !important;
+    background-color: transparent !important;
+    font-size: 22px !important; /* Un poco más grande para que sea nítido */
+    -unity-font-style: bold;
+    -unity-text-align: middle-left; /* Centra el texto verticalmente */
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    border-width: 0 !important; /* Quitamos bordes internos que ensucian */
+    margin: 0 !important;
 }
 
-.campo-input:hover {
-    border-color: rgb(255, 215, 0) !important;
-    background-color: rgba(50, 45, 35, 0.95);
-    scale: 1.02;
-}
-
-/* TextField styling */
-#Campo_Usuario .unity-text-field__input,
-#Campo_Contrasena .unity-text-field__input {
-    background-color: rgba(0, 0, 0, 0);
-    border-width: 0;
-    color: white;
+/* ESTILO PARA LAS ETIQUETAS (LABELS) */
+.campo-input Label {
+    color: gold !important;
+    -unity-font-style: bold;
     font-size: 18px;
+    margin-bottom: 5px;
 }
 
-/* ====================================
-   BOTONES
-   ==================================== */
-
-.boton-login {
-    transition-duration: 0.25s;
-    transition-property: scale, background-color;
+/* PANEL PRINCIPAL (PARA QUE NO SE VEA PEQUEÑO) */
+#PanelLogin, #PanelRegistro {
+    width: 450px; 
+    background-color: rgba(25, 20, 15, 0.95);
+    border-radius: 25px; 
+    padding: 40px;
+    border-width: 4px; 
+    border-color: rgb(139, 69, 19);
 }
 
+/* EL BOTÓN CUANDO PASAS EL RATÓN */
 .boton-login:hover {
     scale: 1.05;
+    transition-duration: 0.1s;
 }
 
-.boton-login:active {
-    scale: 0.97;
-}
-
-/* Botón Verde - Iniciar Sesión */
-#Boton_IniciarSesion:hover {
-    background-color: rgb(20, 170, 60);
-}
-
-/* Botón Naranja - Registrarse */
-#Boton_Registrarse:hover {
-    background-color: rgb(200, 115, 50);
-}
-
-/* ====================================
-   MENSAJE DE ERROR
-   ==================================== */
-
+/* MENSAJE DE ERROR */
 #Mensaje_Error {
-    opacity: 1;
+    color: white !important;
+    background-color: rgba(200, 40, 40, 0.9);
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 15px;
+    -unity-text-align: middle-center;
+    font-size: 16px;
 }

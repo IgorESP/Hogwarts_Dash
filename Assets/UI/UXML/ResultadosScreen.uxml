@@ -1,0 +1,43 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" schemaLocation="UnityEngine.UIElements ../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/USS/GlobalAccesibilidad.uss?fileID=7433441132597879392&amp;guid=54de473943b1544468f4e32873b9414e&amp;type=3#GlobalAccesibilidad" />
+    
+    <!-- 🔥 Panel OCULTO por defecto (display: none) -->
+    <ui:VisualElement name="PanelResultados" style="flex-grow: 1; width: 100%; height: 100%; position: absolute; background-color: rgba(0, 0, 0, 0.75); justify-content: center; align-items: center; display: none;">
+        
+        <ui:VisualElement name="ContenedorResultados" style="width: 550px; background-color: rgba(20, 15, 10, 0.95); border-radius: 30px; border-width: 5px; border-color: rgb(255, 215, 0); padding: 40px; align-items: center;">
+            
+            <!-- Título -->
+            <ui:Label text="¡NIVEL COMPLETADO!" name="Titulo" style="font-size: 42px; color: rgb(255, 215, 0); -unity-font-style: bold; margin-bottom: 30px; -unity-text-outline-width: 3px; -unity-text-outline-color: rgba(0, 0, 0, 0.8); -unity-text-align: middle-center;" />
+            
+            <!-- Estrellas -->
+            <ui:VisualElement name="ContenedorEstrellas" style="flex-direction: row; margin-bottom: 35px; gap: 20px;">
+                <ui:VisualElement name="Estrella1" style="width: 80px; height: 80px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/68.png?fileID=21300000&amp;guid=3bcd937835616de48b839d4c3394c651&amp;type=3#68&quot;); -unity-background-scale-mode: scale-to-fit; -unity-background-image-tint-color: rgb(255, 215, 0); opacity: 0.3;" />
+                <ui:VisualElement name="Estrella2" style="width: 100px; height: 100px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/68.png?fileID=21300000&amp;guid=3bcd937835616de48b839d4c3394c651&amp;type=3#68&quot;); -unity-background-scale-mode: scale-to-fit; -unity-background-image-tint-color: rgb(255, 215, 0); margin-top: -20px; opacity: 0.3;" />
+                <ui:VisualElement name="Estrella3" style="width: 80px; height: 80px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/68.png?fileID=21300000&amp;guid=3bcd937835616de48b839d4c3394c651&amp;type=3#68&quot;); -unity-background-scale-mode: scale-to-fit; -unity-background-image-tint-color: rgb(255, 215, 0); opacity: 0.3;" />
+            </ui:VisualElement>
+            
+            <!-- Estadísticas -->
+            <ui:VisualElement name="ContenedorEstadisticas" style="width: 100%; background-color: rgba(0, 0, 0, 0.4); border-radius: 20px; padding: 25px; margin-bottom: 30px; border-width: 2px; border-color: rgba(255, 215, 0, 0.2);">
+                <ui:VisualElement style="flex-direction: row; justify-content: space-between; margin-bottom: 15px;">
+                    <ui:Label text="PORCENTAJE:" style="font-size: 22px; color: rgb(200, 200, 200); -unity-font-style: bold;" />
+                    <ui:Label name="Label_Porcentaje" text="0%" style="font-size: 22px; color: rgb(255, 215, 0); -unity-font-style: bold;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-direction: row; justify-content: space-between; margin-bottom: 15px;">
+                    <ui:Label text="INTENTOS:" style="font-size: 22px; color: rgb(200, 200, 200); -unity-font-style: bold;" />
+                    <ui:Label name="Label_Intentos" text="0" style="font-size: 22px; color: rgb(255, 215, 0); -unity-font-style: bold;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-direction: row; justify-content: space-between; align-items: center;">
+                    <ui:Label text="SNITCHES DORADAS:" style="font-size: 22px; color: rgb(200, 200, 200); -unity-font-style: bold;" />
+                    <ui:Label name="Label_Snitches" text="0" style="font-size: 22px; color: rgb(255, 215, 0); -unity-font-style: bold;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            
+            <!-- Botones -->
+            <ui:VisualElement style="flex-direction: row; gap: 20px; width: 100%; justify-content: center;">
+                <ui:Button name="Boton_Reintentar" text="REINTENTAR" style="width: 180px; height: 55px; font-size: 18px; background-color: rgba(139, 69, 19, 0.95); color: rgb(255, 215, 0); border-radius: 12px; border-width: 3px; border-color: rgb(180, 120, 60); -unity-font-style: bold;" />
+                <ui:Button name="Boton_Volver" text="VOLVER" style="width: 180px; height: 55px; font-size: 18px; background-color: rgba(15, 100, 30, 0.95); color: white; border-radius: 12px; border-width: 3px; border-color: rgb(20, 150, 40); -unity-font-style: bold;" />
+            </ui:VisualElement>
+            
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
