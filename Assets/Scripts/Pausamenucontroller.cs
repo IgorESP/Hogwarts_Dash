@@ -2,6 +2,10 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Controlador del menu de pausa.
+/// Maneja pausa, reanudacion, reinicio, volver al menu y controles de audio.
+/// </summary>
 public class Pausamenucontroller : MonoBehaviour
 {
     private VisualElement root;
@@ -13,10 +17,11 @@ public class Pausamenucontroller : MonoBehaviour
     private Button botonMenu;
     private Button botonReiniciar;
     
-    // Sliders
+    // Sliders de audio
     private Slider sliderMusica;
     private Slider sliderSFX;
     
+    // Estado de pausa
     private bool juegoEnPausa = false;
 
     void Start() 
@@ -24,7 +29,7 @@ public class Pausamenucontroller : MonoBehaviour
         var uiDoc = GetComponent<UIDocument>();
         root = uiDoc.rootVisualElement;
 
-        // Capturar elementos
+        // Capturar elementos de la UI
         panelPausa = root.Q<VisualElement>("PanelPausa");
         botonPausaEsquina = root.Q<Button>("Boton_Pausa_Esquina");
         botonPlay = root.Q<Button>("Boton_Play");
@@ -34,119 +39,221 @@ public class Pausamenucontroller : MonoBehaviour
         sliderMusica = root.Q<Slider>("Slider_Musica");
         sliderSFX = root.Q<Slider>("Slider_SFX");
 
-        // Registrar eventos
+        // Registrar eventos de botones
         if (botonPausaEsquina != null) botonPausaEsquina.clicked += MostrarPausa;
         if (botonPlay != null) botonPlay.clicked += ReanudarJuego;
         if (botonMenu != null) botonMenu.clicked += VolverAlMenu;
         if (botonReiniciar != null) botonReiniciar.clicked += ReiniciarNivel;
         
+        // Registrar eventos de sliders
         if (sliderMusica != null) sliderMusica.RegisterValueChangedCallback(OnMusicaChanged);
         if (sliderSFX != null) sliderSFX.RegisterValueChangedCallback(OnSFXChanged);
 
-        // Cargar valores de audio
+        // Cargar valores guardados de audio
         CargarConfiguracionAudio();
         
-        // 🔥 IMPORTANTE: Asegurar que el botón de pausa esté visible
+        // Asegurar que el boton de pausa este visible
         MostrarBotonPausa();
         
-        // 🔥 IMPORTANTE: Ocultar el panel de pausa al inicio
+        // Ocultar el panel de pausa al inicio
         OcultarPanelPausa();
     }
 
     void Update() 
     {
-        // También se puede pausar con ESC
+        // Pausar/Reanudar con tecla ESC
         if (Input.GetKeyDown(KeyCode.Escape)) 
         {
-            if (juegoEnPausa) ReanudarJuego();
-            else MostrarPausa();
+            if (juegoEnPausa) 
+                ReanudarJuego();
+            else 
+                MostrarPausa();
         }
     }
 
-    // 🔥 NUEVO: Mostrar botón de pausa
+    // ====================================
+    // MOSTRAR/OCULTAR ELEMENTOS
+    // ====================================
+    
+    /// <summary>
+    /// Mostrar el boton de pausa en la esquina superior derecha.
+    /// </summary>
     private void MostrarBotonPausa()
     {
         if (botonPausaEsquina != null)
         {
             botonPausaEsquina.style.display = DisplayStyle.Flex;
             botonPausaEsquina.style.visibility = Visibility.Visible;
-            Debug.Log("✅ Botón de pausa visible");
+            Debug.Log("[Pausa] Boton de pausa visible");
         }
         else
         {
-            Debug.LogError("❌ No se encontró Boton_Pausa_Esquina");
+            Debug.LogError("[Pausa] No se encontro Boton_Pausa_Esquina");
         }
     }
     
-    // 🔥 NUEVO: Ocultar panel de pausa
+    /// <summary>
+    /// Ocultar el panel de pausa al inicio.
+    /// </summary>
     private void OcultarPanelPausa()
     {
         if (panelPausa != null)
         {
             panelPausa.style.display = DisplayStyle.None;
-            Debug.Log("✅ Panel de pausa oculto");
+            Debug.Log("[Pausa] Panel de pausa oculto");
         }
     }
 
+    // ====================================
+    // FUNCIONES DE PAUSA
+    // ====================================
+    
+    /// <summary>
+    /// Mostrar el menu de pausa y congelar el juego.
+    /// </summary>
     private void MostrarPausa() 
     {
         juegoEnPausa = true;
-        if (panelPausa != null) panelPausa.style.display = DisplayStyle.Flex;
+        
+        // Mostrar panel de pausa
+        if (panelPausa != null) 
+            panelPausa.style.display = DisplayStyle.Flex;
+        
+        // Congelar el tiempo del juego
         Time.timeScale = 0f;
-        Debug.Log("⏸️ Juego pausado");
+        
+        Debug.Log("[Pausa] Juego pausado");
     }
 
+    /// <summary>
+    /// Reanudar el juego y ocultar el menu de pausa.
+    /// </summary>
     private void ReanudarJuego() 
     {
         juegoEnPausa = false;
-        if (panelPausa != null) panelPausa.style.display = DisplayStyle.None;
+        
+        // Ocultar panel de pausa
+        if (panelPausa != null) 
+            panelPausa.style.display = DisplayStyle.None;
+        
+        // Reanudar el tiempo del juego
         Time.timeScale = 1f;
-        Debug.Log("▶️ Juego reanudado");
+        
+        Debug.Log("[Pausa] Juego reanudado");
     }
 
+    /// <summary>
+    /// Volver al menu principal (PlayScene -> MenuPrincipalT).
+    /// </summary>
     private void VolverAlMenu() 
     {
+        // Reanudar tiempo antes de cambiar de escena
         Time.timeScale = 1f;
-        SceneManager.LoadScene("MenulPrincipalT");
-        Debug.Log("🏠 Volviendo al menú principal");
+        
+        Debug.Log("[Pausa] Volviendo al menu principal");
+        
+        // Cargar el menu principal
+        SceneManager.LoadScene("MenuPrincipalT");
     }
 
+    /// <summary>
+    /// Reiniciar el nivel actual.
+    /// </summary>
     private void ReiniciarNivel() 
     {
+        // Ocultar el panel de pausa
+        juegoEnPausa = false;
+        if (panelPausa != null) 
+            panelPausa.style.display = DisplayStyle.None;
+        
+        // Reanudar tiempo antes de reiniciar
         Time.timeScale = 1f;
+        
+        Debug.Log("[Pausa] Reiniciando nivel");
+        
+        // Reiniciar estadisticas del GameManager si existe
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.ReiniciarEstadisticas();
+        }
+        
+        // Recargar la escena actual
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        Debug.Log("🔄 Reiniciando nivel");
     }
 
     // ====================================
-    // AUDIO
+    // CONTROLES DE AUDIO
     // ====================================
+    
+    /// <summary>
+    /// Callback cuando cambia el slider de musica.
+    /// </summary>
     private void OnMusicaChanged(ChangeEvent<float> evt) 
     {
-        float vol = evt.newValue;
-        PlayerPrefs.SetFloat("VolumenMusica", vol);
+        float volumen = evt.newValue;
+        
+        // Guardar en PlayerPrefs
+        PlayerPrefs.SetFloat("VolumenMusica", volumen);
+        PlayerPrefs.Save();
+        
+        // Aplicar al AudioManager si existe
         if (AudioManager.Instance != null) 
         {
-            AudioManager.Instance.SetVolumenMusica(vol / 100f);
+            AudioManager.Instance.SetVolumenMusica(volumen / 100f);
         }
+        
+        Debug.Log($"[Pausa] Volumen musica: {volumen}%");
     }
 
+    /// <summary>
+    /// Callback cuando cambia el slider de SFX.
+    /// </summary>
     private void OnSFXChanged(ChangeEvent<float> evt) 
     {
-        float vol = evt.newValue;
-        PlayerPrefs.SetFloat("VolumenSFX", vol);
+        float volumen = evt.newValue;
+        
+        // Guardar en PlayerPrefs
+        PlayerPrefs.SetFloat("VolumenSFX", volumen);
+        PlayerPrefs.Save();
+        
+        // Aplicar al AudioManager si existe
         if (AudioManager.Instance != null) 
         {
-            AudioManager.Instance.SetVolumenSFX(vol / 100f);
+            AudioManager.Instance.SetVolumenSFX(volumen / 100f);
         }
+        
+        Debug.Log($"[Pausa] Volumen SFX: {volumen}%");
     }
 
+    /// <summary>
+    /// Cargar la configuracion de audio guardada.
+    /// </summary>
     private void CargarConfiguracionAudio() 
     {
-        float vMus = PlayerPrefs.GetFloat("VolumenMusica", 75f);
-        if (sliderMusica != null) sliderMusica.value = vMus;
+        // Cargar volumen de musica (default 75%)
+        float volumenMusica = PlayerPrefs.GetFloat("VolumenMusica", 75f);
+        if (sliderMusica != null) 
+        {
+            sliderMusica.value = volumenMusica;
+        }
 
-        float vSFX = PlayerPrefs.GetFloat("VolumenSFX", 75f);
-        if (sliderSFX != null) sliderSFX.value = vSFX;
+        // Cargar volumen de SFX (default 75%)
+        float volumenSFX = PlayerPrefs.GetFloat("VolumenSFX", 75f);
+        if (sliderSFX != null) 
+        {
+            sliderSFX.value = volumenSFX;
+        }
+        
+        Debug.Log($"[Pausa] Audio cargado - Musica: {volumenMusica}%, SFX: {volumenSFX}%");
+    }
+    
+    // ====================================
+    // CLEANUP
+    // ====================================
+    
+    void OnDestroy()
+    {
+        // Asegurar que el tiempo se reanude al destruir el objeto
+        Time.timeScale = 1f;
     }
 }
