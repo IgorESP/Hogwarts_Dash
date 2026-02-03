@@ -4,7 +4,7 @@
         <Style src="project://database/Assets/UI/USS/AjustesEstilos.uss?fileID=7433441132597879392&amp;guid=01d7789c7a9eda741b3379e6f8ec8a29&amp;type=3#AjustesEstilos" />
         <ui:VisualElement name="Header" style="flex-direction: row; width: 95%; justify-content: space-between; align-items: center; margin-bottom: 30px;">
             <ui:Button name="Boton_Atras" text="← ATRÁS" style="width: 150px; height: 50px; font-size: 20px; background-color: rgba(139, 69, 19, 0.9); color: rgb(255, 215, 0); border-radius: 10px; border-width: 2px; border-color: rgb(255, 215, 0); -unity-font-style: bold;" />
-            <ui:Label text="OPCIONES" name="Titulo" style="font-size: 50px; color: rgb(255, 215, 0); -unity-font-style: bold; -unity-text-outline-width: 4px; -unity-text-outline-color: rgb(0, 0, 0);" />
+            <ui:Label text="CONFIGURACIÓN" name="Titulo" style="font-size: 50px; color: rgb(255, 215, 0); -unity-font-style: bold; -unity-text-outline-width: 4px; -unity-text-outline-color: rgb(0, 0, 0);" />
             <ui:VisualElement style="width: 70px; height: 70px;" />
         </ui:VisualElement>
         <ui:ScrollView name="ContenedorScroll" mode="Vertical" style="width: 90%; flex-grow: 1; background-color: rgba(0, 0, 0, 0); margin-bottom: 20px;">
@@ -55,7 +55,8 @@
             </ui:VisualElement>
         </ui:ScrollView>
     </ui:VisualElement>
-    <!-- Panel Flotante de Ranking -->
+
+<!-- Panel Flotante de Ranking -->
 <ui:VisualElement name="PanelRankingOverlay" style="position: absolute; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); justify-content: center; align-items: center; display: none;">
     <ui:VisualElement name="ContenedorRanking" style="width: 600px; max-height: 700px; background-color: rgba(20, 15, 10, 0.98); border-radius: 25px; border-width: 4px; border-color: rgb(255, 215, 0); padding: 30px;">
         
@@ -74,22 +75,48 @@
         <ui:Label name="MensajeVacio" text="No hay jugadores en el ranking" style="font-size: 20px; color: rgb(150, 150, 150); -unity-text-align: middle-center; margin-top: 20px; display: none;" />
     </ui:VisualElement>
 </ui:VisualElement>
+
 <!-- Panel Flotante de Créditos -->
 <ui:VisualElement name="PanelCreditosOverlay" style="position: absolute; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); justify-content: center; align-items: center; display: none;">
     <ui:VisualElement name="ContenedorCreditos" style="width: 700px; max-height: 750px; background-color: rgba(20, 15, 10, 0.98); border-radius: 25px; border-width: 4px; border-color: rgb(255, 215, 0); padding: 40px;">
         
         <!-- Header con título y botón cerrar -->
         <ui:VisualElement style="flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-            <ui:Label text="✨ CRÉDITOS" style="font-size: 38px; color: rgb(255, 215, 0); -unity-font-style: bold; -unity-text-outline-width: 2px; -unity-text-outline-color: rgba(0, 0, 0, 0.8);" />
+            <ui:Label text="CRÉDITOS" style="font-size: 38px; color: rgb(255, 215, 0); -unity-font-style: bold; -unity-text-outline-width: 2px; -unity-text-outline-color: rgba(0, 0, 0, 0.8);" />
             <ui:Button name="Boton_CerrarCreditos" text="✖" style="width: 45px; height: 45px; font-size: 28px; background-color: rgba(139, 0, 0, 0.9); color: white; border-radius: 22px; border-width: 2px; border-color: rgb(255, 100, 100); -unity-font-style: bold;" />
         </ui:VisualElement>
         
         <!-- Contenido Scrolleable -->
         <ui:ScrollView name="ContenidoCreditos" style="flex-grow: 1; max-height: 600px; padding: 10px;">
             
+            <!-- Sección: Assets -->
+            <ui:VisualElement style="margin-bottom: 35px;">
+                <ui:Label text="ASSETS UTILIZADOS" style="font-size: 28px; color: rgb(255, 215, 0); -unity-font-style: bold; margin-bottom: 15px; -unity-text-outline-width: 2px; -unity-text-outline-color: rgba(0, 0, 0, 0.8); -unity-text-align: middle-center;" />
+                
+                <ui:VisualElement style="background-color: rgba(0, 0, 0, 0.3); border-radius: 15px; padding: 20px; border-width: 2px; border-color: rgba(255, 215, 0, 0.3);">
+                    <ui:Label text="A lot of useful icons" style="font-size: 20px; color: rgb(200, 200, 200); margin-bottom: 8px; padding-left: 10px; -unity-text-align: middle-center;" />
+                    <ui:Label text="Pixel2DCastleTileset" style="font-size: 20px; color: rgb(200, 200, 200); margin-bottom: 8px; padding-left: 10px; -unity-text-align: middle-center;" />
+                    <ui:Label text="RafaelMatos" style="font-size: 20px; color: rgb(200, 200, 200); margin-bottom: 8px; padding-left: 10px; -unity-text-align: middle-center;" />
+                    <ui:Label text="Stone and Ice Blocks" style="font-size: 20px; color: rgb(200, 200, 200); padding-left: 10px; -unity-text-align: middle-center;" />
+                    <ui:Label text="Gothicvania-Town" style="font-size: 20px; color: rgb(200, 200, 200); padding-left: 10px; -unity-text-align: middle-center;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- Sección: Canciones -->
+            <ui:VisualElement style="margin-bottom: 35px;">
+                <ui:Label text="MÚSICA" style="font-size: 28px; color: rgb(255, 215, 0); -unity-font-style: bold; margin-bottom: 15px; -unity-text-outline-width: 2px; -unity-text-outline-color: rgba(0, 0, 0, 0.8); -unity-text-align: middle-center;" />
+                
+                <ui:VisualElement style="background-color: rgba(0, 0, 0, 0.3); border-radius: 15px; padding: 20px; border-width: 2px; border-color: rgba(255, 215, 0, 0.3);">
+                    <ui:Label text="Darkness is Comming" style="font-size: 20px; color: rgb(200, 200, 200); margin-bottom: 8px; padding-left: 10px; -unity-text-align: middle-center;" />
+                    <ui:Label text="Deep Haze" style="font-size: 20px; color: rgb(200, 200, 200); padding-left: 10px; -unity-text-align: middle-center;" />
+                    <ui:Label text="Honey Bee" style="font-size: 20px; color: rgb(200, 200, 200); padding-left: 10px; -unity-text-align: middle-center;" />
+                    <ui:Label text="The Complex" style="font-size: 20px; color: rgb(200, 200, 200); padding-left: 10px; -unity-text-align: middle-center;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
             <!-- Sección: Desarrolladores -->
             <ui:VisualElement style="margin-bottom: 35px;">
-                <ui:Label text="👨EQUIPO DE DESARROLLO" style="font-size: 28px; color: rgb(255, 215, 0); -unity-font-style: bold; margin-bottom: 15px; -unity-text-outline-width: 2px; -unity-text-outline-color: rgba(0, 0, 0, 0.8); -unity-text-align: middle-center;" />
+                <ui:Label text="EQUIPO DE DESARROLLO" style="font-size: 28px; color: rgb(255, 215, 0); -unity-font-style: bold; margin-bottom: 15px; -unity-text-outline-width: 2px; -unity-text-outline-color: rgba(0, 0, 0, 0.8); -unity-text-align: middle-center;" />
                 
                 <ui:VisualElement style="background-color: rgba(0, 0, 0, 0.3); border-radius: 15px; padding: 20px; border-width: 2px; border-color: rgba(255, 215, 0, 0.3);">
                     <ui:Label text="Temlo Castillo" style="font-size: 24px; color: white; margin-bottom: 10px; -unity-text-align: middle-center;" />
@@ -98,26 +125,13 @@
                     <ui:Label text="Salca Bachir" style="font-size: 24px; color: white; -unity-text-align: middle-center;" />
                 </ui:VisualElement>
             </ui:VisualElement>
-            
-            <!-- Sección: Assets -->
-            <ui:VisualElement style="margin-bottom: 20px;">
-                <ui:Label text="ASSETS UTILIZADOS" style="font-size: 28px; color: rgb(255, 215, 0); -unity-font-style: bold; margin-bottom: 15px; -unity-text-outline-width: 2px; -unity-text-outline-color: rgba(0, 0, 0, 0.8); -unity-text-align: middle-center;" />
-                
-                <ui:VisualElement style="background-color: rgba(0, 0, 0, 0.3); border-radius: 15px; padding: 20px; border-width: 2px; border-color: rgba(255, 215, 0, 0.3);">
-                    <ui:Label text="A lot of useful icons" style="font-size: 20px; color: rgb(200, 200, 200); margin-bottom: 8px; padding-left: 10px;" />
-                    <ui:Label text="Unity UI Toolkit" style="font-size: 20px; color: rgb(200, 200, 200); margin-bottom: 8px; padding-left: 10px;" />
-                    <ui:Label text="Hogwarts Theme Assets" style="font-size: 20px; color: rgb(200, 200, 200); margin-bottom: 8px; padding-left: 10px;" />
-                    <ui:Label text="Custom Backgrounds" style="font-size: 20px; color: rgb(200, 200, 200); padding-left: 10px;" />
-                </ui:VisualElement>
-            </ui:VisualElement>
-            
-            <!-- Sección: Agradecimientos -->
+
+            <!-- Sección: Copyright -->
             <ui:VisualElement>
-                <ui:Label text="AGRADECIMIENTOS ESPECIALES" style="font-size: 28px; color: rgb(255, 215, 0); -unity-font-style: bold; margin-bottom: 15px; -unity-text-outline-width: 2px; -unity-text-outline-color: rgba(0, 0, 0, 0.8); -unity-text-align: middle-center;" />
+                <ui:Label text="Hogwarts Dash © 2026" style="font-size: 28px; color: rgb(255, 215, 0); -unity-font-style: bold; margin-bottom: 15px; -unity-text-outline-width: 2px; -unity-text-outline-color: rgba(0, 0, 0, 0.8); -unity-text-align: middle-center;" />
                 
                 <ui:VisualElement style="background-color: rgba(0, 0, 0, 0.3); border-radius: 15px; padding: 20px; border-width: 2px; border-color: rgba(255, 215, 0, 0.3);">
-                    <ui:Label text="Gracias a todos los que hicieron posible este proyecto." style="font-size: 20px; color: rgb(200, 200, 200); -unity-text-align: middle-center; -unity-font-style: italic; margin-bottom: 10px;" />
-                    <ui:Label text="Hogwarts Dash © 2025" style="font-size: 22px; color: rgb(255, 215, 0); -unity-text-align: middle-center; -unity-font-style: bold; margin-top: 15px;" />
+                    <ui:Label text="Hogwarts Dash © 2026" style="font-size: 24px; color: rgb(255, 215, 0); -unity-text-align: middle-center; -unity-font-style: bold;" />
                 </ui:VisualElement>
             </ui:VisualElement>
             
