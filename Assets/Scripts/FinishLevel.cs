@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Script para detectar cuando el jugador completa un nivel.
-/// Cuenta intentos automáticamente cada vez que se reinicia la escena.
+/// ✅ FIX: Intentos NO se duplican + Monedas tag "moneda"
 /// </summary>
 public class FinishLevel : MonoBehaviour
 {
@@ -12,28 +12,30 @@ public class FinishLevel : MonoBehaviour
     public float tiempoEspera = 0.5f;
     
     private bool nivelCompletado = false;
-    private static int intentosAcumulados = 0;
     
     void Start()
     {
-        // Cada vez que se carga la escena, incrementar intentos
-        // EXCEPTO la primera vez
+        // ✅ FIX INTENTOS: Usa PlayerPrefs, NO static que se duplica
         string escenaKey = SceneManager.GetActiveScene().name;
         string primeraVezKey = "PrimeraVez_" + escenaKey;
+        string intentosKey = "Intentos_" + escenaKey;
         
         if (!PlayerPrefs.HasKey(primeraVezKey))
         {
-            // Primera vez en este nivel, no contar como intento
+            // ⭐ PRIMERA VEZ = 0 intentos
             PlayerPrefs.SetInt(primeraVezKey, 1);
-            intentosAcumulados = 0;
+            PlayerPrefs.SetInt(intentosKey, 0);
+            Debug.Log("[FinishLevel] ⭐ PRIMERA VEZ → 0 intentos");
         }
         else
         {
-            // Ya jugó antes, esto es un reintento
-            intentosAcumulados++;
+            // 🔄 REINICIO = +1 intento (leer anterior + sumar)
+            int intentosAnteriores = PlayerPrefs.GetInt(intentosKey, 0);
+            int nuevosIntentos = intentosAnteriores + 1;
+            PlayerPrefs.SetInt(intentosKey, nuevosIntentos);
+            PlayerPrefs.Save();
+            Debug.Log($"[FinishLevel] 🔄 REINICIO #{nuevosIntentos} (era {intentosAnteriores})");
         }
-        
-        Debug.Log($"[FinishLevel] Intentos actuales: {intentosAcumulados}");
     }
     
     private void OnTriggerEnter2D(Collider2D other)
@@ -48,87 +50,73 @@ public class FinishLevel : MonoBehaviour
     
     private void FinalizarNivel()
     {
-        Debug.Log("[FinishLevel] Nivel completado!");
+        Debug.Log("[FinishLevel] 🎉 Nivel completado!");
         
-        // Obtener mundo actual
+        string escenaKey = SceneManager.GetActiveScene().name;
+        int intentos = PlayerPrefs.GetInt("Intentos_" + escenaKey, 0);
         int mundoActual = PlayerPrefs.GetInt("MundoSeleccionado", 1);
         
-        // CONTADOR CORREGIDO DE SNITCHES
-        int snitchesRecogidas = ContarSnitchesRecogidas();
-        
-        // Calcular porcentaje (siempre 100% si llegó aquí)
+        // ✅ MONEDAS (fallback múltiples tags)
+        int monedasRecogidas = ContarMonedasRecogidas();
         float porcentaje = 100f;
         
-        Debug.Log($"[FinishLevel] Estadísticas:");
-        Debug.Log($"  - Porcentaje: {porcentaje}%");
-        Debug.Log($"  - Intentos: {intentosAcumulados}");
-        Debug.Log($"  - Snitches: {snitchesRecogidas}");
+        Debug.Log($"[FinishLevel] 📊 ESTADÍSTICAS:");
+        Debug.Log($"  Porcentaje: {porcentaje}%");
+        Debug.Log($"  Intentos: {intentos}");
+        Debug.Log($"  Monedas: {monedasRecogidas}");
         
-        // Guardar en NivelesManager
+        // Guardar NivelesManager
         if (NivelesManager.Instance != null)
-        {
             NivelesManager.Instance.CompletarNivel(mundoActual, 1, porcentaje);
-        }
         
-        // Guardar estadísticas para el panel
+        // ✅ GUARDAR para GameManager (CORREGIDO: monedas)
         PlayerPrefs.SetFloat("UltimoPorcentaje", porcentaje);
-        PlayerPrefs.SetInt("UltimosIntentos", intentosAcumulados);
-        PlayerPrefs.SetInt("UltimasSnitches", snitchesRecogidas);
+        PlayerPrefs.SetInt("UltimosIntentos", intentos);
+        PlayerPrefs.SetInt("UltimasMonedas", monedasRecogidas);  // ← MONEDAS
         PlayerPrefs.SetInt("UltimoMundoCompletado", mundoActual);
         PlayerPrefs.Save();
         
-        // Resetear intentos para el próximo nivel
-        intentosAcumulados = 0;
-        PlayerPrefs.DeleteKey("PrimeraVez_" + SceneManager.GetActiveScene().name);
-        
-        // Llamar a GameManager si existe
+        // Llamar GameManager
         if (GameManager.Instance != null)
-        {
             GameManager.Instance.FinalizarNivel();
-        }
         else
-        {
-            // Si no hay GameManager, cargar ResultadosScene directamente
             SceneManager.LoadScene("ResultadosScene");
-        }
     }
     
     /// <summary>
-    /// CUENTA SNITCHES RECOGIDAS CORRECTAMENTE:
-    /// 1. Guarda total al inicio del nivel
-    /// 2. Cuenta las que quedan ACTIVAS al final
-    /// 3. Recogidas = total - activas
+    /// ✅ MONEDAS con fallback de tags comunes
     /// </summary>
-    private int ContarSnitchesRecogidas()
+    private int ContarMonedasRecogidas()
     {
         try
         {
             string escenaKey = SceneManager.GetActiveScene().name;
-            string totalSnitchesKey = "TotalSnitches_" + escenaKey;
+            string totalKey = "TotalMonedas_" + escenaKey;
             
-            // Buscar snitches ACTIVAS (las que quedan por recoger)
-            GameObject[] snitchesActivas = GameObject.FindGameObjectsWithTag("Snitch");
+            // Probar múltiples tags comunes
+            GameObject[] monedas = GameObject.FindGameObjectsWithTag("moneda");
+            if (monedas.Length == 0) monedas = GameObject.FindGameObjectsWithTag("Coin");
+            if (monedas.Length == 0) monedas = GameObject.FindGameObjectsWithTag("Collectible");
+            if (monedas.Length == 0) monedas = GameObject.FindGameObjectsWithTag("Moneda");
             
-            // Primera vez en el nivel: guardar el total
-            int totalSnitches = snitchesActivas.Length;
-            if (!PlayerPrefs.HasKey(totalSnitchesKey))
+            int totalMonedas = monedas.Length;
+            
+            // Registrar total si es primera vez
+            if (!PlayerPrefs.HasKey(totalKey))
             {
-                PlayerPrefs.SetInt(totalSnitchesKey, totalSnitches);
-                Debug.Log($"[FinishLevel] Total snitches registrado: {totalSnitches}");
+                PlayerPrefs.SetInt(totalKey, totalMonedas);
+                Debug.Log($"[FinishLevel] 💰 Total monedas: {totalMonedas} (tag usado)");
             }
             
-            // Obtener total guardado
-            int totalEsperado = PlayerPrefs.GetInt(totalSnitchesKey, totalSnitches);
+            int totalEsperado = PlayerPrefs.GetInt(totalKey, totalMonedas);
+            int recogidas = totalEsperado - monedas.Length;
             
-            // Recogidas = total - las que quedan activas
-            int recogidas = totalEsperado - snitchesActivas.Length;
-            
-            Debug.Log($"[FinishLevel] Snitches: Total={totalEsperado}, Activas={snitchesActivas.Length}, Recogidas={recogidas}");
+            Debug.Log($"[FinishLevel] 💰 Total={totalEsperado} | Activas={monedas.Length} | Recogidas={recogidas}");
             return recogidas;
         }
         catch (System.Exception e)
         {
-            Debug.LogWarning($"[FinishLevel] Error contando snitches: {e.Message}");
+            Debug.LogWarning($"[FinishLevel] ❌ Error monedas: {e.Message}");
             return 0;
         }
     }
@@ -141,12 +129,8 @@ public class FinishLevel : MonoBehaviour
         Gizmos.color = nivelCompletado ? Color.red : Color.green;
         
         if (col is BoxCollider2D box)
-        {
             Gizmos.DrawWireCube(transform.position + (Vector3)box.offset, box.size);
-        }
         else if (col is CircleCollider2D circle)
-        {
             Gizmos.DrawWireSphere(transform.position + (Vector3)circle.offset, circle.radius);
-        }
     }
 }
