@@ -150,27 +150,16 @@ public class MovimientoGD : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Moneda"))
-        {
-           if (audioSource != null && sonidoMoneda != null) 
+{
+    if (audioSource != null && sonidoMoneda != null) 
     {
         audioSource.PlayOneShot(sonidoMoneda);
     }
 
-    AnimacionSnitch animSnitch = collision.GetComponent<AnimacionSnitch>();
-    if (animSnitch != null)
-    {
-        // CAMBIO: Aseguramos que se ejecute la lógica de la Snitch
-        // La propia Snitch se desactivará al final de su animación.
-        Debug.Log("Snitch detectada");
-    }
-    else
-    {
-        collision.gameObject.SetActive(false);
-    }
-    
+    // No hacemos nada más aquí; dejamos que AnimacionSnitch.cs 
+    // gestione su variable 'recogida' por sí solo.
     return; 
 }
-
         if (collision.CompareTag("PortalCohete")) { ActivarModoCohete(); return; }
         if (collision.CompareTag("PortalBola")) { ActivarModoBola(); return; }
         if (collision.CompareTag("PortalUfo")) { ActivarModoUfo(); return; }

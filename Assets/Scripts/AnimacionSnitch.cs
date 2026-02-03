@@ -10,9 +10,10 @@ public class AnimacionSnitch : MonoBehaviour
 
     [Header("Animación de Recolección")]
     public float velocidadSubida = 6f;
-    public float duracionEfecto = 2.0f; // Aumentado para que te dé tiempo a verla
+    public float duracionEfecto = 2.0f; 
     
-    private bool recogida = false;
+    // CAMBIO: Ahora es public para que el contador pueda leerla
+    [HideInInspector] public bool recogida = false;
     private SpriteRenderer sprite;
 
     void Start()
@@ -32,10 +33,8 @@ public class AnimacionSnitch : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Verifica que sea el jugador y que no se haya recogido ya
         if (other.CompareTag("Player") && !recogida)
         {
-            Debug.Log("Iniciando Animación de Recolección...");
             StartCoroutine(SecuenciaRecoleccion());
         }
     }
@@ -44,7 +43,6 @@ public class AnimacionSnitch : MonoBehaviour
     {
         recogida = true;
 
-        // 1. IMPORTANTE: Desactivar el Collider para que no detecte más toques
         Collider2D col = GetComponent<Collider2D>();
         if (col != null) col.enabled = false;
 
@@ -52,29 +50,23 @@ public class AnimacionSnitch : MonoBehaviour
         Vector3 escalaInicial = transform.localScale;
         Color colorInicial = sprite.color;
 
-        // 2. Bucle de animación
         while (tiempo < duracionEfecto)
         {
             tiempo += Time.deltaTime;
             float t = tiempo / duracionEfecto;
 
-            // Subir
             transform.position += Vector3.up * velocidadSubida * Time.deltaTime;
-
-            // Encogerse gradualmente
             transform.localScale = Vector3.Lerp(escalaInicial, Vector3.zero, t);
 
-            // Desvanecerse (Alpha)
             if (sprite != null)
             {
                 sprite.color = new Color(colorInicial.r, colorInicial.g, colorInicial.b, 1 - t);
             }
 
-            yield return null; // Espera al siguiente frame
+            yield return null; 
         }
 
-        // 3. Solo se destruye cuando el bucle termina
-        Debug.Log("Animación terminada, destruyendo objeto.");
-        Destroy(gameObject);
+        // CAMBIO: Desactivar en lugar de destruir para que el contador lo encuentre
+        gameObject.SetActive(false);
     }
 }
