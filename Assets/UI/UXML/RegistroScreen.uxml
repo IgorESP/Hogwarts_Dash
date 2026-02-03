@@ -6,11 +6,15 @@
             <ui:Label text="Crear Cuenta" style="font-size: 32px; color: gold; margin-bottom: 25px; -unity-font-style: bold;" />
             <ui:VisualElement class="campo-input" style="width: 100%; margin-bottom: 20px;">
                 <ui:Label text="Nombre" style="color: gold; margin-bottom: 5px; -unity-font-style: bold;" />
-                <ui:TextField name="Campo_Nombre" focusable="true" placeholder-text="Ej: Juan" />
+                <ui:TextField name="Campo_Nombre" focusable="true" placeholder-text="Juan" />
             </ui:VisualElement>
             <ui:VisualElement class="campo-input" style="width: 100%; margin-bottom: 20px;">
                 <ui:Label text="Apellido" style="color: gold; margin-bottom: 5px; -unity-font-style: bold;" />
-                <ui:TextField name="Campo_Apellido" focusable="true" placeholder-text="Ej: Pérez" />
+                <ui:TextField name="Campo_Apellido" focusable="true" placeholder-text="Pérez" />
+            </ui:VisualElement>
+            <ui:VisualElement class="campo-input" style="width: 100%; margin-bottom: 20px;"> 
+                <ui:Label text="Usuario" style="color: gold; margin-bottom: 5px; -unity-font-style: bold;" /> 
+                <ui:TextField name="Campo_Usuario" focusable="true" placeholder-text="juanperez123" /> 
             </ui:VisualElement>
             <ui:VisualElement class="campo-input" style="width: 100%; margin-bottom: 20px;">
                 <ui:Label text="Contraseña" style="color: gold; margin-bottom: 5px; -unity-font-style: bold;" />
