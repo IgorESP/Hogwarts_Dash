@@ -127,9 +127,9 @@
                 <ui:Label text="EQUIPO DE DESARROLLO" style="font-size: 28px; color: rgb(255, 215, 0); -unity-font-style: bold; margin-bottom: 15px; -unity-text-outline-width: 2px; -unity-text-outline-color: rgba(0, 0, 0, 0.8); -unity-text-align: middle-center;" />
                 
                 <ui:VisualElement style="background-color: rgba(0, 0, 0, 0.3); border-radius: 15px; padding: 20px; border-width: 2px; border-color: rgba(255, 215, 0, 0.3);">
-                    <ui:Label text="Temlo Castillo" style="font-size: 24px; color: white; margin-bottom: 10px; -unity-text-align: middle-center;" />
+                    <ui:Label text="Telmo Castillo" style="font-size: 24px; color: white; margin-bottom: 10px; -unity-text-align: middle-center;" />
                     <ui:Label text="Igor Esparza" style="font-size: 24px; color: white; margin-bottom: 10px; -unity-text-align: middle-center;" />
-                    <ui:Label text="Erlantz Garcia" style="font-size: 24px; color: white; margin-bottom: 10px; -unity-text-align: middle-center;" />
+                    <ui:Label text="Erlantz García" style="font-size: 24px; color: white; margin-bottom: 10px; -unity-text-align: middle-center;" />
                     <ui:Label text="Salca Bachir" style="font-size: 24px; color: white; -unity-text-align: middle-center;" />
                 </ui:VisualElement>
             </ui:VisualElement>

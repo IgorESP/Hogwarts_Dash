@@ -13,7 +13,7 @@ public class RegistroUIController : MonoBehaviour
     // REFERENCIAS UI
     // ====================================
     private VisualElement root;
-    private TextField campoNom, campoApe, campoPass, campoConf;
+    private TextField campoNom, campoApe, campoUsuario, campoPass, campoConf;
     private Button botonCrear, botonVolver;
     private Label mensajeError;
 
@@ -94,6 +94,7 @@ public class RegistroUIController : MonoBehaviour
     {
         campoNom = root.Q<TextField>("Campo_Nombre");
         campoApe = root.Q<TextField>("Campo_Apellido");
+        campoUsuario = root.Q<TextField>("Campo_Usuario");
         campoPass = root.Q<TextField>("Campo_Contrasena");
         campoConf = root.Q<TextField>("Campo_Confirmar");
         botonCrear = root.Q<Button>("Boton_Crear");
@@ -102,6 +103,7 @@ public class RegistroUIController : MonoBehaviour
 
         ForzarColorTexto(campoNom); 
         ForzarColorTexto(campoApe); 
+        ForzarColorTexto(campoUsuario);
         ForzarColorTexto(campoPass); 
         ForzarColorTexto(campoConf);
     }
@@ -158,6 +160,19 @@ public class RegistroUIController : MonoBehaviour
             return; 
         }
 
+       // Validar username 
+       if (string.IsNullOrEmpty(campoUsuario.value)) 
+       { 
+            MostrarError("Por favor,\ningresa un nombre de usuario"); 
+            return; 
+        } 
+        
+        if (campoUsuario.value.Length < 3) 
+        { 
+            MostrarError("El usuario debe tener\nmínimo 3 caracteres"); 
+            return; 
+        }
+
         // Validar contraseña
         if (string.IsNullOrEmpty(campoPass.value))
         {
@@ -205,7 +220,7 @@ public class RegistroUIController : MonoBehaviour
         botonCrear.text = "Creando...";
 
         // Generar nombre de usuario a partir del nombre
-        string usuario = campoNom.value.ToLower().Replace(" ", "");
+        string usuario = campoUsuario.value.ToLower().Trim();
 
         // Llamar a la API para registrar
         ApiManager.Instance.Registrar(
