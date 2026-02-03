@@ -66,6 +66,23 @@ public class RegistroUIController : MonoBehaviour
         root.Query<Label>().ForEach(l => l.style.fontSize = 25f * escala);
     }
 
+    /// <summary>
+    /// Fuerza el color del texto en un TextField de UI Toolkit.
+    /// </summary>
+    /// <param name="tf">El TextField al que se aplicará el estilo.</param>
+    private void ForzarColorTexto(TextField tf)
+    {
+        if (tf == null) return;
+
+        var input = tf.Q<VisualElement>("unity-text-input"); 
+
+        if (input != null) 
+        {
+            input.style.color = Color.black; 
+            input.style.unityFontStyleAndWeight = FontStyle.Bold; 
+        } 
+    }
+
     // ====================================
     // REFERENCIAS UI
     // ====================================
@@ -82,6 +99,11 @@ public class RegistroUIController : MonoBehaviour
         botonCrear = root.Q<Button>("Boton_Crear");
         botonVolver = root.Q<Button>("Boton_Volver");
         mensajeError = root.Q<Label>("Mensaje_Error");
+
+        ForzarColorTexto(campoNom); 
+        ForzarColorTexto(campoApe); 
+        ForzarColorTexto(campoPass); 
+        ForzarColorTexto(campoConf);
     }
 
     // ====================================

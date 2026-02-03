@@ -23,7 +23,7 @@ public class AjustesController : MonoBehaviour
     private Toggle toggleDaltonicos;
     
     // Botones
-    private Button botonRanking, botonAtras, botonCerrarSesion, botonCreditos, botonPerfil;
+    private Button botonRanking, botonAtras, botonCerrarSesion, botonCreditos, botonPerfil, botonTutorial, botonManual;
 
     // Ranking
     private VisualElement panelRankingOverlay;
@@ -80,6 +80,12 @@ public class AjustesController : MonoBehaviour
         // Créditos
         panelCreditosOverlay = root.Q<VisualElement>("PanelCreditosOverlay");
         botonCerrarCreditos = root.Q<Button>("Boton_CerrarCreditos");
+
+        // Tutorial
+        botonTutorial = root.Q<Button>("Boton_Tutorial"); 
+
+        // Manual
+        botonManual = root.Q<Button>("Boton_Manual");
     }
 
     // ====================================
@@ -114,6 +120,27 @@ public class AjustesController : MonoBehaviour
             botonCerrarRanking.clicked += CerrarRanking;
         if (botonCerrarCreditos != null) 
             botonCerrarCreditos.clicked += CerrarCreditos;
+        
+        // Tutorial
+        if (botonTutorial != null) 
+            botonTutorial.clicked += OnTutorialClick; 
+
+        // Manual
+        if (botonManual != null) 
+            botonManual.clicked += OnManualClick;
+    }
+
+
+    private void OnTutorialClick() 
+    { 
+        string ruta = System.IO.Path.Combine(Application.streamingAssetsPath, "Tutorial/index.html");
+        Application.OpenURL("file://" + ruta); 
+    }
+
+    private void OnManualClick() 
+    { 
+        string ruta = System.IO.Path.Combine(Application.streamingAssetsPath, "Manual/manual.pdf"); 
+        Application.OpenURL("file://" + ruta); 
     }
 
     // ====================================

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="icon" type="image/png" href="imagenes/logo_app.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial | Hogwarts Dash</title>
+    <style>
+        :root {
+            --primary: #70c6d1;
+            --secondary: #e9316e;
+            --bg: #0a0a0c;
+            --card-bg: #16161a;
+            --text: #ffffff;
+            --gold: #ffd700;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding-bottom: 50px;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(180deg, #1a1a2e 0%, var(--bg) 100%);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h2 {
+            border-left: 5px solid var(--secondary);
+            padding-left: 15px;
+            margin-top: 60px;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 2px solid #222;
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(0, 255, 204, 0.1);
+        }
+
+        .img-container {
+            width: 100%;
+            height: 180px;
+            background: #202026;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .img-container img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
+        }
+
+        .controls {
+            background: rgba(0, 255, 204, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 15px;
+        }
+
+        /* Sección Especial Snitch */
+        .snitch-box {
+            background: linear-gradient(45deg, #16161a, #2a2a10);
+            border: 2px solid var(--gold);
+            border-radius: 25px;
+            padding: 40px;
+            margin-top: 60px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.1);
+        }
+
+        .snitch-img {
+            width: 200px;
+            height: 130px;
+            margin: 0 auto 20px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 80px;
+            opacity: 0.5;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>TUTORIAL HOGWARTS DASH</h1>
+    <p>Aprende las mecánicas de nuestro juego</p>
+</header>
+
+<div class="container">
+
+    <h2>Mecánicas de Juego</h2>
+    <div class="grid">
+        <div class="card">
+            <div class="img-container">
+                <img src="imagenes/salto.png" alt="Salto Normal">
+            </div>
+            <h3>Salto Base</h3>
+            <p>Evita los obstáculos del suelo con un salto preciso.</p>
+            <div class="controls">TAP / ESPACIO</div>
+        </div>
+
+        <div class="card">
+            <div class="img-container">
+                <img src="imagenes/orbe.png" alt="Orbe de Salto">
+            </div>
+            <h3>Orbe Místico</h3>
+            <p>Tócala mientras estás en el aire para impulsarte nuevamente.</p>
+            <div class="controls">TAP EN EL AIRE</div>
+        </div>
+
+        <div class="card">
+            <div class="img-container">
+                <img src="imagenes/salto_jump_pad.png" alt="Jump Pad">
+            </div>
+            <h3>Jump Pad</h3>
+            <p>Plataformas de impulso automático. Te lanzan a gran altura.</p>
+            <div class="controls">PASIVO</div>
+        </div>
+    </div>
+
+    <h2>Vehículos Disponibles</h2>
+    <div class="grid">
+        <div class="card">
+            <div class="img-container">
+                <img src="imagenes/portal_cubo.png" alt="El Cubo">
+            </div>
+            <h3>El Cubo</h3>
+            <p>Tu forma principal. Salto simple y efectivo.</p>
+        </div>
+
+        <div class="card">
+            <div class="img-container">
+                <img src="imagenes/bola.png" alt="Erizo Mágico">
+            </div>
+            <h3>Erizo Mágico</h3>
+            <p>Cambia la gravedad instantáneamente y se pega a las superficies.</p>
+        </div>
+
+        <div class="card">
+            <div class="img-container">
+                <img src="imagenes/escoba.png" alt="La Escoba">
+            </div>
+            <h3>La Escoba</h3>
+            <p>Vuelo propulsado. Mantén para subir, suelta para caer.</p>
+        </div>
+
+        <div class="card">
+            <div class="img-container">
+                <img src="imagenes/ufo.png" alt="Gorro Mágico">
+            </div>
+            <h3>Gorro Mágico</h3>
+            <p>Permite realizar múltiples saltos cortos en el aire (estilo UFO).</p>
+        </div>
+    </div>
+
+    <div class="snitch-box">
+        <img src="imagenes/snitch.png" alt="Snitch Dorada" class="snitch-img">
+        <h2 style="border:none; padding:0; margin:0; color: var(--gold);">La Snitch Dorada</h2>
+        <p>El coleccionable definitivo. Encuentra las 3 snitch doradas en cada nivel para demostrar tu maestría.</p>
+    </div>
+
+</div>
+
+<footer>
+    <p><strong>&copy; 2026 Hogwarts Dash</strong> | Tutorial oficial</p>
+</footer>
+
+</body>
+</html>

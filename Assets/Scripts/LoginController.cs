@@ -19,7 +19,7 @@ public class LoginUIController : MonoBehaviour
     // ====================================
     // INICIALIZACIÓN
     // ====================================
-    void Start() 
+    void Start()
     {
         // Obtener el documento UI
         var uiDoc = GetComponent<UIDocument>();
@@ -35,18 +35,35 @@ public class LoginUIController : MonoBehaviour
         RegistrarEventos();
     }
 
+    /// <summary>
+    /// Fuerza el color del texto en un TextField de UI Toolkit.
+    /// </summary>
+    /// <param name="tf">El TextField al que se aplicará el estilo.</param>
+    private void ForzarColorTexto(TextField tf)
+    {
+        if (tf == null) return;
+
+        var input = tf.Q<VisualElement>("unity-text-input"); 
+
+        if (input != null) 
+        {
+            input.style.color = Color.black; 
+            input.style.unityFontStyleAndWeight = FontStyle.Bold; 
+        } 
+    }
+
     // ====================================
     // ACCESIBILIDAD
     // ====================================
-    
-    /// <summary>
-    /// Aplica las configuraciones de accesibilidad guardadas
-    /// (Modo daltónico y tamaño de texto)
-    /// </summary>
+
+        /// <summary>
+        /// Aplica las configuraciones de accesibilidad guardadas
+        /// (Modo daltónico y tamaño de texto)
+        /// </summary>
     private void AplicarAccesibilidad()
     {
         // Activar modo daltónico si está habilitado
-        if (PlayerPrefs.GetInt("ModoDaltonico", 0) == 1) 
+        if (PlayerPrefs.GetInt("ModoDaltonico", 0) == 1)
         {
             root.AddToClassList("modo-daltonico-activado");
         }
@@ -54,8 +71,9 @@ public class LoginUIController : MonoBehaviour
         // Ajustar tamaño de texto según preferencia del usuario
         float porcentaje = PlayerPrefs.GetFloat("TamanoLetra", 100f);
         float escala = porcentaje / 100f;
-        
-        root.Query<Label>().ForEach(label => {
+
+        root.Query<Label>().ForEach(label =>
+        {
             label.style.fontSize = 24f * escala; // 24px es el tamaño base
         });
     }
@@ -63,7 +81,7 @@ public class LoginUIController : MonoBehaviour
     // ====================================
     // REFERENCIAS UI
     // ====================================
-    
+
     /// <summary>
     /// Obtiene las referencias a todos los elementos de la UI
     /// </summary>
@@ -74,12 +92,15 @@ public class LoginUIController : MonoBehaviour
         botonLogin = root.Q<Button>("Boton_IniciarSesion");
         botonRegistrarse = root.Q<Button>("Boton_Registrarse");
         mensajeError = root.Q<Label>("Mensaje_Error");
+
+        ForzarColorTexto(campoUsuario); 
+        ForzarColorTexto(campoContrasena);
     }
 
     // ====================================
     // EVENTOS
     // ====================================
-    
+
     /// <summary>
     /// Registra los eventos de los botones
     /// </summary>
@@ -92,24 +113,24 @@ public class LoginUIController : MonoBehaviour
     // ====================================
     // MANEJO DE LOGIN
     // ====================================
-    
+
     /// <summary>
     /// Maneja el evento de click en el botón de login
     /// Valida los campos y llama a la API para autenticar
     /// </summary>
-    private void OnLoginClick() 
+    private void OnLoginClick()
     {
         // Ocultar mensaje de error previo
         OcultarError();
 
         // Validar que los campos no estén vacíos
-        if (string.IsNullOrEmpty(campoUsuario.value)) 
+        if (string.IsNullOrEmpty(campoUsuario.value))
         {
             MostrarError("Por favor,\ningresa tu usuario");
             return;
         }
 
-        if (string.IsNullOrEmpty(campoContrasena.value)) 
+        if (string.IsNullOrEmpty(campoContrasena.value))
         {
             MostrarError("Por favor,\ningresa tu contraseña");
             return;
@@ -121,8 +142,8 @@ public class LoginUIController : MonoBehaviour
 
         // Llamar a la API para autenticar
         ApiManager.Instance.Login(
-            campoUsuario.value, 
-            campoContrasena.value, 
+            campoUsuario.value,
+            campoContrasena.value,
             OnLoginRespuesta
         );
     }
@@ -136,13 +157,13 @@ public class LoginUIController : MonoBehaviour
         botonLogin.SetEnabled(true);
         botonLogin.text = "ENTRAR";
 
-        if (exito) 
+        if (exito)
         {
             // Login exitoso - ir al menú principal
             Debug.Log("✅ Login exitoso - Redirigiendo");
             SceneManager.LoadScene("MenuPrincipalT");
-        } 
-        else 
+        }
+        else
         {
             // Login fallido - mostrar error
             MostrarError(mensaje);
@@ -152,7 +173,7 @@ public class LoginUIController : MonoBehaviour
     // ====================================
     // NAVEGACIÓN
     // ====================================
-    
+
     /// <summary>
     /// Navega a la pantalla de registro
     /// </summary>
@@ -164,18 +185,18 @@ public class LoginUIController : MonoBehaviour
     // ====================================
     // MENSAJES DE ERROR
     // ====================================
-    
+
     /// <summary>
     /// Muestra un mensaje de error en la pantalla
     /// </summary>
-    private void MostrarError(string mensaje) 
+    private void MostrarError(string mensaje)
     {
-        if (mensajeError != null) 
+        if (mensajeError != null)
         {
             mensajeError.text = mensaje;
             mensajeError.style.display = DisplayStyle.Flex;
             mensajeError.style.whiteSpace = WhiteSpace.Normal;
-            
+
             Debug.LogWarning("Login Error: " + mensaje);
         }
     }
