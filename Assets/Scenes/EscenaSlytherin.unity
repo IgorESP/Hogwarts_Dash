@@ -133,11 +133,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5889198634819294321, guid: 38ca93abce9f5f242b3b8d1766552863, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.6
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 5889198634819294321, guid: 38ca93abce9f5f242b3b8d1766552863, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.6
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 5889198634819294321, guid: 38ca93abce9f5f242b3b8d1766552863, type: 3}
       propertyPath: m_LocalPosition.x
@@ -61657,11 +61657,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5889198634819294321, guid: 38ca93abce9f5f242b3b8d1766552863, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.6
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 5889198634819294321, guid: 38ca93abce9f5f242b3b8d1766552863, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.6
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 5889198634819294321, guid: 38ca93abce9f5f242b3b8d1766552863, type: 3}
       propertyPath: m_LocalPosition.x
@@ -61734,11 +61734,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5889198634819294321, guid: 38ca93abce9f5f242b3b8d1766552863, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.6
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 5889198634819294321, guid: 38ca93abce9f5f242b3b8d1766552863, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.6
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 5889198634819294321, guid: 38ca93abce9f5f242b3b8d1766552863, type: 3}
       propertyPath: m_LocalPosition.x
@@ -65608,7 +65608,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185bd3de3a9907f4cbd3135872ffaa27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  escenaFallback: MenuPrincipalT
   tiempoEspera: 0.2
 --- !u!212 &1979232796
 SpriteRenderer:
