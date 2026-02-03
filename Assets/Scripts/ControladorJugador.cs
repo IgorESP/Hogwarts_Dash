@@ -151,23 +151,25 @@ public class MovimientoGD : MonoBehaviour
     {
         if (collision.CompareTag("Moneda"))
         {
-            if (audioSource != null && sonidoMoneda != null) 
-            {
-                audioSource.PlayOneShot(sonidoMoneda);
-            }
+           if (audioSource != null && sonidoMoneda != null) 
+    {
+        audioSource.PlayOneShot(sonidoMoneda);
+    }
 
-            AnimacionSnitch animSnitch = collision.GetComponent<AnimacionSnitch>();
-            if (animSnitch != null)
-            {
-                Debug.Log("Snitch detectada");
-            }
-            else
-            {
-                collision.gameObject.SetActive(false);
-            }
-            
-            return; 
-        }
+    AnimacionSnitch animSnitch = collision.GetComponent<AnimacionSnitch>();
+    if (animSnitch != null)
+    {
+        // CAMBIO: Aseguramos que se ejecute la lógica de la Snitch
+        // La propia Snitch se desactivará al final de su animación.
+        Debug.Log("Snitch detectada");
+    }
+    else
+    {
+        collision.gameObject.SetActive(false);
+    }
+    
+    return; 
+}
 
         if (collision.CompareTag("PortalCohete")) { ActivarModoCohete(); return; }
         if (collision.CompareTag("PortalBola")) { ActivarModoBola(); return; }

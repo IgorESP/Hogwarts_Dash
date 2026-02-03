@@ -3,7 +3,8 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Script para detectar cuando el jugador completa un nivel.
-/// Cuenta: Intentos, Monedas (con tag "Moneda"), Porcentaje
+/// Porcentaje: SIEMPRE 100% al llegar al final
+/// Cuenta: Intentos (muertes) y Monedas recogidas
 /// </summary>
 public class FinishLevel : MonoBehaviour
 {
@@ -29,15 +30,15 @@ public class FinishLevel : MonoBehaviour
         
         int mundoActual = PlayerPrefs.GetInt("MundoSeleccionado", 1);
         
-        // CONTAR ESTADÍSTICAS
-        float porcentaje = CalcularPorcentaje();
+        // ESTADÍSTICAS
+        float porcentaje = 100f; // ✅ SIEMPRE 100%
         int monedasRecogidas = ContarMonedasRecogidas();
         int intentos = ObtenerIntentos();
         
         Debug.Log($"[FinishLevel] 📊 ESTADÍSTICAS:");
-        Debug.Log($"   Porcentaje: {porcentaje}%");
-        Debug.Log($"   Intentos: {intentos}");
-        Debug.Log($"   Monedas: {monedasRecogidas}");
+        Debug.Log($"   ✅ Porcentaje: 100% (nivel completado)");
+        Debug.Log($"   💀 Intentos: {intentos}");
+        Debug.Log($"   💰 Monedas: {monedasRecogidas}");
         
         // Guardar en NivelesManager
         if (NivelesManager.Instance != null)
@@ -52,7 +53,7 @@ public class FinishLevel : MonoBehaviour
         PlayerPrefs.SetInt("UltimoMundoCompletado", mundoActual);
         PlayerPrefs.Save();
         
-        // Resetear intentos
+        // Resetear intentos para el próximo intento
         string escenaActual = SceneManager.GetActiveScene().name;
         PlayerPrefs.DeleteKey("Intentos_" + escenaActual);
         PlayerPrefs.DeleteKey("IntentosActuales");
@@ -69,63 +70,40 @@ public class FinishLevel : MonoBehaviour
     }
     
     /// <summary>
-    /// Calcula el porcentaje de monedas recogidas
-    /// </summary>
-    private float CalcularPorcentaje()
-    {
-        GameObject[] monedas = GameObject.FindGameObjectsWithTag("Moneda");
-        
-        int totalMonedas = monedas.Length;
-        
-        if (totalMonedas == 0)
-        {
-            Debug.LogWarning("[FinishLevel] ⚠️ No hay monedas con tag 'Moneda'");
-            return 100f;
-        }
-        
-        // Contar inactivas (recogidas)
-        int recogidas = 0;
-        
-        foreach (GameObject moneda in monedas)
-        {
-            if (!moneda.activeInHierarchy)
-                recogidas++;
-        }
-        
-        float porcentaje = ((float)recogidas / totalMonedas) * 100f;
-        
-        Debug.Log($"[FinishLevel] 💰 Monedas: {recogidas}/{totalMonedas} = {porcentaje}%");
-        
-        return porcentaje;
-    }
-    
-    /// <summary>
-    /// Cuenta monedas recogidas (inactivas)
+    /// Cuenta monedas recogidas (inactivas con tag "Moneda")
     /// </summary>
     private int ContarMonedasRecogidas()
     {
-        GameObject[] monedas = GameObject.FindGameObjectsWithTag("Moneda");
-        int recogidas = 0;
-        
-        foreach (GameObject moneda in monedas)
+        try
         {
-            if (!moneda.activeInHierarchy)
-                recogidas++;
+            GameObject[] monedas = GameObject.FindGameObjectsWithTag("Moneda");
+            int recogidas = 0;
+            
+            foreach (GameObject moneda in monedas)
+            {
+                if (!moneda.activeInHierarchy)
+                    recogidas++;
+            }
+            
+            Debug.Log($"[FinishLevel] 💰 Monedas recogidas: {recogidas}/{monedas.Length}");
+            return recogidas;
         }
-        
-        Debug.Log($"[FinishLevel] Monedas recogidas: {recogidas}/{monedas.Length}");
-        return recogidas;
+        catch
+        {
+            Debug.LogWarning("[FinishLevel] ⚠️ No hay monedas con tag 'Moneda'");
+            return 0;
+        }
     }
     
     /// <summary>
-    /// Obtiene intentos desde PlayerPrefs
+    /// Obtiene intentos (muertes) desde PlayerPrefs
     /// </summary>
     private int ObtenerIntentos()
     {
         string escenaActual = SceneManager.GetActiveScene().name;
         int intentos = PlayerPrefs.GetInt("Intentos_" + escenaActual, 0);
         
-        Debug.Log($"[FinishLevel] 💀 Intentos: {intentos}");
+        Debug.Log($"[FinishLevel] 💀 Intentos totales: {intentos}");
         return intentos;
     }
     
