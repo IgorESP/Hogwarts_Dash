@@ -2,22 +2,22 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Gestor principal del juego que rastrea el progreso del nivel
-/// Llama al panel de resultados cuando el nivel termina
+/// Gestor principal del juego
+/// Lee las estadísticas guardadas en PlayerPrefs por FinishLevel
 /// </summary>
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     
     [Header("Estadísticas del Nivel")]
-    public int objetivosTotales = 100;         // Meta del nivel (ej: 100m de distancia, 50 monedas, etc.)
-    public int objetivosCompletados = 0;       // Progreso actual (ej: 75m recorridos, 40 monedas, etc.)
-    public int totalIntentos = 0;              // Número de veces que murió/falló
-    public int snitchesRecogidas = 0;          // Snitches doradas recogidas (bonus)
+    public int objetivosTotales = 0;
+    public int objetivosCompletados = 0;
+    public int totalIntentos = 0;
+    public int snitchesRecogidas = 0;
     
     [Header("Configuración del Nivel")]
-    public int mundoActual = 1;                // Mundo actual (1-5)
-    public int nivelActual = 1;                // Nivel actual (1-10)
+    public int mundoActual = 1;
+    public int nivelActual = 1;
     
     private ResultadosController resultadosController;
     
@@ -33,140 +33,50 @@ public class GameManager : MonoBehaviour
             return;
         }
         
-        // Obtener mundo y nivel desde PlayerPrefs o nombre de escena
         mundoActual = PlayerPrefs.GetInt("MundoSeleccionado", 1);
         nivelActual = PlayerPrefs.GetInt("NivelSeleccionado", 1);
         
-        Debug.Log($"🎮 GameManager iniciado - Mundo {mundoActual}, Nivel {nivelActual}");
+        Debug.Log($"[GameManager] Iniciado - Mundo {mundoActual}, Nivel {nivelActual}");
     }
     
     void Start()
     {
-        // Buscar el ResultadosController en la escena
         resultadosController = FindFirstObjectByType<ResultadosController>();
         
         if (resultadosController == null)
         {
-            Debug.LogWarning("⚠️ No se encontró ResultadosController en la escena");
+            Debug.LogWarning("[GameManager] No se encontró ResultadosController");
         }
-    }
-    
-    // ============================================
-    // MÉTODOS PARA REGISTRAR EVENTOS DEL JUEGO
-    // ============================================
-    
-    /// <summary>
-    /// Actualizar progreso del nivel (ej: metros recorridos, monedas recogidas, etc.)
-    /// </summary>
-    public void ActualizarProgreso(int cantidad)
-    {
-        objetivosCompletados = cantidad;
-        Debug.Log($"📊 Progreso: {objetivosCompletados}/{objetivosTotales} ({ObtenerPorcentajeActual()}%)");
-    }
-    
-    /// <summary>
-    /// Incrementar progreso (ej: +1 moneda, +10 metros, etc.)
-    /// </summary>
-    public void IncrementarProgreso(int cantidad = 1)
-    {
-        objetivosCompletados += cantidad;
-        objetivosCompletados = Mathf.Min(objetivosCompletados, objetivosTotales); // No pasar del máximo
-        Debug.Log($"📈 Progreso incrementado: {objetivosCompletados}/{objetivosTotales}");
-    }
-    
-    /// <summary>
-    /// Registrar un intento fallido (muerte, caída, etc.)
-    /// </summary>
-    public void RegistrarIntento()
-    {
-        totalIntentos++;
-        Debug.Log($"💀 Intento registrado: {totalIntentos}");
-    }
-    
-    /// <summary>
-    /// Registrar una Snitch dorada recogida
-    /// </summary>
-    public void RegistrarSnitchRecogida()
-    {
-        snitchesRecogidas++;
-        Debug.Log($"⭐ Snitch recogida: {snitchesRecogidas}");
     }
     
     /// <summary>
     /// Finalizar el nivel y mostrar resultados
+    /// LEE LOS DATOS DE PLAYERPREFS (guardados por FinishLevel)
     /// </summary>
     public void FinalizarNivel()
     {
-        // Calcular porcentaje
-        int porcentaje = ObtenerPorcentajeActual();
+        // Leer estadísticas de PlayerPrefs (guardadas por FinishLevel)
+        int porcentaje = Mathf.RoundToInt(PlayerPrefs.GetFloat("UltimoPorcentaje", 0f));
+        int intentos = PlayerPrefs.GetInt("UltimosIntentos", 0);
+        int snitches = PlayerPrefs.GetInt("UltimasSnitches", 0);
         
-        Debug.Log($"🏁 Nivel finalizado:");
-        Debug.Log($"   Progreso: {objetivosCompletados}/{objetivosTotales}");
+        Debug.Log($"[GameManager] Finalizando nivel:");
         Debug.Log($"   Porcentaje: {porcentaje}%");
-        Debug.Log($"   Intentos: {totalIntentos}");
-        Debug.Log($"   Snitches: {snitchesRecogidas}");
+        Debug.Log($"   Intentos: {intentos}");
+        Debug.Log($"   Snitches: {snitches}");
         
-        // Guardar progreso en NivelesManager
-        if (NivelesManager.Instance != null)
-        {
-            NivelesManager.Instance.CompletarNivel(mundoActual, nivelActual, porcentaje);
-        }
-        
-        // Guardar en la API
-        GuardarProgresoEnAPI(porcentaje);
-        
-        // Mostrar panel de resultados
+        // Mostrar panel de resultados CON LOS VALORES CORRECTOS
         if (resultadosController != null)
         {
-            bool victoria = porcentaje >= 40; // 40% mínimo para aprobar
-            resultadosController.MostrarResultados(porcentaje, totalIntentos, snitchesRecogidas, victoria);
+            bool victoria = porcentaje >= 40;
+            resultadosController.MostrarResultados(porcentaje, intentos, snitches, victoria);
+            Debug.Log("[GameManager] Panel de resultados llamado con valores correctos");
         }
         else
         {
-            Debug.LogError("❌ ResultadosController no encontrado");
+            Debug.LogError("[GameManager] ResultadosController no encontrado");
         }
     }
-    
-    /// <summary>
-    /// Forzar fin del nivel con valores específicos (para pruebas)
-    /// </summary>
-    public void FinalizarNivelForzado(int porcentaje, int intentos, int snitches)
-    {
-        objetivosCompletados = Mathf.RoundToInt(objetivosTotales * porcentaje / 100f);
-        totalIntentos = intentos;
-        snitchesRecogidas = snitches;
-        
-        FinalizarNivel();
-    }
-    
-    // ============================================
-    // GUARDAR EN LA API
-    // ============================================
-    
-    private void GuardarProgresoEnAPI(int porcentaje)
-    {
-        if (ApiManager.Instance == null)
-        {
-            Debug.LogWarning("⚠️ ApiManager no disponible, no se puede guardar en API");
-            return;
-        }
-        
-        string playerId = PlayerPrefs.GetString("player_id", "");
-        if (string.IsNullOrEmpty(playerId))
-        {
-            Debug.LogWarning("⚠️ No hay player_id, no se puede guardar en API");
-            return;
-        }
-        
-        // Aquí deberías llamar a un método de ApiManager para guardar el progreso
-        // Ejemplo: ApiManager.Instance.GuardarProgreso(playerId, mundoActual, nivelActual, porcentaje);
-        
-        Debug.Log($"💾 Progreso guardado en API - Mundo {mundoActual}, Nivel {nivelActual}, {porcentaje}%");
-    }
-    
-    // ============================================
-    // MÉTODOS DE UTILIDAD
-    // ============================================
     
     /// <summary>
     /// Obtener el porcentaje actual del nivel
@@ -185,28 +95,41 @@ public class GameManager : MonoBehaviour
         objetivosCompletados = 0;
         totalIntentos = 0;
         snitchesRecogidas = 0;
-        Debug.Log("🔄 Estadísticas reiniciadas");
+        Debug.Log("[GameManager] Estadísticas reiniciadas");
     }
     
     // ============================================
-    // MÉTODOS DE COMPATIBILIDAD (para otros scripts)
+    // MÉTODOS DE COMPATIBILIDAD
     // ============================================
     
-    /// <summary>
-    /// Llamado cuando el jugador muere (compatibilidad con scripts antiguos)
-    /// </summary>
     public void PlayerDied()
     {
-        RegistrarIntento();
-        Debug.Log("💀 PlayerDied llamado - Intento registrado");
+        totalIntentos++;
+        Debug.Log($"[GameManager] PlayerDied llamado - Intento: {totalIntentos}");
     }
     
-    /// <summary>
-    /// Llamado cuando se completa el nivel (compatibilidad con scripts antiguos)
-    /// </summary>
     public void LevelComplete()
     {
         FinalizarNivel();
-        Debug.Log("🏁 LevelComplete llamado - Finalizando nivel");
+    }
+    
+    public void ActualizarProgreso(int cantidad)
+    {
+        objetivosCompletados = cantidad;
+    }
+    
+    public void IncrementarProgreso(int cantidad = 1)
+    {
+        objetivosCompletados += cantidad;
+    }
+    
+    public void RegistrarSnitchRecogida()
+    {
+        snitchesRecogidas++;
+    }
+    
+    public void RegistrarIntento()
+    {
+        totalIntentos++;
     }
 }

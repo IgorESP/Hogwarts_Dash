@@ -3,91 +3,123 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Script para detectar cuando el jugador completa un nivel.
-/// Colocar este script en un GameObject con Collider2D (Is Trigger = true) en la meta del nivel.
+/// Cuenta intentos automáticamente cada vez que se reinicia la escena.
 /// </summary>
 public class FinishLevel : MonoBehaviour
 {
     [Header("Configuración")]
-    [Tooltip("Escena a cargar si no hay GameManager (fallback)")]
-    public string escenaFallback = "MenuPrincipalT";
-    
-    [Tooltip("Tiempo de espera antes de cargar la escena (segundos)")]
+    [Tooltip("Tiempo de espera antes de mostrar resultados")]
     public float tiempoEspera = 0.5f;
     
-    // Variable para evitar múltiples activaciones
     private bool nivelCompletado = false;
+    private static int intentosAcumulados = 0;
     
-    /// <summary>
-    /// Se ejecuta cuando algo entra en el trigger.
-    /// Solo detecta objetos 2D con Collider2D.
-    /// </summary>
+    void Start()
+    {
+        // Cada vez que se carga la escena, incrementar intentos
+        // EXCEPTO la primera vez
+        if (!PlayerPrefs.HasKey("PrimeraVez_" + SceneManager.GetActiveScene().name))
+        {
+            // Primera vez en este nivel, no contar como intento
+            PlayerPrefs.SetInt("PrimeraVez_" + SceneManager.GetActiveScene().name, 1);
+            intentosAcumulados = 0;
+        }
+        else
+        {
+            // Ya jugó antes, esto es un reintento
+            intentosAcumulados++;
+        }
+        
+        Debug.Log($"[FinishLevel] Intentos actuales: {intentosAcumulados}");
+    }
+    
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Log para debug - ver qué está tocando el trigger
-        Debug.Log($"[FinishLevel] Trigger detectado: {other.name} (Tag: '{other.tag}')");
-        
-        // Verificar que sea el jugador y que no hayamos completado ya
         if (other.CompareTag("Player") && !nivelCompletado)
         {
             Debug.Log("[FinishLevel] JUGADOR DETECTADO - Finalizando nivel!");
             nivelCompletado = true;
-            FinalizarNivel();
+            Invoke("FinalizarNivel", tiempoEspera);
         }
     }
     
-    /// <summary>
-    /// Llama al GameManager para procesar el final del nivel.
-    /// Si no existe GameManager, carga la escena de fallback.
-    /// </summary>
     private void FinalizarNivel()
     {
         Debug.Log("[FinishLevel] Nivel completado!");
         
-        // Intentar llamar al GameManager
+        // Obtener mundo actual
+        int mundoActual = PlayerPrefs.GetInt("MundoSeleccionado", 1);
+        
+        // Contar snitches recogidas (inactivas)
+        int snitchesRecogidas = ContarSnitchesRecogidas();
+        
+        // Calcular porcentaje (siempre 100% si llegó aquí)
+        float porcentaje = 100f;
+        
+        Debug.Log($"[FinishLevel] Estadísticas:");
+        Debug.Log($"  - Porcentaje: {porcentaje}%");
+        Debug.Log($"  - Intentos: {intentosAcumulados}");
+        Debug.Log($"  - Snitches: {snitchesRecogidas}");
+        
+        // Guardar en NivelesManager
+        if (NivelesManager.Instance != null)
+        {
+            NivelesManager.Instance.CompletarNivel(mundoActual, 1, porcentaje);
+        }
+        
+        // Guardar estadísticas para el panel
+        PlayerPrefs.SetFloat("UltimoPorcentaje", porcentaje);
+        PlayerPrefs.SetInt("UltimosIntentos", intentosAcumulados);
+        PlayerPrefs.SetInt("UltimasSnitches", snitchesRecogidas);
+        PlayerPrefs.SetInt("UltimoMundoCompletado", mundoActual);
+        PlayerPrefs.Save();
+        
+        // Resetear intentos para el próximo nivel
+        intentosAcumulados = 0;
+        PlayerPrefs.DeleteKey("PrimeraVez_" + SceneManager.GetActiveScene().name);
+        
+        // Llamar a GameManager si existe
         if (GameManager.Instance != null)
         {
-            // El GameManager se encarga de:
-            // 1. Calcular porcentaje de monedas
-            // 2. Registrar estrellas
-            // 3. Desbloquear siguiente nivel
-            // 4. Mostrar pantalla de resultados
             GameManager.Instance.FinalizarNivel();
         }
         else
         {
-            // Si no hay GameManager, cargar escena de fallback
-            Debug.LogWarning("[FinishLevel] GameManager no encontrado - Cargando escena de fallback");
-            Invoke("CargarEscenaFallback", tiempoEspera);
+            // Si no hay GameManager, cargar ResultadosScene directamente
+            SceneManager.LoadScene("ResultadosScene");
         }
     }
     
-    /// <summary>
-    /// Carga la escena de fallback si no hay GameManager.
-    /// </summary>
-    private void CargarEscenaFallback()
+    private int ContarSnitchesRecogidas()
     {
-        Debug.Log($"[FinishLevel] Cargando escena de fallback: {escenaFallback}");
-        SceneManager.LoadScene(escenaFallback);
+        try
+        {
+            GameObject[] snitches = GameObject.FindGameObjectsWithTag("Snitch");
+            int recogidas = 0;
+            
+            foreach (GameObject snitch in snitches)
+            {
+                if (!snitch.activeInHierarchy)
+                    recogidas++;
+            }
+            
+            Debug.Log($"[FinishLevel] Snitches recogidas: {recogidas}/{snitches.Length}");
+            return recogidas;
+        }
+        catch
+        {
+            Debug.LogWarning("[FinishLevel] Tag 'Snitch' no existe");
+            return 0;
+        }
     }
     
-    // ============================================
-    // MÉTODOS DE DEBUG
-    // ============================================
-    
-    /// <summary>
-    /// Dibuja el área del trigger en el editor (Gizmos).
-    /// Solo visible en Scene View.
-    /// </summary>
     private void OnDrawGizmos()
     {
-        // Obtener el collider
         Collider2D col = GetComponent<Collider2D>();
         if (col == null) return;
         
-        // Dibujar en color verde si está activo
         Gizmos.color = nivelCompletado ? Color.red : Color.green;
         
-        // Dibujar el área del trigger
         if (col is BoxCollider2D box)
         {
             Gizmos.DrawWireCube(transform.position + (Vector3)box.offset, box.size);
