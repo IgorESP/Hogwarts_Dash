@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Script para detectar cuando el jugador completa un nivel.
-/// ✅ FIX: Intentos NO se duplican + Monedas tag "moneda"
+/// Cuenta: Intentos, Monedas (con tag "Moneda"), Porcentaje
 /// </summary>
 public class FinishLevel : MonoBehaviour
 {
@@ -13,36 +13,11 @@ public class FinishLevel : MonoBehaviour
     
     private bool nivelCompletado = false;
     
-    void Start()
-    {
-        // ✅ FIX INTENTOS: Usa PlayerPrefs, NO static que se duplica
-        string escenaKey = SceneManager.GetActiveScene().name;
-        string primeraVezKey = "PrimeraVez_" + escenaKey;
-        string intentosKey = "Intentos_" + escenaKey;
-        
-        if (!PlayerPrefs.HasKey(primeraVezKey))
-        {
-            // ⭐ PRIMERA VEZ = 0 intentos
-            PlayerPrefs.SetInt(primeraVezKey, 1);
-            PlayerPrefs.SetInt(intentosKey, 0);
-            Debug.Log("[FinishLevel] ⭐ PRIMERA VEZ → 0 intentos");
-        }
-        else
-        {
-            // 🔄 REINICIO = +1 intento (leer anterior + sumar)
-            int intentosAnteriores = PlayerPrefs.GetInt(intentosKey, 0);
-            int nuevosIntentos = intentosAnteriores + 1;
-            PlayerPrefs.SetInt(intentosKey, nuevosIntentos);
-            PlayerPrefs.Save();
-            Debug.Log($"[FinishLevel] 🔄 REINICIO #{nuevosIntentos} (era {intentosAnteriores})");
-        }
-    }
-    
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player") && !nivelCompletado)
         {
-            Debug.Log("[FinishLevel] JUGADOR DETECTADO - Finalizando nivel!");
+            Debug.Log("[FinishLevel] ¡JUGADOR DETECTADO! Finalizando nivel...");
             nivelCompletado = true;
             Invoke("FinalizarNivel", tiempoEspera);
         }
@@ -52,73 +27,106 @@ public class FinishLevel : MonoBehaviour
     {
         Debug.Log("[FinishLevel] 🎉 Nivel completado!");
         
-        string escenaKey = SceneManager.GetActiveScene().name;
-        int intentos = PlayerPrefs.GetInt("Intentos_" + escenaKey, 0);
         int mundoActual = PlayerPrefs.GetInt("MundoSeleccionado", 1);
         
-        // ✅ MONEDAS (fallback múltiples tags)
+        // CONTAR ESTADÍSTICAS
+        float porcentaje = CalcularPorcentaje();
         int monedasRecogidas = ContarMonedasRecogidas();
-        float porcentaje = 100f;
+        int intentos = ObtenerIntentos();
         
         Debug.Log($"[FinishLevel] 📊 ESTADÍSTICAS:");
-        Debug.Log($"  Porcentaje: {porcentaje}%");
-        Debug.Log($"  Intentos: {intentos}");
-        Debug.Log($"  Monedas: {monedasRecogidas}");
+        Debug.Log($"   Porcentaje: {porcentaje}%");
+        Debug.Log($"   Intentos: {intentos}");
+        Debug.Log($"   Monedas: {monedasRecogidas}");
         
-        // Guardar NivelesManager
+        // Guardar en NivelesManager
         if (NivelesManager.Instance != null)
+        {
             NivelesManager.Instance.CompletarNivel(mundoActual, 1, porcentaje);
+        }
         
-        // ✅ GUARDAR para GameManager (CORREGIDO: monedas)
+        // Guardar para panel de resultados
         PlayerPrefs.SetFloat("UltimoPorcentaje", porcentaje);
         PlayerPrefs.SetInt("UltimosIntentos", intentos);
-        PlayerPrefs.SetInt("UltimasMonedas", monedasRecogidas);  // ← MONEDAS
+        PlayerPrefs.SetInt("UltimasSnitches", monedasRecogidas);
         PlayerPrefs.SetInt("UltimoMundoCompletado", mundoActual);
         PlayerPrefs.Save();
         
+        // Resetear intentos
+        string escenaActual = SceneManager.GetActiveScene().name;
+        PlayerPrefs.DeleteKey("Intentos_" + escenaActual);
+        PlayerPrefs.DeleteKey("IntentosActuales");
+        
         // Llamar GameManager
         if (GameManager.Instance != null)
+        {
             GameManager.Instance.FinalizarNivel();
+        }
         else
+        {
             SceneManager.LoadScene("ResultadosScene");
+        }
     }
     
     /// <summary>
-    /// ✅ MONEDAS con fallback de tags comunes
+    /// Calcula el porcentaje de monedas recogidas
+    /// </summary>
+    private float CalcularPorcentaje()
+    {
+        GameObject[] monedas = GameObject.FindGameObjectsWithTag("Moneda");
+        
+        int totalMonedas = monedas.Length;
+        
+        if (totalMonedas == 0)
+        {
+            Debug.LogWarning("[FinishLevel] ⚠️ No hay monedas con tag 'Moneda'");
+            return 100f;
+        }
+        
+        // Contar inactivas (recogidas)
+        int recogidas = 0;
+        
+        foreach (GameObject moneda in monedas)
+        {
+            if (!moneda.activeInHierarchy)
+                recogidas++;
+        }
+        
+        float porcentaje = ((float)recogidas / totalMonedas) * 100f;
+        
+        Debug.Log($"[FinishLevel] 💰 Monedas: {recogidas}/{totalMonedas} = {porcentaje}%");
+        
+        return porcentaje;
+    }
+    
+    /// <summary>
+    /// Cuenta monedas recogidas (inactivas)
     /// </summary>
     private int ContarMonedasRecogidas()
     {
-        try
+        GameObject[] monedas = GameObject.FindGameObjectsWithTag("Moneda");
+        int recogidas = 0;
+        
+        foreach (GameObject moneda in monedas)
         {
-            string escenaKey = SceneManager.GetActiveScene().name;
-            string totalKey = "TotalMonedas_" + escenaKey;
-            
-            // Probar múltiples tags comunes
-            GameObject[] monedas = GameObject.FindGameObjectsWithTag("moneda");
-            if (monedas.Length == 0) monedas = GameObject.FindGameObjectsWithTag("Coin");
-            if (monedas.Length == 0) monedas = GameObject.FindGameObjectsWithTag("Collectible");
-            if (monedas.Length == 0) monedas = GameObject.FindGameObjectsWithTag("Moneda");
-            
-            int totalMonedas = monedas.Length;
-            
-            // Registrar total si es primera vez
-            if (!PlayerPrefs.HasKey(totalKey))
-            {
-                PlayerPrefs.SetInt(totalKey, totalMonedas);
-                Debug.Log($"[FinishLevel] 💰 Total monedas: {totalMonedas} (tag usado)");
-            }
-            
-            int totalEsperado = PlayerPrefs.GetInt(totalKey, totalMonedas);
-            int recogidas = totalEsperado - monedas.Length;
-            
-            Debug.Log($"[FinishLevel] 💰 Total={totalEsperado} | Activas={monedas.Length} | Recogidas={recogidas}");
-            return recogidas;
+            if (!moneda.activeInHierarchy)
+                recogidas++;
         }
-        catch (System.Exception e)
-        {
-            Debug.LogWarning($"[FinishLevel] ❌ Error monedas: {e.Message}");
-            return 0;
-        }
+        
+        Debug.Log($"[FinishLevel] Monedas recogidas: {recogidas}/{monedas.Length}");
+        return recogidas;
+    }
+    
+    /// <summary>
+    /// Obtiene intentos desde PlayerPrefs
+    /// </summary>
+    private int ObtenerIntentos()
+    {
+        string escenaActual = SceneManager.GetActiveScene().name;
+        int intentos = PlayerPrefs.GetInt("Intentos_" + escenaActual, 0);
+        
+        Debug.Log($"[FinishLevel] 💀 Intentos: {intentos}");
+        return intentos;
     }
     
     private void OnDrawGizmos()
@@ -129,8 +137,12 @@ public class FinishLevel : MonoBehaviour
         Gizmos.color = nivelCompletado ? Color.red : Color.green;
         
         if (col is BoxCollider2D box)
+        {
             Gizmos.DrawWireCube(transform.position + (Vector3)box.offset, box.size);
+        }
         else if (col is CircleCollider2D circle)
+        {
             Gizmos.DrawWireSphere(transform.position + (Vector3)circle.offset, circle.radius);
+        }
     }
 }

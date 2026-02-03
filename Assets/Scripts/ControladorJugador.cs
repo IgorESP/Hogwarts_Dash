@@ -20,9 +20,9 @@ public class MovimientoGD : MonoBehaviour
     public float tiempoEsperaMuerte = 1.0f;
 
     [Header("Sonidos (NUEVO)")]
-    public AudioSource audioSource;    // Arrastra aquí el AudioSource del Cubo
-    public AudioClip sonidoMuerte;     // Arrastra aquí el wav de explosión
-    public AudioClip sonidoMoneda;     // Arrastra aquí el wav de moneda
+    public AudioSource audioSource;
+    public AudioClip sonidoMuerte;
+    public AudioClip sonidoMoneda;
 
     [Header("Modos Especiales")]
     public GameObject objetoEscoba;  
@@ -50,7 +50,6 @@ public class MovimientoGD : MonoBehaviour
         col = GetComponent<BoxCollider2D>();
         rend = GetComponent<SpriteRenderer>();
 
-        // Si no asignaste el AudioSource en el inspector, intentamos buscarlo
         if (audioSource == null) audioSource = GetComponent<AudioSource>();
 
         circleCol = GetComponent<CircleCollider2D>();
@@ -152,26 +151,21 @@ public class MovimientoGD : MonoBehaviour
     {
         if (collision.CompareTag("Moneda"))
         {
-            // 1. Primero lanzamos el sonido
             if (audioSource != null && sonidoMoneda != null) 
             {
                 audioSource.PlayOneShot(sonidoMoneda);
             }
-// 2. Comprobamos si tiene la animación de la Snitch
+
             AnimacionSnitch animSnitch = collision.GetComponent<AnimacionSnitch>();
             if (animSnitch != null)
             {
-                // Si tiene el script de animación, NO lo desactivamos aquí.
-                // El propio script AnimacionSnitch se encargará de ocultarlo/destruirlo.
-                Debug.Log("Snitch detectada: Dejando que AnimacionSnitch maneje la recolección.");
+                Debug.Log("Snitch detectada");
             }
             else
             {
-                // Si es una moneda normal, la desactivamos tal cual (comportamiento original)
                 collision.gameObject.SetActive(false);
             }
             
-            Debug.Log("Moneda recogida y sonido enviado");
             return; 
         }
 
@@ -209,7 +203,6 @@ public class MovimientoGD : MonoBehaviour
         }
     }
 
-    // --- MÉTODOS DE MODOS ---
     void ActivarModoCohete() { DesactivarModos(); modoCohete = true; if (objetoEscoba != null) objetoEscoba.SetActive(true); rb.gravityScale = 2.5f; rb.linearVelocity = new Vector2(velocidad, 0); }
     void ActivarModoBola() { DesactivarModos(); modoBola = true; rend.enabled = false; if (objetoBola != null) objetoBola.SetActive(true); rb.gravityScale = 4.5f; rb.linearVelocity = new Vector2(velocidad, 0); if(col) col.enabled = false; if(circleCol) circleCol.enabled = true; }
     void ActivarModoUfo() { DesactivarModos(); modoUFO = true; if (objetoUFO != null) objetoUFO.SetActive(true); rb.gravityScale = 4.0f; rb.linearVelocity = new Vector2(velocidad, 0); }
@@ -234,7 +227,16 @@ public class MovimientoGD : MonoBehaviour
 
         haMuerto = true;
         
-        // --- NUEVO: SONIDO DE MUERTE ---
+        // ✅ REGISTRAR INTENTO (muerte)
+        string escenaActual = SceneManager.GetActiveScene().name;
+        int intentosActuales = PlayerPrefs.GetInt("Intentos_" + escenaActual, 0);
+        intentosActuales++;
+        PlayerPrefs.SetInt("Intentos_" + escenaActual, intentosActuales);
+        PlayerPrefs.SetInt("IntentosActuales", intentosActuales);
+        PlayerPrefs.Save();
+        
+        Debug.Log($"💀 MUERTE #{intentosActuales}");
+        
         if (audioSource && sonidoMuerte) audioSource.PlayOneShot(sonidoMuerte);
 
         rb.linearVelocity = Vector2.zero;

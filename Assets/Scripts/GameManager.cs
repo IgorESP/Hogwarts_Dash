@@ -1,17 +1,11 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// <summary>
-/// Gestor principal del juego
-/// Lee las estadísticas guardadas en PlayerPrefs por FinishLevel
-/// </summary>
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     
     [Header("Estadísticas del Nivel")]
-    public int objetivosTotales = 0;
-    public int objetivosCompletados = 0;
     public int totalIntentos = 0;
     public int snitchesRecogidas = 0;
     
@@ -36,76 +30,47 @@ public class GameManager : MonoBehaviour
         mundoActual = PlayerPrefs.GetInt("MundoSeleccionado", 1);
         nivelActual = PlayerPrefs.GetInt("NivelSeleccionado", 1);
         
-        Debug.Log($"[GameManager] Iniciado - Mundo {mundoActual}, Nivel {nivelActual}");
+        Debug.Log($"[GameManager] Iniciado - Mundo {mundoActual}");
     }
     
     void Start()
     {
         resultadosController = FindFirstObjectByType<ResultadosController>();
-        
-        if (resultadosController == null)
-        {
-            Debug.LogWarning("[GameManager] No se encontró ResultadosController");
-        }
     }
     
     /// <summary>
-    /// Finalizar el nivel y mostrar resultados
-    /// LEE LOS DATOS DE PLAYERPREFS (guardados por FinishLevel)
+    /// Finalizar el nivel - LEE de PlayerPrefs y muestra panel
     /// </summary>
     public void FinalizarNivel()
     {
-        // Leer estadísticas de PlayerPrefs (guardadas por FinishLevel)
+        // LEER de PlayerPrefs (guardado por FinishLevel)
         int porcentaje = Mathf.RoundToInt(PlayerPrefs.GetFloat("UltimoPorcentaje", 0f));
         int intentos = PlayerPrefs.GetInt("UltimosIntentos", 0);
         int snitches = PlayerPrefs.GetInt("UltimasSnitches", 0);
         
-        Debug.Log($"[GameManager] Finalizando nivel:");
-        Debug.Log($"   Porcentaje: {porcentaje}%");
-        Debug.Log($"   Intentos: {intentos}");
-        Debug.Log($"   Snitches: {snitches}");
+        Debug.Log($"[GameManager] ===== FINALIZANDO NIVEL =====");
+        Debug.Log($"[GameManager] Porcentaje: {porcentaje}%");
+        Debug.Log($"[GameManager] Intentos: {intentos}");
+        Debug.Log($"[GameManager] Snitches: {snitches}");
         
-        // Mostrar panel de resultados CON LOS VALORES CORRECTOS
+        // Mostrar panel
         if (resultadosController != null)
         {
             bool victoria = porcentaje >= 40;
             resultadosController.MostrarResultados(porcentaje, intentos, snitches, victoria);
-            Debug.Log("[GameManager] Panel de resultados llamado con valores correctos");
+            Debug.Log($"[GameManager] ✅ Panel llamado con valores: {porcentaje}%, {intentos} intentos, {snitches} snitches");
         }
         else
         {
-            Debug.LogError("[GameManager] ResultadosController no encontrado");
+            Debug.LogError("[GameManager] ❌ ResultadosController es NULL!");
         }
     }
     
-    /// <summary>
-    /// Obtener el porcentaje actual del nivel
-    /// </summary>
-    public int ObtenerPorcentajeActual()
-    {
-        if (objetivosTotales == 0) return 0;
-        return Mathf.RoundToInt((objetivosCompletados / (float)objetivosTotales) * 100f);
-    }
-    
-    /// <summary>
-    /// Reiniciar estadísticas del nivel
-    /// </summary>
-    public void ReiniciarEstadisticas()
-    {
-        objetivosCompletados = 0;
-        totalIntentos = 0;
-        snitchesRecogidas = 0;
-        Debug.Log("[GameManager] Estadísticas reiniciadas");
-    }
-    
-    // ============================================
-    // MÉTODOS DE COMPATIBILIDAD
-    // ============================================
-    
+    // Métodos de compatibilidad
     public void PlayerDied()
     {
         totalIntentos++;
-        Debug.Log($"[GameManager] PlayerDied llamado - Intento: {totalIntentos}");
+        Debug.Log($"[GameManager] PlayerDied - Intentos: {totalIntentos}");
     }
     
     public void LevelComplete()
@@ -113,23 +78,19 @@ public class GameManager : MonoBehaviour
         FinalizarNivel();
     }
     
-    public void ActualizarProgreso(int cantidad)
+    public void ActualizarProgreso(int cantidad) { }
+    public void IncrementarProgreso(int cantidad = 1) { }
+    public void RegistrarSnitchRecogida() { snitchesRecogidas++; }
+    public void RegistrarIntento() { totalIntentos++; }
+    
+    public int ObtenerPorcentajeActual()
     {
-        objetivosCompletados = cantidad;
+        return 0;
     }
     
-    public void IncrementarProgreso(int cantidad = 1)
+    public void ReiniciarEstadisticas()
     {
-        objetivosCompletados += cantidad;
-    }
-    
-    public void RegistrarSnitchRecogida()
-    {
-        snitchesRecogidas++;
-    }
-    
-    public void RegistrarIntento()
-    {
-        totalIntentos++;
+        totalIntentos = 0;
+        snitchesRecogidas = 0;
     }
 }
