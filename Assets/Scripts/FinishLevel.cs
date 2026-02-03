@@ -18,10 +18,13 @@ public class FinishLevel : MonoBehaviour
     {
         // Cada vez que se carga la escena, incrementar intentos
         // EXCEPTO la primera vez
-        if (!PlayerPrefs.HasKey("PrimeraVez_" + SceneManager.GetActiveScene().name))
+        string escenaKey = SceneManager.GetActiveScene().name;
+        string primeraVezKey = "PrimeraVez_" + escenaKey;
+        
+        if (!PlayerPrefs.HasKey(primeraVezKey))
         {
             // Primera vez en este nivel, no contar como intento
-            PlayerPrefs.SetInt("PrimeraVez_" + SceneManager.GetActiveScene().name, 1);
+            PlayerPrefs.SetInt(primeraVezKey, 1);
             intentosAcumulados = 0;
         }
         else
@@ -50,7 +53,7 @@ public class FinishLevel : MonoBehaviour
         // Obtener mundo actual
         int mundoActual = PlayerPrefs.GetInt("MundoSeleccionado", 1);
         
-        // Contar snitches recogidas (inactivas)
+        // CONTADOR CORREGIDO DE SNITCHES
         int snitchesRecogidas = ContarSnitchesRecogidas();
         
         // Calcular porcentaje (siempre 100% si llegó aquí)
@@ -90,25 +93,42 @@ public class FinishLevel : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// CUENTA SNITCHES RECOGIDAS CORRECTAMENTE:
+    /// 1. Guarda total al inicio del nivel
+    /// 2. Cuenta las que quedan ACTIVAS al final
+    /// 3. Recogidas = total - activas
+    /// </summary>
     private int ContarSnitchesRecogidas()
     {
         try
         {
-            GameObject[] snitches = GameObject.FindGameObjectsWithTag("Snitch");
-            int recogidas = 0;
+            string escenaKey = SceneManager.GetActiveScene().name;
+            string totalSnitchesKey = "TotalSnitches_" + escenaKey;
             
-            foreach (GameObject snitch in snitches)
+            // Buscar snitches ACTIVAS (las que quedan por recoger)
+            GameObject[] snitchesActivas = GameObject.FindGameObjectsWithTag("Snitch");
+            
+            // Primera vez en el nivel: guardar el total
+            int totalSnitches = snitchesActivas.Length;
+            if (!PlayerPrefs.HasKey(totalSnitchesKey))
             {
-                if (!snitch.activeInHierarchy)
-                    recogidas++;
+                PlayerPrefs.SetInt(totalSnitchesKey, totalSnitches);
+                Debug.Log($"[FinishLevel] Total snitches registrado: {totalSnitches}");
             }
             
-            Debug.Log($"[FinishLevel] Snitches recogidas: {recogidas}/{snitches.Length}");
+            // Obtener total guardado
+            int totalEsperado = PlayerPrefs.GetInt(totalSnitchesKey, totalSnitches);
+            
+            // Recogidas = total - las que quedan activas
+            int recogidas = totalEsperado - snitchesActivas.Length;
+            
+            Debug.Log($"[FinishLevel] Snitches: Total={totalEsperado}, Activas={snitchesActivas.Length}, Recogidas={recogidas}");
             return recogidas;
         }
-        catch
+        catch (System.Exception e)
         {
-            Debug.LogWarning("[FinishLevel] Tag 'Snitch' no existe");
+            Debug.LogWarning($"[FinishLevel] Error contando snitches: {e.Message}");
             return 0;
         }
     }

@@ -167,24 +167,28 @@ public class NivelesUIController : MonoBehaviour
     }
  
     /// <summary>
-    /// Actualiza el label de progreso general mostrando cuantos mundosestan desbloqueados.
+    /// Actualiza el label de progreso general mostrando cuantos mundos están COMPLETADOS.
+    /// Progreso: 0/5 -> 1/5 -> 2/5 -> 3/5 -> 4/5 -> 5/5
     /// </summary>
     private void ActualizarProgresoGeneral() 
     {
         if (labelProgreso == null) return;
         
-        // Contar mundos desbloqueados (5 mundos totales)
-        int mundosDesbloqueados = 0;
+        // Contar mundos COMPLETADOS (no desbloqueados)
+        int mundosCompletados = 0;
         for (int i = 1; i <= 5; i++) 
         {
-            if (NivelesManager.Instance.MundoEstaDesbloqueado(i)) 
+            // Un mundo está completado si tiene al menos 1 estrella
+            if (NivelesManager.Instance.ObtenerEstrellasTotalMundo(i) > 0) 
             {
-                mundosDesbloqueados++;
+                mundosCompletados++;
             }
         }
         
-        // Actualizar texto
-        labelProgreso.text = $"Progreso: {mundosDesbloqueados}/5 mundos";
+        // Actualizar texto: 0/5, 1/5, 2/5, 3/5, 4/5, 5/5
+        labelProgreso.text = $"Progreso: {mundosCompletados}/5 mundos";
+        
+        Debug.Log($"[NivelesUI] Progreso actualizado: {mundosCompletados}/5 mundos completados");
     }
  
     /// <summary>

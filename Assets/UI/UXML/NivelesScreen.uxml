@@ -40,16 +40,16 @@
             </ui:Button>
             <!-- MUNDO 3: SLYTHERIN -->
             <ui:Button name="Mundo_3" class="tarjeta-mundo bloqueado">
-                <ui:Label text="MUNDO 3 - SLYTHERIN" style="font-size: 14px; color: rgb(93, 93, 93); margin-bottom: 10px; -unity-font-style: bold;" />
+                <ui:Label text="MUNDO 3 - SLYTHERIN" style="font-size: 14px; color: rgb(211, 166, 37); margin-bottom: 10px; -unity-font-style: bold;" />
                 <ui:Label text="Bosque Prohibido" style="font-size: 28px; color: white; -unity-font-style: bold; margin-bottom: 15px; -unity-text-outline-width: 2px; -unity-text-outline-color: rgba(0, 0, 0, 0.8);" />
                 <ui:VisualElement style="flex-direction: row; justify-content: space-between; margin-top: auto;">
                     <ui:VisualElement style="flex-direction: row; align-items: center;">
                         <ui:VisualElement style="width: 20px; height: 20px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/68.png?fileID=21300000&amp;guid=3bcd937835616de48b839d4c3394c651&amp;type=3#68&quot;); -unity-background-scale-mode: scale-to-fit; margin-right: 5px;" />
-                        <ui:Label text="0/3" style="font-size: 16px; color: rgb(93, 93, 93); -unity-font-style: bold;" />
+                        <ui:Label text="0/3" style="font-size: 16px; color: rgb(211, 166, 37); -unity-font-style: bold;" />
                     </ui:VisualElement>
                     <ui:VisualElement style="flex-direction: row; align-items: center;">
                         <ui:VisualElement style="width: 20px; height: 20px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/122.png?fileID=21300000&amp;guid=f19245d751804bf4cb3de69c1a36c826&amp;type=3#122&quot;); -unity-background-scale-mode: scale-to-fit; margin-right: 5px;" />
-                        <ui:Label text="0%" style="font-size: 16px; color: rgb(93, 93, 93); -unity-font-style: bold;" />
+                        <ui:Label text="0%" style="font-size: 16px; color: rgb(211, 166, 37); -unity-font-style: bold;" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:Button>
@@ -72,16 +72,16 @@
             </ui:Button>
             <!-- MUNDO 5: RAVENCLAW (ÚLTIMO NIVEL) -->
             <ui:Button name="Mundo_5" class="tarjeta-mundo bloqueado">
-                <ui:Label text="MUNDO 5 - RAVENCLAW" style="font-size: 14px; color: rgb(148, 107, 45); margin-bottom: 10px; -unity-font-style: bold;" />
+                <ui:Label text="MUNDO 5 - RAVENCLAW" style="font-size: 14px; color: rgb(211, 166, 37); margin-bottom: 10px; -unity-font-style: bold;" />
                 <ui:Label text="Biblioteca Antigua" style="font-size: 24px; color: white; -unity-font-style: bold; margin-bottom: 15px; -unity-text-outline-width: 2px; -unity-text-outline-color: rgba(0, 0, 0, 0.8);" />
                 <ui:VisualElement style="flex-direction: row; justify-content: space-between; margin-top: auto;">
                     <ui:VisualElement style="flex-direction: row; align-items: center;">
                         <ui:VisualElement style="width: 20px; height: 20px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/68.png?fileID=21300000&amp;guid=3bcd937835616de48b839d4c3394c651&amp;type=3#68&quot;); -unity-background-scale-mode: scale-to-fit; margin-right: 5px; opacity: 0.5;" />
-                        <ui:Label text="0/3" style="font-size: 16px; color: rgb(148, 107, 45); -unity-font-style: bold;" />
+                        <ui:Label text="0/3" style="font-size: 16px; color: rgb(211, 166, 37); -unity-font-style: bold;" />
                     </ui:VisualElement>
                     <ui:VisualElement style="flex-direction: row; align-items: center;">
                         <ui:VisualElement style="width: 20px; height: 20px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/122.png?fileID=21300000&amp;guid=f19245d751804bf4cb3de69c1a36c826&amp;type=3#122&quot;); -unity-background-scale-mode: scale-to-fit; margin-right: 5px; opacity: 0.5;" />
-                        <ui:Label text="0%" style="font-size: 16px; color: rgb(148, 107, 45); -unity-font-style: bold;" />
+                        <ui:Label text="0%" style="font-size: 16px; color: rgb(211, 166, 37); -unity-font-style: bold;" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:Button>
