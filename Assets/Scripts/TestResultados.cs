@@ -1,43 +1,27 @@
 using UnityEngine;
 
+/// <summary>
+/// Utilidad de prueba para invocar el panel de resultados manualmente (Tecla T)
+/// </summary>
 public class TestResultados : MonoBehaviour
 {
-    void Start()
-    {
-        Debug.Log("TestResultados iniciado - Presiona T para ver el menú");
-    }
-    
     void Update()
     {
-        // Presiona T para mostrar el menú
         if (Input.GetKeyDown(KeyCode.T))
         {
-            Debug.Log("Tecla T presionada");
-            MostrarMenuPrueba();
+            InvocarSimulacion();
         }
     }
     
-    void MostrarMenuPrueba()
+    void InvocarSimulacion()
     {
-        Debug.Log("Buscando ResultadosController...");
+        Debug.Log("[Debug] Simulando fin de nivel...");
+        ResultadosController res = FindFirstObjectByType<ResultadosController>();
         
-        ResultadosController resultados = FindObjectOfType<ResultadosController>();
-        
-        if (resultados != null)
+        if (res != null)
         {
-            Debug.Log("ResultadosController encontrado, mostrando menú...");
-            
-            resultados.MostrarResultados(
-                porcentaje: 85,
-                intentos: 3,
-                snitches: 5,
-                victoria: true
-            );
+            res.MostrarResultados(85, 3, 5, true);
         }
-        else
-        {
-            Debug.LogError("ResultadosController NO encontrado en la escena");
-            Debug.LogError("Verifica que el GameObject tenga el componente ResultadosController");
-        }
+        else Debug.LogError("[Debug] ResultadosController no encontrado en esta escena.");
     }
 }

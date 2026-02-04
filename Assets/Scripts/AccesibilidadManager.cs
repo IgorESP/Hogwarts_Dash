@@ -2,57 +2,38 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 /// <summary>
-/// Gestor universal de accesibilidad
-/// Aplica modo daltónico y tamaño de letra en CUALQUIER escena automáticamente
-/// Se debe agregar al GameObject que tiene el UIDocument en cada escena
+/// Gestor universal de accesibilidad que aplica configuraciones visuales automáticamente
 /// </summary>
 public class AccesibilidadManager : MonoBehaviour
 {
-    // ====================================
-    // INICIALIZACIÓN
-    // ====================================
     void Start()
     {
-        // Esperar un frame para que la UI se cargue completamente
+        // Esperar brevemente para asegurar que el UIDocument esté listo
         Invoke("AplicarConfiguracion", 0.1f);
     }
 
-    // ====================================
-    // APLICAR CONFIGURACIÓN
-    // ====================================
-    
     /// <summary>
-    /// Aplica la configuración de accesibilidad guardada
+    /// Recupera y aplica la configuración de accesibilidad guardada en PlayerPrefs
     /// </summary>
     private void AplicarConfiguracion()
     {
         var uiDoc = GetComponent<UIDocument>();
         if (uiDoc == null)
         {
-            Debug.LogWarning("⚠️ No se encontró UIDocument en " + gameObject.name);
+            Debug.LogWarning($"[Accesibilidad] No hay UIDocument en {gameObject.name}. Ignorando.");
             return;
         }
 
         var root = uiDoc.rootVisualElement;
-        if (root == null)
-        {
-            Debug.LogWarning("⚠️ rootVisualElement es null en " + gameObject.name);
-            return;
-        }
+        if (root == null) return;
 
-        // Aplicar modo daltónico
+        // Aplicar capas de estilo según ajustes
         AplicarModoDaltonico(root);
-
-        // Aplicar tamaño de letra
         AplicarTamanoLetra(root);
     }
 
-    // ====================================
-    // MODO DALTÓNICO
-    // ====================================
-    
     /// <summary>
-    /// Aplica el modo daltónico si está activado
+    /// Gestiona la clase de estilo para el modo daltónico
     /// </summary>
     private void AplicarModoDaltonico(VisualElement root)
     {
@@ -61,21 +42,16 @@ public class AccesibilidadManager : MonoBehaviour
         if (modoDaltonico)
         {
             root.AddToClassList("modo-daltonico-activado");
-            Debug.Log("🎨 Modo daltónico ACTIVADO en: " + gameObject.scene.name);
+            Debug.Log($"[Accesibilidad] Modo daltónico ACTIVADO en {gameObject.scene.name}");
         }
         else
         {
             root.RemoveFromClassList("modo-daltonico-activado");
-            Debug.Log("🎨 Modo daltónico DESACTIVADO en: " + gameObject.scene.name);
         }
     }
 
-    // ====================================
-    // TAMAÑO DE LETRA
-    // ====================================
-    
     /// <summary>
-    /// Aplica el tamaño de letra configurado
+    /// Escala el tamaño de las fuentes basándose en el porcentaje guardado
     /// </summary>
     private void AplicarTamanoLetra(VisualElement root)
     {
@@ -83,7 +59,7 @@ public class AccesibilidadManager : MonoBehaviour
         float escala = tamano / 100f;
 
         root.Query<Label>().ForEach(label => {
-            // No cambiar labels de porcentajes en ajustes
+            // Excluir labels específicos que no deben escalar (como los propios porcentajes)
             if (label.name != "Label_Musica" && 
                 label.name != "Label_SFX" && 
                 label.name != "Label_TamanoLetra")
@@ -93,43 +69,28 @@ public class AccesibilidadManager : MonoBehaviour
             }
         });
 
-        Debug.Log("📏 Tamaño de letra aplicado: " + tamano + "% en " + gameObject.scene.name);
+        Debug.Log($"[Accesibilidad] Escala de fuente a {tamano}% en {gameObject.scene.name}");
     }
 
     /// <summary>
-    /// Determina el tamaño base según el contenido del texto
+    /// Mapeo de tamaños base para diferentes tipos de texto
     /// </summary>
     private float DeterminarTamanoBase(string texto)
     {
-        if (string.IsNullOrEmpty(texto))
-            return 22f;
+        if (string.IsNullOrEmpty(texto)) return 22f;
 
-        // Títulos principales muy grandes
-        if (texto.Contains("HOGWARTS") || texto.Contains("OPCIONES"))
-            return 50f;
+        // Títulos grandes
+        if (texto.Contains("HOGWARTS") || texto.Contains("OPCIONES")) return 50f;
 
-        // Subtítulos de secciones
-        if (texto.Contains("AUDIO") || 
-            texto.Contains("ACCESIBILIDAD") ||
-            texto.Contains("CRÉDITOS") || 
-            texto.Contains("RANKING") ||
-            texto.Contains("SELECCIONA") || 
-            texto.Contains("SELECCIÓN") ||
-            texto.Contains("TU PERSONAJE") ||
-            texto.Contains("TU CASA") ||
-            texto.Contains("MUNDOS"))
-            return 32f;
+        // Títulos de sección
+        if (texto.Contains("AUDIO") || texto.Contains("ACCESIBILIDAD") ||
+            texto.Contains("CRÉDITOS") || texto.Contains("RANKING") ||
+            texto.Contains("TU CASA") || texto.Contains("MUNDOS")) return 32f;
 
-        // Texto de botones grandes
-        if (texto.Contains("ENTRAR") || 
-            texto.Contains("CREAR CUENTA") ||
-            texto.Contains("VER PERFIL") || 
-            texto.Contains("CERRAR SESIÓN") ||
-            texto.Contains("REGISTRARSE") ||
-            texto.Contains("ENTRAR AL JUEGO"))
-            return 26f;
+        // Botones e interacciones
+        if (texto.Contains("ENTRAR") || texto.Contains("CREAR CUENTA") ||
+            texto.Contains("REGISTRARSE") || texto.Contains("CERRAR SESIÓN")) return 26f;
 
-        // Etiquetas y texto normal
-        return 22f;
+        return 22f; // Tamaño estándar
     }
 }

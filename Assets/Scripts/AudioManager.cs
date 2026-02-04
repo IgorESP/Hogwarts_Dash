@@ -1,222 +1,98 @@
 using UnityEngine;
 
 /// <summary>
-/// Sistema centralizado de audio para todo el juego
-/// Gestiona música de fondo y efectos de sonido
+/// Sistema centralizado de audio que sobrevive entre escenas (Singleton)
 /// </summary>
 public class AudioManager : MonoBehaviour
 {
-    // ====================================
-    // SINGLETON
-    // ====================================
-    
     public static AudioManager Instance { get; private set; }
     
-    // ====================================
-    // AUDIO SOURCES
-    // ====================================
-    
     [Header("Audio Sources")]
-    [Tooltip("AudioSource para la música de fondo")]
     public AudioSource musicaSource;
-    
-    [Tooltip("AudioSource para efectos de sonido")]
     public AudioSource sfxSource;
     
-    // ====================================
-    // MÚSICA DE FONDO
-    // ====================================
-    
-    [Header("Música de Fondo")]
-    [Tooltip("Clip de música del menú principal")]
+    [Header("Clips de Música")]
     public AudioClip musicaMenu;
-    
-    [Tooltip("Clip de música durante el juego")]
     public AudioClip musicaJuego;
-    
-    // ====================================
-    // VOLÚMENES
-    // ====================================
     
     private float volumenMusica = 0.8f;
     private float volumenSFX = 0.8f;
     
-    // ====================================
-    // INICIALIZACIÓN
-    // ====================================
-    
     void Awake()
     {
-        // Singleton pattern
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            Debug.Log("AudioManager creado");
+            Debug.Log("[Audio] Iniciando AudioManager persistente");
         }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        else { Destroy(gameObject); return; }
         
-        // Crear AudioSources si no existen
-        if (musicaSource == null)
-        {
-            musicaSource = gameObject.AddComponent<AudioSource>();
-            musicaSource.loop = true;
-            musicaSource.playOnAwake = false;
-        }
-        
-        if (sfxSource == null)
-        {
-            sfxSource = gameObject.AddComponent<AudioSource>();
-            sfxSource.loop = false;
-            sfxSource.playOnAwake = false;
-        }
+        // Configurar fuentes si no están asignadas
+        if (musicaSource == null) { musicaSource = gameObject.AddComponent<AudioSource>(); musicaSource.loop = true; }
+        if (sfxSource == null) sfxSource = gameObject.AddComponent<AudioSource>();
     }
     
     void Start()
     {
-        // Cargar volúmenes guardados
         CargarVolumenes();
-        
-        // Reproducir música de menú al inicio
         ReproducirMusicaMenu();
     }
-    
-    // ====================================
-    // CARGAR VOLÚMENES
-    // ====================================
     
     private void CargarVolumenes()
     {
         volumenMusica = PlayerPrefs.GetFloat("VolumenMusica", 80f) / 100f;
         volumenSFX = PlayerPrefs.GetFloat("VolumenSFX", 80f) / 100f;
-        
         AplicarVolumenes();
-        
-        Debug.Log($"Volúmenes cargados - Música: {volumenMusica * 100}%, SFX: {volumenSFX * 100}%");
     }
     
     private void AplicarVolumenes()
     {
-        if (musicaSource != null)
-            musicaSource.volume = volumenMusica;
-        
-        if (sfxSource != null)
-            sfxSource.volume = volumenSFX;
+        if (musicaSource != null) musicaSource.volume = volumenMusica;
+        if (sfxSource != null) sfxSource.volume = volumenSFX;
     }
-    
+
     // ====================================
-    // CONTROL DE MÚSICA
+    // CONTROL DE REPRODUCCIÓN
     // ====================================
-    
+
     public void ReproducirMusicaMenu()
     {
-        if (musicaMenu != null && musicaSource != null)
+        if (musicaMenu != null && musicaSource != null && musicaSource.clip != musicaMenu)
         {
-            if (musicaSource.clip != musicaMenu)
-            {
-                musicaSource.clip = musicaMenu;
-                musicaSource.Play();
-                Debug.Log("Reproduciendo música de menú");
-            }
+            Debug.Log("[Audio] Cambiando a música de menú");
+            musicaSource.clip = musicaMenu;
+            musicaSource.Play();
         }
     }
     
     public void ReproducirMusicaJuego()
     {
-        if (musicaJuego != null && musicaSource != null)
+        if (musicaJuego != null && musicaSource != null && musicaSource.clip != musicaJuego)
         {
-            if (musicaSource.clip != musicaJuego)
-            {
-                musicaSource.clip = musicaJuego;
-                musicaSource.Play();
-                Debug.Log("Reproduciendo música de juego");
-            }
+            Debug.Log("[Audio] Cambiando a música de nivel");
+            musicaSource.clip = musicaJuego;
+            musicaSource.Play();
         }
     }
-    
-    public void PausarMusica()
-    {
-        if (musicaSource != null && musicaSource.isPlaying)
-        {
-            musicaSource.Pause();
-        }
-    }
-    
-    public void ReanudarMusica()
-    {
-        if (musicaSource != null && !musicaSource.isPlaying)
-        {
-            musicaSource.UnPause();
-        }
-    }
-    
-    public void DetenerMusica()
-    {
-        if (musicaSource != null)
-        {
-            musicaSource.Stop();
-        }
-    }
-    
-    // ====================================
-    // CONTROL DE VOLUMEN
-    // ====================================
-    
+
     public void SetVolumenMusica(float volumen)
     {
         volumenMusica = Mathf.Clamp01(volumen);
-        
-        if (musicaSource != null)
-            musicaSource.volume = volumenMusica;
-        
-        Debug.Log($"🎵 Volumen música: {volumenMusica * 100}%");
+        if (musicaSource != null) musicaSource.volume = volumenMusica;
     }
     
     public void SetVolumenSFX(float volumen)
     {
         volumenSFX = Mathf.Clamp01(volumen);
-        
-        if (sfxSource != null)
-            sfxSource.volume = volumenSFX;
-        
-        Debug.Log($"🔊 Volumen SFX: {volumenSFX * 100}%");
+        if (sfxSource != null) sfxSource.volume = volumenSFX;
     }
     
-    // ====================================
-    // REPRODUCIR EFECTOS DE SONIDO
-    // ====================================
-    
+    /// <summary>
+    /// Reproduce un efecto de sonido puntual
+    /// </summary>
     public void ReproducirSFX(AudioClip clip)
     {
-        if (clip != null && sfxSource != null)
-        {
-            sfxSource.PlayOneShot(clip);
-        }
-    }
-    
-    public void ReproducirSFX(AudioClip clip, float volumenExtra)
-    {
-        if (clip != null && sfxSource != null)
-        {
-            sfxSource.PlayOneShot(clip, volumenExtra);
-        }
-    }
-    
-    // ====================================
-    // GETTERS
-    // ====================================
-    
-    public float GetVolumenMusica()
-    {
-        return volumenMusica;
-    }
-    
-    public float GetVolumenSFX()
-    {
-        return volumenSFX;
+        if (clip != null && sfxSource != null) sfxSource.PlayOneShot(clip);
     }
 }

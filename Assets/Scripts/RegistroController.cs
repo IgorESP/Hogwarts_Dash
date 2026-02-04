@@ -4,78 +4,44 @@ using UnityEngine.SceneManagement;
 using System.Text.RegularExpressions;
 
 /// <summary>
-/// Controlador de la pantalla de registro
-/// Gestiona la creación de nuevas cuentas de usuario
+/// Controlador de la interfaz de registro de nuevos usuarios
 /// </summary>
 public class RegistroUIController : MonoBehaviour
 {
-    // ====================================
-    // REFERENCIAS UI
-    // ====================================
     private VisualElement root;
     private TextField campoNom, campoApe, campoUsuario, campoPass, campoConf;
     private Button botonCrear, botonVolver;
     private Label mensajeError;
 
-    // ====================================
-    // CONFIGURACIÓN DE VALIDACIÓN
-    // ====================================
-    private const int LONGITUD_MINIMA_NOMBRE = 2;
-    private const int LONGITUD_MINIMA_PASSWORD = 6;
-    
-    // Expresión regular para validar contraseña
-    // Debe tener: al menos 1 mayúscula, 1 minúscula y 1 número
-    private const string REGEX_PASSWORD = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$";
+    // Constantes de validación
+    private const int LONGITUD_MIN_NOMBRE = 2;
+    private const int LONGITUD_MIN_PASS = 6;
+    private const string REGEX_PASS = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$";
 
-    // ====================================
-    // INICIALIZACIÓN
-    // ====================================
     void Start() 
     {
-        // Obtener el documento UI
+        Debug.Log("[Registro] Inicializando pantalla de registro");
         var uiDoc = GetComponent<UIDocument>();
-        root = uiDoc.rootVisualElement;
+        if (uiDoc != null) root = uiDoc.rootVisualElement;
 
-        // Aplicar configuración de accesibilidad
         AplicarAccesibilidad();
-
-        // Obtener referencias a los elementos
         ObtenerReferencias();
-
-        // Registrar eventos
         RegistrarEventos();
     }
 
-    // ====================================
-    // ACCESIBILIDAD
-    // ====================================
-    
-    /// <summary>
-    /// Aplica las configuraciones de accesibilidad guardadas
-    /// </summary>
     private void AplicarAccesibilidad()
     {
-        // Activar modo daltónico si está habilitado
-        if (PlayerPrefs.GetInt("ModoDaltonico", 0) == 1) 
-        {
-            root.AddToClassList("modo-daltonico-activado");
-        }
+        if (root == null) return;
+        if (PlayerPrefs.GetInt("ModoDaltonico", 0) == 1) root.AddToClassList("modo-daltonico-activado");
 
-        // Ajustar tamaño de texto
         float escala = PlayerPrefs.GetFloat("TamanoLetra", 100f) / 100f;
         root.Query<Label>().ForEach(l => l.style.fontSize = 25f * escala);
     }
 
-    /// <summary>
-    /// Fuerza el color del texto en un TextField de UI Toolkit.
-    /// </summary>
-    /// <param name="tf">El TextField al que se aplicará el estilo.</param>
     private void ForzarColorTexto(TextField tf)
     {
         if (tf == null) return;
-
         var input = tf.Q<VisualElement>("unity-text-input"); 
-
         if (input != null) 
         {
             input.style.color = Color.black; 
@@ -83,15 +49,9 @@ public class RegistroUIController : MonoBehaviour
         } 
     }
 
-    // ====================================
-    // REFERENCIAS UI
-    // ====================================
-    
-    /// <summary>
-    /// Obtiene las referencias a todos los elementos de la UI
-    /// </summary>
     private void ObtenerReferencias()
     {
+        if (root == null) return;
         campoNom = root.Q<TextField>("Campo_Nombre");
         campoApe = root.Q<TextField>("Campo_Apellido");
         campoUsuario = root.Q<TextField>("Campo_Usuario");
@@ -108,191 +68,47 @@ public class RegistroUIController : MonoBehaviour
         ForzarColorTexto(campoConf);
     }
 
-    // ====================================
-    // EVENTOS
-    // ====================================
-    
-    /// <summary>
-    /// Registra los eventos de los botones
-    /// </summary>
     private void RegistrarEventos()
     {
-        botonCrear.clicked += OnCrearClick;
-        botonVolver.clicked += OnVolverClick;
+        if (botonCrear != null) botonCrear.clicked += OnCrearClick;
+        if (botonVolver != null) botonVolver.clicked += () => SceneManager.LoadScene("LoginScene");
     }
 
-    // ====================================
-    // VALIDACIÓN Y REGISTRO
-    // ====================================
-    
-    /// <summary>
-    /// Maneja el evento de crear cuenta
-    /// Valida todos los campos antes de enviar a la API
-    /// </summary>
     private void OnCrearClick() 
     {
-        // Ocultar errores previos
         OcultarError();
 
-        // Validar nombre
-        if (string.IsNullOrEmpty(campoNom.value))
-        {
-            MostrarError("Por favor,\ningresa tu nombre");
-            return;
-        }
+        // Validaciones básicas de campos
+        if (string.IsNullOrEmpty(campoNom.value) || campoNom.value.Length < LONGITUD_MIN_NOMBRE) { MostrarError("Nombre inválido"); return; }
+        if (string.IsNullOrEmpty(campoApe.value) || campoApe.value.Length < LONGITUD_MIN_NOMBRE) { MostrarError("Apellido inválido"); return; }
+        if (string.IsNullOrEmpty(campoUsuario.value) || campoUsuario.value.Length < 3) { MostrarError("Usuario muy corto"); return; }
+        if (string.IsNullOrEmpty(campoPass.value) || campoPass.value.Length < LONGITUD_MIN_PASS) { MostrarError("Password muy corto"); return; }
+        if (!Regex.IsMatch(campoPass.value, REGEX_PASS)) { MostrarError("Password debe incluir Mayus, minus y número"); return; }
+        if (campoPass.value != campoConf.value) { MostrarError("Las contraseñas no coinciden"); return; }
 
-        if (campoNom.value.Length < LONGITUD_MINIMA_NOMBRE) 
-        { 
-            MostrarError("Nombre: mínimo\n2 caracteres");
-            return; 
-        }
-
-        // Validar apellido
-        if (string.IsNullOrEmpty(campoApe.value))
-        {
-            MostrarError("Por favor,\ningresa tu apellido");
-            return;
-        }
-
-        if (campoApe.value.Length < LONGITUD_MINIMA_NOMBRE) 
-        { 
-            MostrarError("Apellido: mínimo\n2 caracteres");
-            return; 
-        }
-
-       // Validar username 
-       if (string.IsNullOrEmpty(campoUsuario.value)) 
-       { 
-            MostrarError("Por favor,\ningresa un nombre de usuario"); 
-            return; 
-        } 
-        
-        if (campoUsuario.value.Length < 3) 
-        { 
-            MostrarError("El usuario debe tener\nmínimo 3 caracteres"); 
-            return; 
-        }
-
-        // Validar contraseña
-        if (string.IsNullOrEmpty(campoPass.value))
-        {
-            MostrarError("Por favor,\ningresa una contraseña");
-            return;
-        }
-
-        if (campoPass.value.Length < LONGITUD_MINIMA_PASSWORD) 
-        { 
-            MostrarError("Contraseña: mínimo\n6 caracteres");
-            return; 
-        }
-
-        // Validar complejidad de contraseña
-        if (!Regex.IsMatch(campoPass.value, REGEX_PASSWORD)) 
-        {
-            MostrarError("Debe tener mayúscula,\nminúscula y número");
-            return;
-        }
-
-        // Validar confirmación
-        if (string.IsNullOrEmpty(campoConf.value))
-        {
-            MostrarError("Por favor,\nconfirma tu contraseña");
-            return;
-        }
-
-        if (campoPass.value != campoConf.value) 
-        { 
-            MostrarError("Las contraseñas\nno coinciden");
-            return; 
-        }
-
-        // Si todas las validaciones pasaron, crear cuenta
-        CrearCuenta();
+        EjecutarRegistro();
     }
 
-    /// <summary>
-    /// Crea la cuenta de usuario llamando a la API
-    /// </summary>
-    private void CrearCuenta()
+    private void EjecutarRegistro()
     {
-        // Deshabilitar botón mientras se procesa
         botonCrear.SetEnabled(false);
-        botonCrear.text = "Creando...";
+        botonCrear.text = "Enviando...";
 
-        // Generar nombre de usuario a partir del nombre
-        string usuario = campoUsuario.value.ToLower().Trim();
-
-        // Llamar a la API para registrar
+        Debug.Log($"[Registro] Solicitando registro para usuario: {campoUsuario.value}");
         ApiManager.Instance.Registrar(
-            usuario, 
+            campoUsuario.value.ToLower().Trim(), 
             campoNom.value, 
             campoApe.value, 
             campoPass.value, 
-            OnRegistroRespuesta
+            (exito, msg) => {
+                botonCrear.SetEnabled(true);
+                botonCrear.text = "CREAR CUENTA";
+                if (exito) { Debug.Log("[Registro] Usuario creado con éxito"); SceneManager.LoadScene("LoginScene"); }
+                else { Debug.LogWarning($"[Registro] Fallo en registro: {msg}"); MostrarError(msg); }
+            }
         );
     }
 
-    /// <summary>
-    /// Callback que se ejecuta cuando la API responde
-    /// </summary>
-    private void OnRegistroRespuesta(bool exito, string mensaje)
-    {
-        // Rehabilitar botón
-        botonCrear.SetEnabled(true);
-        botonCrear.text = "CREAR CUENTA";
-
-        if (exito) 
-        {
-            // Registro exitoso - volver al login
-            Debug.Log("✅ Cuenta creada - Redirigiendo al login");
-            SceneManager.LoadScene("LoginScene");
-        } 
-        else 
-        {
-            // Registro fallido - mostrar error
-            MostrarError(mensaje);
-        }
-    }
-
-    // ====================================
-    // NAVEGACIÓN
-    // ====================================
-    
-    /// <summary>
-    /// Regresa a la pantalla de login
-    /// </summary>
-    private void OnVolverClick()
-    {
-        SceneManager.LoadScene("LoginScene");
-    }
-
-    // ====================================
-    // MENSAJES DE ERROR
-    // ====================================
-    
-    /// <summary>
-    /// Muestra un mensaje de error en la pantalla
-    /// </summary>
-    private void MostrarError(string mensaje) 
-    {
-        if (mensajeError != null) 
-        { 
-            mensajeError.text = mensaje; 
-            mensajeError.style.display = DisplayStyle.Flex;
-            mensajeError.style.whiteSpace = WhiteSpace.Normal; // Permitir saltos de línea
-            
-            Debug.LogWarning("Registro Error: " + mensaje);
-        }
-    }
-
-    /// <summary>
-    /// Oculta el mensaje de error
-    /// </summary>
-    private void OcultarError()
-    {
-        if (mensajeError != null)
-        {
-            mensajeError.style.display = DisplayStyle.None;
-        }
-    }
+    private void MostrarError(string msg) { if (mensajeError != null) { mensajeError.text = msg; mensajeError.style.display = DisplayStyle.Flex; } }
+    private void OcultarError() { if (mensajeError != null) mensajeError.style.display = DisplayStyle.None; }
 }

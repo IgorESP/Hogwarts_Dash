@@ -1,29 +1,34 @@
 using UnityEngine;
 
-
+/// <summary>
+/// Efecto de flotado vertical para objetos (portales, powerups, etc)
+/// </summary>
 public class FlotarObjeto : MonoBehaviour
 {
     [Header("Configuración de Flote")]
-    public float amplitud = 0.5f; // Cuánto sube y baja
-    public float frecuencia = 1f;  // Qué tan rápido lo hace
-
+    [Tooltip("Cuánto sube y baja")]
+    public float amplitud = 0.5f;
+    
+    [Tooltip("Qué tan rápido oscila")]
+    public float frecuencia = 1f;
 
     private Vector3 posicionInicial;
 
-
     void Start()
     {
-        // Guardamos la posición donde pusiste el portal en el mapa
+        // Guardar posición inicial del objeto
         posicionInicial = transform.position;
     }
 
-
+    /// <summary>
+    /// Movimiento sinusoidal vertical
+    /// </summary>
     void Update()
     {
-        // Calculamos la nueva posición usando el tiempo y el seno
+        // Calcular nueva posición Y usando función seno
         float nuevaY = posicionInicial.y + Mathf.Sin(Time.time * frecuencia) * amplitud;
        
-        // Aplicamos solo al eje Y
+        // Aplicar solo al eje Y, mantener X y Z fijos
         transform.position = new Vector3(posicionInicial.x, nuevaY, posicionInicial.z);
     }
 }

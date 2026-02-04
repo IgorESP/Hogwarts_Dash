@@ -1,23 +1,31 @@
 using UnityEngine;
 
+/// <summary>
+/// Gestiona la recolección de monedas (Snitches) por el jugador
+/// </summary>
 public class RecoleccionMoneda : MonoBehaviour
 {
-    public int coinID; // Así identificas si es la 1, 2 o 3
+    [Tooltip("ID único de la moneda (1, 2, 3, etc.)")]
+    public int coinID;
 
+    /// <summary>
+    /// Detecta cuando el jugador recoge la moneda
+    /// </summary>
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            // Aquí llamarías a tu GameManager para guardar el progreso
-            Debug.Log("¡Snitch " + coinID + " recogida!");
+            Debug.Log($"[RecoleccionMoneda] ¡Snitch {coinID} recogida!");
 
-            // Si tiene el script AnimacionSnitch, NO destruyas aquí, deja que la animación termine
+            // Si tiene animación de recolección, NO destruir aquí
+            // AnimacionSnitch se encargará de destruir el objeto tras la animación
             if (GetComponent<AnimacionSnitch>() != null) 
             {
+                Debug.Log($"[RecoleccionMoneda] Snitch {coinID} tiene animación, esperando...");
                 return; 
             }
             
-            // Efecto visual o sonido antes de destruir
+            // Si no tiene animación, destruir inmediatamente
             Destroy(gameObject);
         }
     }

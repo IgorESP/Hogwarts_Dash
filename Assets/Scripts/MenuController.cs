@@ -2,6 +2,9 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Controlador del menú principal del juego
+/// </summary>
 public class MenuController : MonoBehaviour
 {
     private UIDocument uiDocument;
@@ -9,12 +12,16 @@ public class MenuController : MonoBehaviour
 
     void OnEnable()
     {
+        Debug.Log("[Menu] Cargando menú principal");
         uiDocument = GetComponent<UIDocument>();
+        if (uiDocument == null) return;
+        
         var root = uiDocument.rootVisualElement;
         
-        // --- APLICAR ACCESIBILIDAD ---
+        // Sincronizar configuraciones visuales de accesibilidad
         if (NivelesManager.Instance != null) NivelesManager.Instance.SincronizarAccesibilidad(root);
         
+        // Obtener botones por nombre en el UXML
         botonPlay = root.Q<Button>("Boton_play");
         botonPerfil = root.Q<Button>("Boton_perfil");
         botonAjustes = root.Q<Button>("Boton_Ajustes");
@@ -26,12 +33,13 @@ public class MenuController : MonoBehaviour
 
     void OnDisable()
     {
+        // Limpiar suscripciones para evitar fugas de memoria
         if (botonPlay != null) botonPlay.clicked -= OnPlayClicked;
         if (botonPerfil != null) botonPerfil.clicked -= OnPerfilClicked;
         if (botonAjustes != null) botonAjustes.clicked -= OnAjustesClicked;
     }
 
-    void OnPlayClicked() => SceneManager.LoadScene("PlayScene");
-    void OnPerfilClicked() => SceneManager.LoadScene("PerfilScene");
-    void OnAjustesClicked() => SceneManager.LoadScene("AjustesScene");
+    void OnPlayClicked() { Debug.Log("[Menu] Navegando a Selección de Niveles"); SceneManager.LoadScene("PlayScene"); }
+    void OnPerfilClicked() { Debug.Log("[Menu] Navegando a Perfil de Jugador"); SceneManager.LoadScene("PerfilScene"); }
+    void OnAjustesClicked() { Debug.Log("[Menu] Navegando a Ajustes"); SceneManager.LoadScene("AjustesScene"); }
 }

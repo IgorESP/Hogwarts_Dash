@@ -1,18 +1,23 @@
 using UnityEngine;
 
+/// <summary>
+/// Herramienta de configuración automática del jugador - Se ejecuta una sola vez
+/// </summary>
 [RequireComponent(typeof(SpriteRenderer))]
 public class PlayerSetup : MonoBehaviour
 {
-    // Este script es una herramienta de un solo uso para configurar tu personaje rápidamente.
-    // Solo añádelo a tu objeto con sprite y se configurará solo.
-
+    /// <summary>
+    /// Configura automáticamente el jugador con todos los componentes necesarios
+    /// </summary>
     public void Setup()
     {
+        Debug.Log("[PlayerSetup] Iniciando configuración automática del jugador...");
+        
         // 1. Asignar Tag
         if (!gameObject.CompareTag("Player"))
         {
             gameObject.tag = "Player";
-            Debug.Log("✔ Tag 'Player' asignado.");
+            Debug.Log("[PlayerSetup] ✔ Tag 'Player' asignado");
         }
 
         // 2. Añadir Rigidbody2D
@@ -21,8 +26,8 @@ public class PlayerSetup : MonoBehaviour
         {
             rb = gameObject.AddComponent<Rigidbody2D>();
             rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous; // Vital para no atravesar paredes
-            rb.constraints = RigidbodyConstraints2D.FreezeRotation; // Que no ruede como pelota
-            Debug.Log("✔ Rigidbody2D añadido y configurado.");
+            rb.constraints = RigidbodyConstraints2D.FreezeRotation; // Evitar rotación no deseada
+            Debug.Log("[PlayerSetup] ✔ Rigidbody2D añadido y configurado");
         }
 
         // 3. Añadir Collider
@@ -30,7 +35,7 @@ public class PlayerSetup : MonoBehaviour
         if (col == null)
         {
             col = gameObject.AddComponent<BoxCollider2D>();
-            Debug.Log("✔ BoxCollider2D añadido.");
+            Debug.Log("[PlayerSetup] ✔ BoxCollider2D añadido");
         }
 
         // 4. Añadir PlayerController
@@ -39,27 +44,29 @@ public class PlayerSetup : MonoBehaviour
         {
             controller = gameObject.AddComponent<PlayerController>();
             
-            // Intentar buscar los hijos para el GroundCheck
+            // Crear GroundCheck
             Transform check = transform.Find("GroundCheck");
             if (check == null)
             {
                 check = new GameObject("GroundCheck").transform;
                 check.SetParent(transform);
-                check.localPosition = new Vector3(0, -0.5f, 0); // Ponerlo en los pies
+                check.localPosition = new Vector3(0, -0.5f, 0); // Posicionar en los pies
             }
             controller.groundCheck = check;
             
-            // Intentar asignar layer de suelo (esto asume que el Layer 3 o 6 es ground, depende del proyecto, se avisa)
-             controller.groundLayer = LayerMask.GetMask("Ground");
+            // Asignar layer de suelo
+            controller.groundLayer = LayerMask.GetMask("Ground");
             
-            Debug.Log("✔ PlayerController añadido.");
+            Debug.Log("[PlayerSetup] ✔ PlayerController añadido");
         }
         
-        Debug.Log("✨ ¡LISTO! Tu cubo Slytherin ahora es el Jugador. Borra este script 'PlayerSetup' si quieres.");
-        DestroyImmediate(this); // Autodestruirse para limpiar
+        Debug.Log("[PlayerSetup] ✨ ¡Configuración completada! El script se autodestruirá");
+        DestroyImmediate(this); // Autodestruirse tras configuración
     }
 
-    // Se ejecuta al añadir el script en el editor
+    /// <summary>
+    /// Se ejecuta automáticamente al añadir el script en el editor
+    /// </summary>
     private void Reset()
     {
         Setup();

@@ -1,11 +1,17 @@
 using UnityEngine;
 
+/// <summary>
+/// Efecto parallax para fondos - Crea sensación de profundidad
+/// </summary>
 public class ParallaxBackground : MonoBehaviour
 {
     [Header("Configuración")]
+    [Tooltip("Referencia a la cámara a seguir")]
     public Transform cameraTransform;
+    
     [Range(0f, 1f)]
-    public float parallaxEffect = 0.5f; // 0 = se mueve con la cámara (estático visualmente), 1 = quieto en el mundo
+    [Tooltip("0 = se mueve con la cámara, 1 = estático en el mundo")]
+    public float parallaxEffect = 0.5f;
 
     private float lastCameraX;
     private float textureUnitSizeX;
@@ -17,7 +23,7 @@ public class ParallaxBackground : MonoBehaviour
 
         lastCameraX = cameraTransform.position.x;
 
-        // Intentar obtener el tamaño del sprite para hacer tiling infinito (opcional)
+        // Obtener tamaño del sprite para tiling infinito
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null && spriteRenderer.sprite != null)
         {
@@ -25,8 +31,12 @@ public class ParallaxBackground : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Actualiza posición del fondo con efecto parallax
+    /// </summary>
     private void LateUpdate()
     {
+        // Calcular movimiento parallax
         float deltaX = cameraTransform.position.x - lastCameraX;
         float parallaxMovement = deltaX * parallaxEffect;
         
@@ -34,7 +44,7 @@ public class ParallaxBackground : MonoBehaviour
 
         lastCameraX = cameraTransform.position.x;
 
-        // Lógica de repetición infinita (si la imagen es tileable)
+        // Lógica de repetición infinita (si el sprite es tileable)
         if (textureUnitSizeX > 0)
         {
             if (Mathf.Abs(cameraTransform.position.x - transform.position.x) >= textureUnitSizeX)
