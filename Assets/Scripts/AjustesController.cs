@@ -20,10 +20,9 @@ public class AjustesController : MonoBehaviour
     // Accesibilidad
     private Slider sliderTamanoLetra;
     private Label labelTamanoLetra;
-    private Toggle toggleDaltonicos;
     
     // Botones
-    private Button botonRanking, botonAtras, botonCerrarSesion, botonCreditos, botonPerfil, botonTutorial, botonManual;
+    private Button botonRanking, botonAtras, botonCerrarSesion, botonCreditos, botonTutorial, botonManual;
 
     // Ranking
     private VisualElement panelRankingOverlay;
@@ -62,14 +61,12 @@ public class AjustesController : MonoBehaviour
         // Accesibilidad
         sliderTamanoLetra = root.Q<Slider>("Slider_TamanoLetra");
         labelTamanoLetra = root.Q<Label>("Label_TamanoLetra");
-        toggleDaltonicos = root.Q<Toggle>("Toggle_Daltonicos");
 
         // Botones
         botonRanking = root.Q<Button>("Boton_Ranking");
         botonAtras = root.Q<Button>("Boton_Atras");
         botonCerrarSesion = root.Q<Button>("Boton_CerrarSesion");
         botonCreditos = root.Q<Button>("Boton_Creditos");
-        botonPerfil = root.Q<Button>("Boton_Perfil");
 
         // Ranking
         panelRankingOverlay = root.Q<VisualElement>("PanelRankingOverlay");
@@ -102,8 +99,6 @@ public class AjustesController : MonoBehaviour
         // Accesibilidad
         if (sliderTamanoLetra != null) 
             sliderTamanoLetra.RegisterValueChangedCallback(OnTamanoLetraChanged);
-        if (toggleDaltonicos != null) 
-            toggleDaltonicos.RegisterValueChangedCallback(OnDaltonicosChanged);
 
         // Botones
         if (botonRanking != null) 
@@ -112,8 +107,6 @@ public class AjustesController : MonoBehaviour
             botonCreditos.clicked += OnCreditosClick;
         if (botonAtras != null) 
             botonAtras.clicked += () => SceneManager.LoadScene("MenuPrincipalT");
-        if (botonPerfil != null) 
-            botonPerfil.clicked += () => SceneManager.LoadScene("PerfilScene");
         if (botonCerrarSesion != null) 
             botonCerrarSesion.clicked += OnCerrarSesionClick;
         if (botonCerrarRanking != null) 
@@ -222,36 +215,12 @@ public class AjustesController : MonoBehaviour
             texto.Contains("SELECCIONA") || texto.Contains("SELECCIÓN"))
             return 32f;
 
-        if (texto.Contains("ENTRAR") || texto.Contains("VER PERFIL") ||
+        if (texto.Contains("ENTRAR") ||
             texto.Contains("CERRAR SESIÓN") || texto.Contains("CREAR CUENTA") ||
             texto.Contains("REGISTRARSE"))
             return 26f;
 
         return 22f;
-    }
-
-    private void OnDaltonicosChanged(ChangeEvent<bool> evt) 
-    {
-        bool activado = evt.newValue;
-        
-        PlayerPrefs.SetInt("ModoDaltonico", activado ? 1 : 0);
-        PlayerPrefs.Save();
-        
-        AplicarModoDaltonico(activado);
-    }
-
-    private void AplicarModoDaltonico(bool activado) 
-    {
-        if (activado) 
-        {
-            root.AddToClassList("modo-daltonico-activado");
-            Debug.Log("🎨 Modo daltónico ACTIVADO");
-        }
-        else 
-        {
-            root.RemoveFromClassList("modo-daltonico-activado");
-            Debug.Log("🎨 Modo daltónico DESACTIVADO");
-        }
     }
 
     // ====================================
@@ -429,16 +398,6 @@ public class AjustesController : MonoBehaviour
         }
         
         Invoke("AplicarTamanoInicial", 0.1f);
-
-        // Modo daltónico - VALOR POR DEFECTO: 0 (DESACTIVADO)
-        bool mDal = PlayerPrefs.GetInt("ModoDaltonico", 0) == 1;
-        if (toggleDaltonicos != null) 
-        {
-            toggleDaltonicos.value = mDal;
-        }
-        AplicarModoDaltonico(mDal);
-        
-        Debug.Log("✅ Configuración cargada - Daltónico: " + mDal + ", Letra: " + tLet + "%");
     }
 
     private void AplicarTamanoInicial() 

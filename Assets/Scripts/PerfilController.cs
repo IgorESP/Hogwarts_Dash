@@ -63,16 +63,16 @@ public class PerfilUIController : MonoBehaviour
         switch (nombreCasa) {
             case "Gryffindor":
                 botonGryffindor.AddToClassList("casa-seleccionada"); root.AddToClassList("color-gryffindor");
-                ActualizarIconos(new AssetsCasa("Assets/ASSETS_CUBOS/CUBO1.png", "Assets/ASSETS_BOLA/Bola_4.png", "Assets/ASSETS_COHETO/Cohete4.png", "Assets/ASSETS_UFO/UFO4.png")); break;
+                ActualizarIconos(new AssetsCasa("Assets/ASSETS_CUBOS/CUBO1.png", "Assets/ASSETS_CUBOS/Bola_gryffindor.png", "Assets/ASSETS_CUBOS/Cohete_gryffindor.png", "Assets/ASSETS_CUBOS/UFO_gryffindor.png")); break;
             case "Hufflepuff":
                 botonHufflepuff.AddToClassList("casa-seleccionada"); root.AddToClassList("color-hufflepuff");
-                ActualizarIconos(new AssetsCasa("Assets/ASSETS_CUBOS/CUBO2.png", "Assets/ASSETS_BOLA/Bola_3.png", "Assets/ASSETS_COHETO/Cohete3.png", "Assets/ASSETS_UFO/UFO2.png")); break;
+                ActualizarIconos(new AssetsCasa("Assets/ASSETS_CUBOS/CUBO2.png", "Assets/ASSETS_CUBOS/Bola_hufflepuff.png", "Assets/ASSETS_CUBOS/Cohete_hufflepuff.png", "Assets/ASSETS_CUBOS/UFO_hufflepuff.png")); break;
             case "Ravenclaw":
                 botonRavenclaw.AddToClassList("casa-seleccionada"); root.AddToClassList("color-ravenclaw");
-                ActualizarIconos(new AssetsCasa("Assets/ASSETS_CUBOS/CUBO3.png", "Assets/ASSETS_BOLA/Bola_2.png", "Assets/ASSETS_COHETO/Cohete2.png", "Assets/ASSETS_UFO/UFO3.png")); break;
+                ActualizarIconos(new AssetsCasa("Assets/ASSETS_CUBOS/CUBO3.png", "Assets/ASSETS_CUBOS/Bola_ravenclaw.png", "Assets/ASSETS_CUBOS/Cohete_ravenclaw.png", "Assets/ASSETS_CUBOS/UFO_ravenclaw.png")); break;
             case "Slytherin":
                 botonSlytherin.AddToClassList("casa-seleccionada"); root.AddToClassList("color-slytherin");
-                ActualizarIconos(new AssetsCasa("Assets/ASSETS_CUBOS/CUBO4.png", "Assets/ASSETS_BOLA/Bola_1.png", "Assets/ASSETS_COHETO/Cohete1.png", "Assets/ASSETS_UFO/UFO1.png")); break;
+                ActualizarIconos(new AssetsCasa("Assets/ASSETS_CUBOS/CUBO4.png", "Assets/ASSETS_CUBOS/Bola_slytherin.png", "Assets/ASSETS_CUBOS/Cohete_slytherin.png", "Assets/ASSETS_CUBOS/UFO_slytherin.png")); break;
         }
     }
     
