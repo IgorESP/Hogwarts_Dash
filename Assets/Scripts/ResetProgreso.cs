@@ -13,16 +13,23 @@ public class ResetProgreso : MonoBehaviour
         }
     }
     
+    /// <summary> 
+    /// Borra todos los PlayerPrefs y restablece el estado inicial del juego. 
+    /// </summary>
     public void ResetearTodo()
     {
         Debug.LogWarning("[ResetProgreso] !PELIGRO! Borrando todos los PlayerPrefs");
         
+        // Elimina absolutamente todas las claves guardadas
         PlayerPrefs.DeleteAll();
         PlayerPrefs.Save();
         
-        // Bloqueo manual vs Desbloqueo de nivel inicial
+        // Vuelve a bloquear todos los mundos excepto el primero
         PlayerPrefs.SetInt("Mundo_1_Desbloqueado", 1);
-        for (int i = 2; i <= 5; i++) PlayerPrefs.SetInt($"Mundo_{i}_Desbloqueado", 0);
+
+        // Mundos 2 a 5 quedan bloqueados
+        for (int i = 2; i <= 5; i++) 
+            PlayerPrefs.SetInt($"Mundo_{i}_Desbloqueado", 0);
         
         PlayerPrefs.Save();
         
@@ -30,6 +37,9 @@ public class ResetProgreso : MonoBehaviour
         
         // Intentar refrescar la interfaz si existe
         var controller = FindFirstObjectByType<NivelesUIController>();
-        if (controller != null) controller.SendMessage("ActualizarUI", SendMessageOptions.DontRequireReceiver);
+        if (controller != null)
+        {
+            controller.SendMessage("ActualizarUI", SendMessageOptions.DontRequireReceiver);
+        }
     }
 }

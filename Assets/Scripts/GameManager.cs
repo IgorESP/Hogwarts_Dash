@@ -83,37 +83,64 @@ public class GameManager : MonoBehaviour
     // MÉTODOS DE COMPATIBILIDAD Y CONTROL
     // ====================================
 
+    /// <summary> 
+    /// Se llama cuando el jugador muere. 
+    /// </summary>
     public void PlayerDied()
     {
         totalIntentos++;
         Debug.Log($"[GameManager] Jugador muerto. Total intentos sesión: {totalIntentos}");
     }
     
+    /// <summary> 
+    /// Se llama cuando el jugador completa el nivel (por trigger o tag). 
+    /// </summary>
     public void LevelComplete()
     {
         Debug.Log("[GameManager] Nivel completado detectado por tag.");
         FinalizarNivel();
     }
     
-    public void ActualizarProgreso(int cantidad) { /* Implementar si es necesario */ }
-    public void IncrementarProgreso(int cantidad = 1) { /* Implementar si es necesario */ }
+    /// <summary> 
+    /// Métodos reservados para futuros sistemas de progreso. 
+    /// </summary>
+    public void ActualizarProgreso(int cantidad)
+    {
+        
+    }
+    public void IncrementarProgreso(int cantidad = 1)
+    {
+        
+    }
     
+    /// <summary> 
+    /// Registra una snitch recogida durante la sesión. 
+    /// </summary>
     public void RegistrarSnitchRecogida() 
     { 
         snitchesRecogidas++; 
         Debug.Log($"[GameManager] Snitch registrada. Total: {snitchesRecogidas}");
     }
     
+    /// <summary> 
+    /// Registra un intento adicional. 
+    /// </summary>
     public void RegistrarIntento() 
     { 
         totalIntentos++; 
     }
     
+    /// <summary> 
+    /// Devuelve el porcentaje actual del nivel. 
+    /// </summary>
     public int ObtenerPorcentajeActual()
     {
-        return 0; // Implementar cálculo de porcentaje en tiempo real si se requiere
+        return 0; 
     }
     
+    /// <summary> 
+    /// Reinicia estadísticas de la sesión actual. 
+    /// </summary>
     public void ReiniciarEstadisticas()
     {
         Debug.Log("[GameManager] Reiniciando estadísticas de sesión");

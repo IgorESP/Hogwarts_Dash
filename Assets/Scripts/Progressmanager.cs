@@ -33,9 +33,17 @@ public class ProgressManager : MonoBehaviour
         DesbloquearSiguienteMundoAlEntrar();
     }
     
+    /// <summary> 
+    /// Inicializa todas las estadísticas de la partida. 
+    /// </summary>
     private void IniciarPartida()
     {
-        preguntasTotales = respuestasCorrectas = respuestasIncorrectas = intentos = snitchesRecogidos = 0;
+        preguntasTotales = 0;
+        respuestasCorrectas = 0;
+        respuestasIncorrectas = 0;
+        intentos = 0;
+        snitchesRecogidos = 0;
+
         tiempoInicio = Time.time;
     }
     
@@ -47,23 +55,49 @@ public class ProgressManager : MonoBehaviour
         if (mundoActual < 5)
         {
             int next = mundoActual + 1;
-            if (NivelesManager.Instance != null) NivelesManager.Instance.DesbloquearMundo(next);
+            if (NivelesManager.Instance != null) 
+                NivelesManager.Instance.DesbloquearMundo(next);
             else PlayerPrefs.SetInt($"Mundo_{next}_Desbloqueado", 1);
         }
     }
     
+    /// <summary> 
+    /// Registra una respuesta (correcta o incorrecta). 
+    /// </summary>
     public void RegistrarRespuesta(bool esCorrecta)
     {
         preguntasTotales++;
-        if (esCorrecta) respuestasCorrectas++;
-        else respuestasIncorrectas++;
+
+        if (esCorrecta) 
+            respuestasCorrectas++;
+        else 
+            respuestasIncorrectas++;
+
         Debug.Log($"[Progress] Pregunta respondida. Correctas: {respuestasCorrectas}/{preguntasTotales}");
     }
     
-    public void RegistrarIntento() { intentos++; }
-    public void RecogerSnitch() { snitchesRecogidos++; Debug.Log("[Progress] Snitch +1"); }
+    /// <summary> 
+    /// Registra un intento fallido. 
+    /// </summary>
+    public void RegistrarIntento() 
+    { 
+        intentos++; 
+    }
+
+    /// <summary>
+    /// Registra una snitch recogida. 
+    /// </summary>
+    public void RecogerSnitch() 
+    { 
+        snitchesRecogidos++; 
+        Debug.Log("[Progress] Snitch +1"); 
+        }
     
-    public float CalcularPorcentaje() => preguntasTotales == 0 ? 0f : (respuestasCorrectas / (float)preguntasTotales) * 100f;
+    /// <summary> 
+    /// Calcula el porcentaje de aciertos. 
+    /// </summary>
+    public float CalcularPorcentaje() => 
+        preguntasTotales == 0 ? 0f : (respuestasCorrectas / (float)preguntasTotales) * 100f;
     
     /// <summary>
     /// Finaliza el seguimiento de la partida y reporta resultados al NivelesManager y UI
@@ -75,7 +109,8 @@ public class ProgressManager : MonoBehaviour
         
         Debug.Log($"[Progress] Finalizando Nivel {mundoActual}. Porcentaje: {p:F1}%. Intentos: {intentos}");
         
-        if (NivelesManager.Instance != null) NivelesManager.Instance.CompletarNivel(mundoActual, 1, p);
+        if (NivelesManager.Instance != null) 
+            NivelesManager.Instance.CompletarNivel(mundoActual, 1, p);
         
         // Persistir resultados para la escena de fin
         PlayerPrefs.SetFloat("UltimoPorcentaje", p);
@@ -84,9 +119,18 @@ public class ProgressManager : MonoBehaviour
         PlayerPrefs.Save();
         
         ResultadosController ui = FindFirstObjectByType<ResultadosController>();
-        if (ui != null) ui.MostrarResultados(Mathf.RoundToInt(p), intentos, snitchesRecogidos, p >= 40f);
-        else Debug.LogWarning("[Progress] No se encontró el panel de resultados para mostrar el fin de nivel");
+        if (ui != null) 
+            ui.MostrarResultados(Mathf.RoundToInt(p), intentos, snitchesRecogidos, p >= 40f);
+        else 
+            Debug.LogWarning("[Progress] No se encontró el panel de resultados para mostrar el fin de nivel");
     }
 
-    public void SalirSinGuardar() { Time.timeScale = 1f; SceneManager.LoadScene("PlayScene"); }
+    /// <summary> 
+    /// Sale del nivel sin guardar progreso. 
+    /// </summary>
+    public void SalirSinGuardar() 
+    { 
+        Time.timeScale = 1f; 
+        SceneManager.LoadScene("PlayScene"); 
+    }
 }

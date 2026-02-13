@@ -37,11 +37,18 @@ public class LoginUIController : MonoBehaviour
         } 
     }
 
+    /// <summary> 
+    /// Aplica ajustes de accesibilidad guardados en PlayerPrefs. 
+    /// </summary>
     private void AplicarAccesibilidad()
     {
         if (root == null) return;
-        if (PlayerPrefs.GetInt("ModoDaltonico", 0) == 1) root.AddToClassList("modo-daltonico-activado");
 
+        // Activar modo daltónico si está habilitado
+        if (PlayerPrefs.GetInt("ModoDaltonico", 0) == 1) 
+            root.AddToClassList("modo-daltonico-activado");
+
+        // Ajustar tamaño de letra global
         float porcentaje = PlayerPrefs.GetFloat("TamanoLetra", 100f);
         float escala = porcentaje / 100f;
 
@@ -50,6 +57,9 @@ public class LoginUIController : MonoBehaviour
         });
     }
 
+    /// <summary> 
+    /// Obtiene referencias a los elementos del UXML. 
+    /// </summary>
     private void ObtenerReferencias()
     {
         if (root == null) return;
@@ -59,35 +69,50 @@ public class LoginUIController : MonoBehaviour
         botonRegistrarse = root.Q<Button>("Boton_Registrarse");
         mensajeError = root.Q<Label>("Mensaje_Error");
 
+        // Ajustar estilo de los inputs
         ForzarColorTexto(campoUsuario); 
         ForzarColorTexto(campoContrasena);
     }
 
+    /// <summary> 
+    /// Registra los eventos de los botones. 
+    /// </summary>
     private void RegistrarEventos()
     {
         if (botonLogin != null) botonLogin.clicked += OnLoginClick;
         if (botonRegistrarse != null) botonRegistrarse.clicked += OnRegistrarseClick;
     }
 
+    /// <summary> 
+    /// Lógica al pulsar el botón de iniciar sesión. 
+    /// </summary>
     private void OnLoginClick()
     {
         OcultarError();
 
+        // Validación básica
         if (string.IsNullOrEmpty(campoUsuario.value) || string.IsNullOrEmpty(campoContrasena.value))
         {
             MostrarError("Por favor, rellena todos los campos");
             return;
         }
 
+        // Desactivar botón mientras se procesa
         botonLogin.SetEnabled(false);
         botonLogin.text = "Cargando...";
 
         Debug.Log($"[Login] Intentando acceder con el usuario: {campoUsuario.value}");
+
+        // Llamada al backend
         ApiManager.Instance.Login(campoUsuario.value, campoContrasena.value, OnLoginRespuesta);
     }
 
+    /// <summary> 
+    /// Callback que recibe la respuesta del servidor tras intentar iniciar sesión. 
+    /// </summary>
     private void OnLoginRespuesta(bool exito, string mensaje, dynamic datos)
     {
+        // Restaurar botón
         if (botonLogin != null)
         {
             botonLogin.SetEnabled(true);
@@ -106,8 +131,14 @@ public class LoginUIController : MonoBehaviour
         }
     }
 
+    /// <summary> 
+    /// Navega a la escena de registro. 
+     /// </summary>
     private void OnRegistrarseClick() => SceneManager.LoadScene("RegistroScene");
 
+    /// <summary> 
+    /// Muestra un mensaje de error en pantalla. 
+    /// </summary>
     private void MostrarError(string mensaje)
     {
         if (mensajeError != null)
@@ -117,8 +148,12 @@ public class LoginUIController : MonoBehaviour
         }
     }
 
+    /// <summary> 
+    /// Oculta el mensaje de error. 
+    /// </summary>
     private void OcultarError()
     {
-        if (mensajeError != null) mensajeError.style.display = DisplayStyle.None;
+        if (mensajeError != null) 
+            mensajeError.style.display = DisplayStyle.None;
     }
 }

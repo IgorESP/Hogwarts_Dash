@@ -26,19 +26,33 @@ public class AudioManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             Debug.Log("[Audio] Iniciando AudioManager persistente");
         }
-        else { Destroy(gameObject); return; }
+        else { 
+            Destroy(gameObject); 
+            return; 
+        }
         
-        // Configurar fuentes si no están asignadas
-        if (musicaSource == null) { musicaSource = gameObject.AddComponent<AudioSource>(); musicaSource.loop = true; }
-        if (sfxSource == null) sfxSource = gameObject.AddComponent<AudioSource>();
+        // Si no se asignaron fuentes desde el inspector, se crean automáticamente
+        if (musicaSource == null) { 
+            musicaSource = gameObject.AddComponent<AudioSource>(); 
+            musicaSource.loop = true; 
+        }
+
+        if (sfxSource == null) 
+            sfxSource = gameObject.AddComponent<AudioSource>();
     }
     
     void Start()
     {
+        // Cargar volúmenes guardados en PlayerPrefs
         CargarVolumenes();
+
+        // Reproducir música del menú al iniciar
         ReproducirMusicaMenu();
     }
     
+    /// <summary> 
+    /// Carga los volúmenes guardados y los aplica. 
+    /// </summary>
     private void CargarVolumenes()
     {
         volumenMusica = PlayerPrefs.GetFloat("VolumenMusica", 80f) / 100f;
@@ -46,6 +60,9 @@ public class AudioManager : MonoBehaviour
         AplicarVolumenes();
     }
     
+    /// <summary> 
+    /// Aplica los volúmenes actuales a las fuentes de audio. 
+    /// </summary>
     private void AplicarVolumenes()
     {
         if (musicaSource != null) musicaSource.volume = volumenMusica;
@@ -56,6 +73,9 @@ public class AudioManager : MonoBehaviour
     // CONTROL DE REPRODUCCIÓN
     // ====================================
 
+    /// <summary> 
+    /// Reproduce la música del menú si no está ya sonando. 
+    /// </summary>
     public void ReproducirMusicaMenu()
     {
         if (musicaMenu != null && musicaSource != null && musicaSource.clip != musicaMenu)
@@ -66,6 +86,9 @@ public class AudioManager : MonoBehaviour
         }
     }
     
+    /// <summary> 
+    /// Reproduce la música del juego si no está ya sonando. 
+    /// </summary>
     public void ReproducirMusicaJuego()
     {
         if (musicaJuego != null && musicaSource != null && musicaSource.clip != musicaJuego)
@@ -76,20 +99,30 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    // ==================================== 
+    // CONTROL DE VOLÚMENES 
+    // ====================================
+
+    /// <summary> 
+    /// Ajusta el volumen de la música (0–1). 
+    /// </summary>
     public void SetVolumenMusica(float volumen)
     {
         volumenMusica = Mathf.Clamp01(volumen);
         if (musicaSource != null) musicaSource.volume = volumenMusica;
     }
     
+    /// <summary> 
+    /// Ajusta el volumen de los efectos (0–1). 
+    /// </summary>
     public void SetVolumenSFX(float volumen)
     {
         volumenSFX = Mathf.Clamp01(volumen);
         if (sfxSource != null) sfxSource.volume = volumenSFX;
     }
     
-    /// <summary>
-    /// Reproduce un efecto de sonido puntual
+    /// <summary> 
+    /// Reproduce un efecto de sonido puntual sin interrumpir la música. 
     /// </summary>
     public void ReproducirSFX(AudioClip clip)
     {
