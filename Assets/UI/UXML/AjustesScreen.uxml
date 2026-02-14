@@ -139,4 +139,82 @@
         
     </ui:VisualElement>
 </ui:VisualElement>
+
+<!-- Panel Flotante del Manual de Usuario -->
+<ui:VisualElement name="PanelManualOverlay"
+                  style="position: absolute; width: 100%; height: 100%;
+                         background-color: rgba(0, 0, 0, 0.85);
+                         justify-content: center; align-items: center;
+                         display: none;">
+    
+    <ui:VisualElement name="ContenedorManual"
+                      style="width: 90%; max-height: 90%;
+                             background-color: rgba(20, 15, 10, 0.98);
+                             border-radius: 25px; border-width: 4px;
+                             border-color: rgb(255, 215, 0);
+                             padding: 35px;">
+
+        <!-- Header -->
+        <ui:VisualElement style="flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <ui:Label text="MANUAL DE USUARIO"
+                      style="font-size: 36px; color: rgb(255, 215, 0);
+                             -unity-font-style: bold;
+                             -unity-text-outline-width: 2px;
+                             -unity-text-outline-color: rgba(0,0,0,0.8);" />
+            
+            <ui:Button name="Boton_CerrarManual"
+                       text="✖"
+                       style="width: 45px; height: 45px; font-size: 28px;
+                              background-color: rgba(139, 0, 0, 0.9);
+                              color: white; border-radius: 22px;
+                              border-width: 2px; border-color: rgb(255, 100, 100);" />
+        </ui:VisualElement>
+
+        <!-- Contenido Scrolleable -->
+        <ui:ScrollView name="ContenidoManual"
+                       style="flex-grow: 1; max-height: 600px; padding: 10px;">
+        </ui:ScrollView>
+
+    </ui:VisualElement>
+</ui:VisualElement>
+
+
+<!-- Panel Flotante del Tutorial -->
+<ui:VisualElement name="PanelTutorialOverlay"
+                  style="position: absolute; width: 100%; height: 100%;
+                         background-color: rgba(0, 0, 0, 0.85);
+                         justify-content: center; align-items: center;
+                         display: none;">
+    
+    <ui:VisualElement name="ContenedorTutorial"
+                      style="width: 85%; max-height: 85%;
+                             background-color: rgba(20, 15, 10, 0.98);
+                             border-radius: 25px; border-width: 4px;
+                             border-color: rgb(255, 215, 0);
+                             padding: 35px;">
+
+        <!-- Header -->
+        <ui:VisualElement style="flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <ui:Label text="TUTORIAL"
+                      style="font-size: 36px; color: rgb(255, 215, 0);
+                             -unity-font-style: bold;
+                             -unity-text-outline-width: 2px;
+                             -unity-text-outline-color: rgba(0,0,0,0.8);" />
+            
+            <ui:Button name="Boton_CerrarTutorial"
+                       text="✖"
+                       style="width: 45px; height: 45px; font-size: 28px;
+                              background-color: rgba(139, 0, 0, 0.9);
+                              color: white; border-radius: 22px;
+                              border-width: 2px; border-color: rgb(255, 100, 100);" />
+        </ui:VisualElement>
+
+        <!-- Contenido Scrolleable -->
+        <ui:ScrollView name="ContenidoTutorial"
+                       style="flex-grow: 1; max-height: 600px; padding: 10px;">
+        </ui:ScrollView>
+
+    </ui:VisualElement>
+</ui:VisualElement>
+
 </ui:UXML>

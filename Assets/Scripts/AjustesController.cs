@@ -12,9 +12,9 @@ public class AjustesController : MonoBehaviour
     // Referencias a elementos de UI
     private Slider sliderMusica, sliderSFX, sliderTamanoLetra;
     private Label labelMusica, labelSFX, labelTamanoLetra, mensajeVacio;
-    private Button botonRanking, botonAtras, botonCerrarSesion, botonCreditos, botonTutorial, botonManual, botonCerrarRanking, botonCerrarCreditos;
-    private VisualElement panelRankingOverlay, panelCreditosOverlay;
-    private ScrollView listaRanking;
+    private Button botonRanking, botonAtras, botonCerrarSesion, botonCreditos, botonTutorial, botonManual, botonCerrarRanking, botonCerrarCreditos, botonCerrarManual, botonCerrarTutorial;
+    private VisualElement panelRankingOverlay, panelCreditosOverlay, panelManualOverlay, panelTutorialOverlay;
+    private ScrollView listaRanking, contenidoManual, contenidoTutorial;
 
     void Start() 
     {
@@ -58,6 +58,16 @@ public class AjustesController : MonoBehaviour
         botonCerrarRanking = root.Q<Button>("Boton_CerrarRanking");
         mensajeVacio = root.Q<Label>("MensajeVacio");
 
+        // Manual de usuario
+        panelManualOverlay = root.Q<VisualElement>("PanelManualOverlay");
+        contenidoManual = root.Q<ScrollView>("ContenidoManual");
+        botonCerrarManual = root.Q<Button>("Boton_CerrarManual");
+
+        // Tutorial
+        panelTutorialOverlay = root.Q<VisualElement>("PanelTutorialOverlay");
+        contenidoTutorial = root.Q<ScrollView>("ContenidoTutorial");
+        botonCerrarTutorial = root.Q<Button>("Boton_CerrarTutorial");
+
         // Créditos
         panelCreditosOverlay = root.Q<VisualElement>("PanelCreditosOverlay");
         botonCerrarCreditos = root.Q<Button>("Boton_CerrarCreditos");
@@ -75,11 +85,17 @@ public class AjustesController : MonoBehaviour
 
         // Botones
         if (botonRanking != null) botonRanking.clicked += OnRankingClick;
-        if (botonCreditos != null) botonCreditos.clicked += OnCreditosClick;
         if (botonCerrarRanking != null) botonCerrarRanking.clicked += CerrarRanking;
+
+        if (botonCreditos != null) botonCreditos.clicked += OnCreditosClick;
         if (botonCerrarCreditos != null) botonCerrarCreditos.clicked += CerrarCreditos;
-        if (botonTutorial != null) botonTutorial.clicked += OnTutorialClick; 
+
+        if (botonTutorial != null) botonTutorial.clicked += OnTutorialClick;
+        if (botonCerrarTutorial != null) botonCerrarTutorial.clicked += CerrarTutorial;
+
         if (botonManual != null) botonManual.clicked += OnManualClick;
+        if (botonCerrarManual != null) botonCerrarManual.clicked += CerrarManual;
+
         if (botonCerrarSesion != null) botonCerrarSesion.clicked += OnCerrarSesionClick;
 
         // Volver atrás
@@ -93,21 +109,241 @@ public class AjustesController : MonoBehaviour
     /// <summary> 
     /// Abre el tutorial HTML desde StreamingAssets 
     /// </summary>
-    private void OnTutorialClick() 
-    { 
-        Debug.Log("[Ajustes] Abriendo tutorial web");
-        string ruta = System.IO.Path.Combine(Application.streamingAssetsPath, "Tutorial/index.html");
-        Application.OpenURL("file://" + ruta); 
+    private void OnTutorialClick()
+    {
+        if (panelTutorialOverlay != null)
+            panelTutorialOverlay.style.display = DisplayStyle.Flex;
+
+        if (contenidoTutorial != null)
+        {
+            contenidoTutorial.Clear();
+
+            // Título
+            contenidoTutorial.Add(new Label("TUTORIAL HOGWARTS DASH")
+            {
+                style = { fontSize = 28, unityFontStyleAndWeight = FontStyle.Bold, color = Color.cyan, marginBottom = 15 }
+            });
+
+            AgregarTitulo("Mecánicas de Juego");
+
+            AgregarTarjeta("Salto Base", "Evita los obstáculos del suelo con un salto preciso.", "Tutorial/salto", "TAP / ESPACIO");
+            AgregarTarjeta("Orbe Místico", "Tócala en el aire para impulsarte nuevamente.", "Tutorial/orbe", "TAP EN EL AIRE");
+            AgregarTarjeta("Jump Pad", "Plataformas que te lanzan automáticamente.", "Tutorial/salto_jump_pad", "PASIVO");
+
+            AgregarTitulo("Vehículos Disponibles");
+
+            AgregarTarjeta("El Cubo", "Tu forma principal. Salto simple y efectivo.", "Tutorial/portal_cubo");
+            AgregarTarjeta("Erizo Mágico", "Cambia la gravedad y se pega a superficies.", "Tutorial/bola");
+            AgregarTarjeta("La Escoba", "Mantén para subir, suelta para caer.", "Tutorial/escoba");
+            AgregarTarjeta("Gorro Mágico", "Permite múltiples saltos cortos en el aire.", "Tutorial/ufo");
+
+            AgregarTitulo("Coleccionables");
+
+            AgregarTarjeta("La Snitch Dorada","Encuentra las 3 snitch doradas en cada nivel para demostrar tu maestría.","Tutorial/snitch");
+        }
+    }
+
+    private void AgregarTitulo(string texto)
+    {
+        contenidoTutorial.Add(new Label(texto)
+        {
+            style = { fontSize = 26, unityFontStyleAndWeight = FontStyle.Bold, color = Color.yellow, marginTop = 25 }
+        });
+    }
+
+    private void AgregarTarjeta(string titulo, string descripcion, string rutaImagen, string control = "")
+    {
+        var card = new VisualElement(); 
+        card.style.flexDirection = FlexDirection.Column; 
+        card.style.backgroundColor = new Color(0.12f, 0.12f, 0.18f, 0.95f); 
+        card.style.borderTopWidth = 3; 
+        card.style.borderBottomWidth = 3; 
+        card.style.borderLeftWidth = 3; 
+        card.style.borderRightWidth = 3; 
+        card.style.SetBorderColor(new Color(0.8f, 0.7f, 0.2f)); 
+        card.style.marginBottom = 25; 
+        card.style.paddingBottom = 20; 
+        card.style.paddingTop = 20; 
+        card.style.paddingLeft = 20; 
+        card.style.paddingRight = 20; 
+        card.style.SetBorderRadius(18);
+
+        card.style.alignItems = Align.Center;
+        card.style.justifyContent = Justify.Center;
+
+        // Imagen
+        AgregarImagen(rutaImagen, 180, card);
+
+        // Título
+        card.Add(new Label(titulo)
+        {
+            style = { fontSize = 22, unityFontStyleAndWeight = FontStyle.Bold, color = Color.cyan, marginTop = 10 }
+        });
+
+        // Descripción
+        card.Add(new Label(descripcion)
+        {
+            style = { fontSize = 18, color = Color.white, whiteSpace = WhiteSpace.Normal }
+        });
+
+        // Controles (si hay)
+        if (!string.IsNullOrEmpty(control))
+        {
+            var ctrl = new Label(control);
+            ctrl.style.backgroundColor = new Color(0, 1, 1, 0.1f);
+            ctrl.style.color = Color.cyan;
+            ctrl.style.unityFontStyleAndWeight = FontStyle.Bold;
+            ctrl.style.marginTop = 10;
+            ctrl.style.paddingLeft = 10;
+            ctrl.style.paddingRight = 10;
+            ctrl.style.SetBorderRadius(10);
+            card.Add(ctrl);
+        }
+
+        contenidoTutorial.Add(card);
+    }
+
+    private void AgregarImagen(string ruta, int height = 200, VisualElement parent = null)
+    {
+        Texture2D tex = Resources.Load<Texture2D>(ruta);
+        if (tex == null)
+        {
+            Debug.LogWarning($"[Tutorial] No se encontró la imagen: {ruta}");
+            return;
+        }
+
+        var img = new VisualElement();
+        img.style.height = height;
+        img.style.width = 300;
+        img.style.backgroundImage = new StyleBackground(tex);
+        img.style.unityBackgroundScaleMode = ScaleMode.ScaleToFit;
+        img.style.marginBottom = 15;
+
+        if (parent != null) parent.Add(img);
+        else contenidoTutorial.Add(img);
+    }
+
+    private void CerrarTutorial()
+    {
+        if (panelTutorialOverlay != null)
+            panelTutorialOverlay.style.display = DisplayStyle.None;
     }
 
     /// <summary> 
     /// Abre el manual PDF desde StreamingAssets 
     /// </summary>
-    private void OnManualClick() 
-    { 
-        Debug.Log("[Ajustes] Abriendo manual PDF");
-        string ruta = System.IO.Path.Combine(Application.streamingAssetsPath, "Manual/manual.pdf"); 
-        Application.OpenURL("file://" + ruta); 
+    private void OnManualClick()
+    {
+        if (panelManualOverlay != null)
+            panelManualOverlay.style.display = DisplayStyle.Flex;
+
+        if (contenidoManual != null)
+        {
+            contenidoManual.Clear();
+
+            // Título
+            contenidoManual.Add(new Label("Manual de Usuario - Hogwarts Dash")
+            {
+                style = { fontSize = 28, unityFontStyleAndWeight = FontStyle.Bold, color = Color.yellow, marginBottom = 15 }
+            });
+
+            // Secciones
+            AgregarSeccion("1. Introducción",
+                "El presente manual describe el funcionamiento del videojuego Hogwarts Dash, un juego de plataformas rítmico desarrollado en Unity para PC y Android. \n" +
+                "En él, el jugador controla un cubo mágico que debe superar niveles inspirados en los escenarios de Hogwarts, saltando y esquivando obstáculos. \n" +
+                "El objetivo principal es completar cada nivel, recolectando snitchs doradas y desbloquear nuevos niveles y skins."
+            );
+
+            AgregarSeccion("2. Controles del juego",
+                "En PC, el jugador utilizará el ratón para navegar por los menús. Durante los niveles podrá usar el clic izquierdo o la barra espaciadora para saltar. \n" +
+                "En Android, todos los controles serán con el dedo. Durante los niveles tendrá que pulsar la pantalla cada vez que quiera saltar."
+            );
+
+            AgregarSeccion("3. Menús",
+                "Menú principal: elegir skins, niveles o ajustes.\n" +
+                "Menú pausa: reanudar, reiniciar o volver al menú.\n" +
+                "Menú ajustes: audio, accesibilidad, créditos, ranking, tutorial y manual."
+            );
+            
+            AgregarSeccion("3.1. Menú principal",
+                "En el menú principal encontrarás 3 botones. \n" +
+                "Empezando por la izquierda al pulsar este botón mostrará otra escena con los diferentes colores de skins que puedes seleccionar (rojo, verde, amarillo y azul). \n" +
+                "El botón central te mostrará la escena para elegir el nivel de juego. \n" +
+                "Por último, el botón de la derecha te mostrará los ajustes del juego."
+            );
+            
+            AgregarImagen("Manual/Menu_principal");
+
+            AgregarSeccion("3.2. Menú pausa",
+                "Para abrir el menú de pausa tendrás que hacer clic dentro de cualquier nivel en la parte superior derecha. \n" + 
+                "Te mostrará un menú parecido al de abajo en el cual tendrás varias opciones. \n" +
+                "Empezando con el botón con el logo de una casa, nos llevará al menú principal. Siguiendo con el botón del medio con el logo de play, reanuda la partida que estés haciendo en el mismo lugar. Por último, encontraremos un botón para reiniciar el nivel desde el inicio. \n" +
+                "En la parte inferior encontrarás 2 barras deslizantes para cambiar el volumen de la música y de los efectos."
+            );
+
+            AgregarImagen("Manual/Menu_pausa");
+
+            AgregarSeccion("3.3. Menú ajustes",
+                "Aquí encontrarás muchas opciones para configurar o mirar. \n" +
+                "Empezando de arriba hacia abajo, primero encontraremos los audios. En el cual podrás subir o bajar el volumen de la música y de los efectos. Después encontraremos la parte de accesibilidad. En la que podremos aumentar o disminuir la el tamaño de la letra. \n" +
+                "Luego encontraremos varios botones para informarnos sobre diferentes temas. En créditos encontrarás los assets utilizados, la música utilizada y los desarrolladores del videojuego. El ranking te mostrará los 10 mejores jugadores. En tutorial te mostrará una ventana con los conocimientos básicos que necesitas saber para jugar. El manual de usuario te mostrará en una ventana el documento que estás leyendo ahora mismo. Por último, un botón para cerrar sesión la cuenta y volver al menú de login/registro."
+            );
+            
+            AgregarImagen("Manual/Menu_ajustes");
+
+            AgregarSeccion("4. Elegir nivel de juego",
+                "Aquí podrás seleccionar el nivel que quieras. Eso sí tendrás que ir desbloqueando uno a uno para jugar a todos. En total encontrarás 5 niveles con temáticas de hogwarts (El comedor, Gryffindor, Slytherin, Hufflepuff y Ravenclaw)."
+            );
+
+            AgregarImagen("Manual/Nivel_juego");
+
+            AgregarSeccion("5. Cambiar skins de personaje",
+                "En esta sección podrás ver los diferentes personajes con los diferentes colores. Solo tendrás que seleccionar la casa (color) que más te guste y te mostrarán en la parte inferior el resultado."
+            );
+
+            AgregarImagen("Manual/Skins_personajes");
+
+            AgregarSeccion("6. Contacto y créditos",
+                "Desarrollado por el equipo HOGWARTS DASH. Para consultas o soporte técnico, contacte con el desarrollador responsable del proyecto."
+            );
+        }
+    }
+
+    private void AgregarSeccion(string titulo, string contenido)
+    {
+        contenidoManual.Add(new Label(titulo)
+        {
+            style = { fontSize = 24, unityFontStyleAndWeight = FontStyle.Bold, color = Color.yellow, marginTop = 20 }
+        });
+
+        contenidoManual.Add(new Label(contenido)
+        {
+            style = { fontSize = 18, color = Color.white, whiteSpace = WhiteSpace.Normal, marginBottom = 10 }
+        });
+    }
+
+    private void AgregarImagen(string ruta)
+    {
+        Texture2D tex = Resources.Load<Texture2D>(ruta);
+        if (tex == null)
+        {
+            Debug.LogWarning($"[Manual] No se encontró la imagen: {ruta}");
+            return;
+        }
+
+        var img = new VisualElement();
+        img.style.height = 400;
+        img.style.backgroundImage = new StyleBackground(tex);
+        img.style.unityBackgroundScaleMode = ScaleMode.ScaleToFit;
+        img.style.marginBottom = 20;
+
+        contenidoManual.Add(img);
+    }
+
+    private void CerrarManual()
+    {
+        if (panelManualOverlay != null)
+            panelManualOverlay.style.display = DisplayStyle.None;
     }
 
     /// <summary> 
