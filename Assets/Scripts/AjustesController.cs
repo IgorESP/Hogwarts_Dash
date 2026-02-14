@@ -83,7 +83,7 @@ public class AjustesController : MonoBehaviour
         if (sliderSFX != null) sliderSFX.RegisterValueChangedCallback(OnSFXChanged);
         if (sliderTamanoLetra != null) sliderTamanoLetra.RegisterValueChangedCallback(OnTamanoLetraChanged);
 
-        // Botones
+        // Botones principales
         if (botonRanking != null) botonRanking.clicked += OnRankingClick;
         if (botonCerrarRanking != null) botonCerrarRanking.clicked += CerrarRanking;
 
@@ -98,16 +98,20 @@ public class AjustesController : MonoBehaviour
 
         if (botonCerrarSesion != null) botonCerrarSesion.clicked += OnCerrarSesionClick;
 
-        // Volver atrás
+        // Botón volver atrás
         if (botonAtras != null) 
             botonAtras.clicked += () => {
                 Debug.Log("[Ajustes] Volviendo al menú principal");
                 SceneManager.LoadScene("MenuPrincipalT");
             };
     }
+
+    // --------------------------------------------------------- 
+    // ---------------------- TUTORIAL -------------------------
+    // ---------------------------------------------------------
     
     /// <summary> 
-    /// Abre el tutorial HTML desde StreamingAssets 
+    /// Abre el panel del tutorial y genera su contenido dinámicamente. 
     /// </summary>
     private void OnTutorialClick()
     {
@@ -143,6 +147,9 @@ public class AjustesController : MonoBehaviour
         }
     }
 
+    /// <summary> 
+    /// Añade un título centrado dentro del tutorial. 
+    /// </summary>
     private void AgregarTitulo(string texto)
     {
         contenidoTutorial.Add(new Label(texto)
@@ -151,6 +158,9 @@ public class AjustesController : MonoBehaviour
         });
     }
 
+    /// <summary> 
+    /// Crea una tarjeta visual con imagen, título, descripción y controles opcionales. 
+    /// </summary>
     private void AgregarTarjeta(string titulo, string descripcion, string rutaImagen, string control = "")
     {
         var card = new VisualElement(); 
@@ -168,6 +178,7 @@ public class AjustesController : MonoBehaviour
         card.style.paddingRight = 20; 
         card.style.SetBorderRadius(18);
 
+        // Centrar contenido
         card.style.alignItems = Align.Center;
         card.style.justifyContent = Justify.Center;
 
@@ -186,7 +197,7 @@ public class AjustesController : MonoBehaviour
             style = { fontSize = 18, color = Color.white, whiteSpace = WhiteSpace.Normal }
         });
 
-        // Controles (si hay)
+        // Controles
         if (!string.IsNullOrEmpty(control))
         {
             var ctrl = new Label(control);
@@ -203,6 +214,9 @@ public class AjustesController : MonoBehaviour
         contenidoTutorial.Add(card);
     }
 
+    /// <summary> 
+    /// Añade una imagen centrada dentro de un contenedor. 
+    /// </summary>
     private void AgregarImagen(string ruta, int height = 200, VisualElement parent = null)
     {
         Texture2D tex = Resources.Load<Texture2D>(ruta);
@@ -223,14 +237,21 @@ public class AjustesController : MonoBehaviour
         else contenidoTutorial.Add(img);
     }
 
+    /// <summary> 
+    /// Cierra el panel del tutorial. 
+    /// </summary>
     private void CerrarTutorial()
     {
         if (panelTutorialOverlay != null)
             panelTutorialOverlay.style.display = DisplayStyle.None;
     }
 
+    // --------------------------------------------------------- 
+    // ----------------------- MANUAL -------------------------- 
+    // ---------------------------------------------------------
+
     /// <summary> 
-    /// Abre el manual PDF desde StreamingAssets 
+    /// Abre el panel del manual y genera su contenido dinámicamente. 
     /// </summary>
     private void OnManualClick()
     {
@@ -309,6 +330,9 @@ public class AjustesController : MonoBehaviour
         }
     }
 
+    /// <summary> 
+    ///  Añade una sección de texto al manual.
+    /// </summary>
     private void AgregarSeccion(string titulo, string contenido)
     {
         contenidoManual.Add(new Label(titulo)
@@ -322,6 +346,9 @@ public class AjustesController : MonoBehaviour
         });
     }
 
+    /// <summary> 
+    ///  Añade una imagen al manual.
+    /// </summary>
     private void AgregarImagen(string ruta)
     {
         Texture2D tex = Resources.Load<Texture2D>(ruta);
@@ -340,11 +367,18 @@ public class AjustesController : MonoBehaviour
         contenidoManual.Add(img);
     }
 
+    /// <summary> 
+    ///  Cierra el panel del manual.
+    /// </summary>
     private void CerrarManual()
     {
         if (panelManualOverlay != null)
             panelManualOverlay.style.display = DisplayStyle.None;
     }
+
+    // --------------------------------------------------------- 
+    // ----------------------- AUDIO --------------------------- 
+    // ---------------------------------------------------------
 
     /// <summary> 
     /// Cambia el volumen de la música 
@@ -367,6 +401,10 @@ public class AjustesController : MonoBehaviour
         PlayerPrefs.SetFloat("VolumenSFX", vol);
         if (AudioManager.Instance != null) AudioManager.Instance.SetVolumenSFX(vol / 100f);
     }
+
+    // --------------------------------------------------------- 
+    // -------------------- ACCESIBILIDAD ---------------------- 
+    // ---------------------------------------------------------
 
     /// <summary> 
     /// Cambia el tamaño de letra y lo aplica a la UI 
@@ -404,6 +442,10 @@ public class AjustesController : MonoBehaviour
         if (texto.Contains("AUDIO") || texto.Contains("ACCESIBILIDAD") || texto.Contains("RANKING")) return 32f;
         return 22f;
     }
+
+    // --------------------------------------------------------- 
+    // ----------------------- RANKING ------------------------- 
+    // ---------------------------------------------------------
 
     /// <summary> 
     /// Solicita el ranking al servidor y lo muestra 
@@ -474,6 +516,10 @@ public class AjustesController : MonoBehaviour
             mensajeVacio.style.display = DisplayStyle.Flex;
     }
 
+    // --------------------------------------------------------- 
+    // ----------------------- CREDITOS ------------------------- 
+    // ---------------------------------------------------------
+
     /// <summary> 
     /// Abre el panel de créditos 
     /// </summary>
@@ -512,6 +558,10 @@ public class AjustesController : MonoBehaviour
     {
         AplicarTamanoLetraUI(PlayerPrefs.GetFloat("TamanoLetra", 100f));
     }
+
+    // --------------------------------------------------------- 
+    // ----------------------- CERRAR SESION ------------------------- 
+    // ---------------------------------------------------------
 
     /// <summary>
     /// Cierra sesión y vuelve a la pantalla de login 
