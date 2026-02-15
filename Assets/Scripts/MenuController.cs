@@ -10,6 +10,8 @@ public class MenuController : MonoBehaviour
     private UIDocument uiDocument;
     private Button botonPlay, botonPerfil, botonAjustes;
 
+    private VisualElement root;
+
     void OnEnable()
     {
         Debug.Log("[Menu] Cargando menú principal");
@@ -19,7 +21,7 @@ public class MenuController : MonoBehaviour
         if (uiDocument == null) return;
         
         // Obtener el root del UXML
-        var root = uiDocument.rootVisualElement;
+        root = uiDocument.rootVisualElement;
         
         // Aplicar accesibilidad global (modo daltónico, tamaño de letra, etc.) 
         // Esto lo gestiona NivelesManager para mantener coherencia entre escenas
@@ -35,6 +37,8 @@ public class MenuController : MonoBehaviour
         if (botonPlay != null) botonPlay.clicked += OnPlayClicked;
         if (botonPerfil != null) botonPerfil.clicked += OnPerfilClicked;
         if (botonAjustes != null) botonAjustes.clicked += OnAjustesClicked;
+
+        AñadirSonidoABotones();
     }
 
     void OnDisable()
@@ -70,5 +74,20 @@ public class MenuController : MonoBehaviour
     { 
         Debug.Log("[Menu] Navegando a Ajustes"); 
         SceneManager.LoadScene("AjustesScene"); 
+    }
+
+    /// <summary> 
+    /// Añade sonido de clic a todos los botones del menú principal. 
+    /// </summary>
+    private void AñadirSonidoABotones()
+    {
+        if (root == null) return;
+
+        var botones = root.Query<Button>().ToList();
+
+        foreach (var b in botones)
+        {
+            b.clicked += () => AudioManager.Instance.PlayBoton();
+        }
     }
 }

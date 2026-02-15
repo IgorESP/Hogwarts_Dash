@@ -34,6 +34,8 @@ public class NivelesUIController : MonoBehaviour
 
         // Actualizar estados visuales según progreso
         ActualizarUI();
+
+        AñadirSonidoABotones();
     }
     
     /// <summary> 
@@ -63,7 +65,12 @@ public class NivelesUIController : MonoBehaviour
         botonMundo5.clicked += () => SeleccionarMundo(5);
 
         if (botonAtras != null) 
-            botonAtras.clicked += () => SceneManager.LoadScene("MenuPrincipalT");
+            botonAtras.clicked += () =>
+                {
+                    AudioManager.Instance.musicaSource.Stop();
+                    SceneManager.LoadScene("MenuPrincipalT");
+                };
+
     }
     
     /// <summary> 
@@ -137,6 +144,30 @@ public class NivelesUIController : MonoBehaviour
         PlayerPrefs.SetInt("MundoSeleccionado", num);
         PlayerPrefs.Save();
 
+        // Música segun el mundo
+        switch (num) 
+        { 
+            case 1: 
+                AudioManager.Instance.ReproducirMusicaComedor(); 
+                break; 
+
+            case 2: 
+                AudioManager.Instance.ReproducirMusicaGryffindor(); 
+                break; 
+
+            case 3: 
+                AudioManager.Instance.ReproducirMusicaSlytherin(); 
+                break; 
+            
+            case 4: 
+                AudioManager.Instance.ReproducirMusicaHufflepuff(); 
+                break; 
+            
+            case 5: 
+                AudioManager.Instance.ReproducirMusicaRavenclaw(); 
+                break; 
+        }
+
         SceneManager.LoadScene(nombresEscenas[num]);
     }
     
@@ -148,4 +179,20 @@ public class NivelesUIController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F5)) 
             ActualizarUI();
     }
+
+    /// <summary> 
+    /// Añade sonido de clic a todos los botones del menú de niveles. 
+    /// </summary>
+    private void AñadirSonidoABotones()
+    {
+        if (root == null) return;
+
+        var botones = root.Query<Button>().ToList();
+
+        foreach (var b in botones)
+        {
+            b.clicked += () => AudioManager.Instance.PlayBoton();
+        }
+    }
+
 }

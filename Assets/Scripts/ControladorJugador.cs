@@ -51,16 +51,6 @@ public class MovimientoGD : MonoBehaviour
     [Tooltip("Tiempo de espera antes de reiniciar la escena tras morir")]
     public float tiempoEsperaMuerte = 1.0f;
 
-    [Header("Sonidos (NUEVO)")]
-    [Tooltip("Componente AudioSource para reproducir sonidos")]
-    public AudioSource audioSource;
-    
-    [Tooltip("Sonido que se reproduce al morir")]
-    public AudioClip sonidoMuerte;
-    
-    [Tooltip("Sonido que se reproduce al recoger una moneda")]
-    public AudioClip sonidoMoneda;
-
     // ========================================
     // MODOS DE JUEGO ESPECIALES
     // ========================================
@@ -126,9 +116,6 @@ public class MovimientoGD : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<BoxCollider2D>();
         rend = GetComponent<SpriteRenderer>();
-
-        // Configurar AudioSource si no está asignado en el Inspector
-        if (audioSource == null) audioSource = GetComponent<AudioSource>();
 
         // Configurar CircleCollider para el modo Bola
         circleCol = GetComponent<CircleCollider2D>();
@@ -323,14 +310,8 @@ public class MovimientoGD : MonoBehaviour
         // MONEDAS / COLECCIONABLES
         if (collision.CompareTag("Moneda"))
         {
-            if (audioSource != null && sonidoMoneda != null) 
-            {
-                audioSource.PlayOneShot(sonidoMoneda);
-                Debug.Log("[MovimientoGD] Moneda recogida");
-            }
-
-            // NOTA: AnimacionSnitch.cs gestiona la lógica de recolección
-            // Este script solo reproduce el sonido
+            AudioManager.Instance.PlaySnitch();
+            Debug.Log("[MovimientoGD] Moneda recogida");
             return; 
         }
         
@@ -520,12 +501,8 @@ public class MovimientoGD : MonoBehaviour
         // EFECTOS DE MUERTE
         // ========================================
         
-        // Reproducir sonido de muerte
-        if (audioSource && sonidoMuerte) 
-        {
-            audioSource.PlayOneShot(sonidoMuerte);
-            Debug.Log("[MovimientoGD] Sonido de muerte reproducido");
-        }
+        AudioManager.Instance.PlayMuerte();
+        Debug.Log("[MovimientoGD] Sonido de muerte reproducido");
 
         // Detener movimiento completamente
         rb.linearVelocity = Vector2.zero;
@@ -563,6 +540,8 @@ public class MovimientoGD : MonoBehaviour
         
         // Esperar el tiempo configurado
         yield return new WaitForSeconds(tiempoEsperaMuerte);
+
+        AudioManager.Instance.musicaSource.Stop();
         
         // Recargar la escena actual
         string escenaActual = SceneManager.GetActiveScene().name;

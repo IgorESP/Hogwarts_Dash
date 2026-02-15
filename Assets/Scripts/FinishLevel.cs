@@ -20,6 +20,7 @@ public class FinishLevel : MonoBehaviour
         if (other.CompareTag("Player") && !nivelCompletado)
         {
             nivelCompletado = true;
+            AudioManager.Instance.PlayVictoria(); 
             Debug.Log("[FinishLevel] ¡Meta alcanzada! Finalizando nivel...");
             Invoke("FinalizarNivel", tiempoEspera);
         }

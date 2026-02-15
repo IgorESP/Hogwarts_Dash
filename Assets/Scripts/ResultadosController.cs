@@ -18,21 +18,29 @@ public class ResultadosController : MonoBehaviour
         if (uiDoc == null) return;
         root = uiDoc.rootVisualElement;
         
+        // Panel principal y contenedor animado
         panelResultados = root.Q<VisualElement>("PanelResultados");
         contenedorResultados = root.Q<VisualElement>("ContenedorResultados");
         
+        // Labels de estadísticas
         titulo = root.Q<Label>("Titulo");
         labelPorcentaje = root.Q<Label>("Label_Porcentaje");
         labelIntentos = root.Q<Label>("Label_Intentos");
         labelSnitches = root.Q<Label>("Label_Snitches");
         
+        // Botones de acción
         botonReintentar = root.Q<Button>("Boton_Reintentar");
         botonVolver = root.Q<Button>("Boton_Volver");
         
+        // Registrar eventos de los botones
         if (botonReintentar != null) botonReintentar.clicked += Reintentar;
         if (botonVolver != null) botonVolver.clicked += VolverAlMenu;
         
+        // Ocultar el panel al iniciar la escena
         OcultarPanel();
+
+        // Añadir sonido a todos los botones del panel
+        AñadirSonidoABotones();
     }
     
     /// <summary>
@@ -54,6 +62,9 @@ public class ResultadosController : MonoBehaviour
         StartCoroutine(EnviarResultadosAPI(porcentaje, intentos, snitches));
     }
     
+    /// <summary> 
+    /// Muestra el panel y ejecuta una animación de escala suave. 
+    /// </summary>
     private void MostrarPanel()
     {
         if (panelResultados != null) panelResultados.style.display = DisplayStyle.Flex;
@@ -65,10 +76,34 @@ public class ResultadosController : MonoBehaviour
         }
     }
     
-    private void OcultarPanel() { if (panelResultados != null) panelResultados.style.display = DisplayStyle.None; }
+    /// <summary> 
+    /// Oculta el panel de resultados. 
+    /// </summary>
+    private void OcultarPanel() 
+    { 
+        if (panelResultados != null) 
+            panelResultados.style.display = DisplayStyle.None; 
+    }
     
-    private void Reintentar() { Time.timeScale = 1f; SceneManager.LoadScene(SceneManager.GetActiveScene().name); }
-    private void VolverAlMenu() { Time.timeScale = 1f; SceneManager.LoadScene("PlayScene"); }
+    /// <summary> 
+    /// Reinicia el nivel actual. 
+    /// </summary>
+    private void Reintentar() 
+    { 
+        Time.timeScale = 1f; 
+        AudioManager.Instance.musicaSource.Stop();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name); 
+    }
+
+    /// <summary> 
+    /// Vuelve al menú principal de selección de niveles. 
+    /// </summary>
+    private void VolverAlMenu() 
+    { 
+        Time.timeScale = 1f; 
+        AudioManager.Instance.musicaSource.Stop();
+        SceneManager.LoadScene("PlayScene"); 
+    }
     
     /// <summary>
     /// Sincroniza el progreso del usuario con la API de Hogwarts Dash
@@ -102,5 +137,26 @@ public class ResultadosController : MonoBehaviour
         }
     }
     
-    void OnDestroy() { Time.timeScale = 1f; }
+    /// <summary> 
+    /// Si el objeto se destruye, reanudar el tiempo. 
+    /// </summary>
+    void OnDestroy() 
+    { 
+        Time.timeScale = 1f; 
+    }
+
+    /// <summary> 
+    /// Añade sonido de clic a todos los botones del panel de resultados. 
+    /// </summary>
+    private void AñadirSonidoABotones()
+    {
+        if (root == null) return;
+
+        var botones = root.Query<Button>().ToList();
+
+        foreach (var b in botones)
+        {
+            b.clicked += () => AudioManager.Instance.PlayBoton();
+        }
+    }
 }

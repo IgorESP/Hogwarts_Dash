@@ -27,6 +27,7 @@ public class AjustesController : MonoBehaviour
         ObtenerReferencias();
         RegistrarEventos();
         CargarConfiguracion();
+        AñadirSonidoABotones();
     }
 
     /// <summary> 
@@ -550,6 +551,13 @@ public class AjustesController : MonoBehaviour
 
         float tLet = PlayerPrefs.GetFloat("TamanoLetra", 100f);
         if (sliderTamanoLetra != null) sliderTamanoLetra.value = tLet;
+
+        // Aplica el volumen al AudioManager
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.SetVolumenMusica(vMus / 100f);
+            AudioManager.Instance.SetVolumenSFX(vSFX / 100f);
+        }
         
         Invoke("AplicarTamanoInicial", 0.1f);
     }
@@ -577,4 +585,20 @@ public class AjustesController : MonoBehaviour
 
         SceneManager.LoadScene("LoginScene");
     }
+
+    /// <summary> 
+    /// Añade sonido de clic a todos los botones del menú de ajustes. 
+    /// </summary>
+    private void AñadirSonidoABotones()
+    {
+        if (root == null) return;
+
+        var botones = root.Query<Button>().ToList();
+
+        foreach (var b in botones)
+        {
+            b.clicked += () => AudioManager.Instance.PlayBoton();
+        }
+    }
+
 }

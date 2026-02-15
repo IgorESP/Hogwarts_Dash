@@ -44,6 +44,8 @@ public class Pausamenucontroller : MonoBehaviour
         }
 
         ConfigurarBotones();
+
+        AñadirSonidoABotones();
     }
 
     /// <summary> 
@@ -67,8 +69,34 @@ public class Pausamenucontroller : MonoBehaviour
         
         // Sincronizar slider de música con el volumen actual
         var sliderMusica = root.Q<Slider>("Slider_Musica");
-        if (sliderMusica != null) 
+        if (sliderMusica != null)
+        {
             sliderMusica.value = PlayerPrefs.GetFloat("VolumenMusica", 75f);
+
+            sliderMusica.RegisterValueChangedCallback(evt =>
+            {
+                float vol = evt.newValue;
+                PlayerPrefs.SetFloat("VolumenMusica", vol);
+                PlayerPrefs.Save();
+
+                AudioManager.Instance.SetVolumenMusica(vol / 100f);
+            });
+        }
+
+        var sliderSFX = root.Q<Slider>("Slider_SFX");
+        if (sliderSFX != null)
+        {
+            sliderSFX.value = PlayerPrefs.GetFloat("VolumenSFX", 75f);
+
+            sliderSFX.RegisterValueChangedCallback(evt =>
+            {
+                float vol = evt.newValue;
+                PlayerPrefs.SetFloat("VolumenSFX", vol);
+                PlayerPrefs.Save();
+
+                AudioManager.Instance.SetVolumenSFX(vol / 100f);
+            });
+        }
     }
 
     /// <summary>
@@ -95,6 +123,9 @@ public class Pausamenucontroller : MonoBehaviour
     private void OnMenuClicked()
     {
         Debug.Log("[Pausa] Volviendo al menú principal");
+        
+        AudioManager.Instance.musicaSource.Stop();
+
         Time.timeScale = 1f;
         SceneManager.LoadScene("MenuPrincipalT");
     }
@@ -106,10 +137,30 @@ public class Pausamenucontroller : MonoBehaviour
     {
         Debug.Log("[Pausa] Reiniciando nivel actual");
         Time.timeScale = 1f;
+    
+        AudioManager.Instance.musicaSource.Stop();
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     // Seguridad adicional: si el objeto se desactiva o destruye, restaurar el tiempo
     void OnDisable() { Time.timeScale = 1f; }
     void OnDestroy() { Time.timeScale = 1f; }
+
+    /// <summary> 
+    /// Añade sonido de clic a todos los botones del menú de pausa. 
+    /// </summary>
+    private void AñadirSonidoABotones()
+    {
+        if (root == null) return;
+
+        var botones = root.Query<Button>().ToList();
+
+        foreach (var b in botones)
+        {
+            if (b == null) continue;
+
+            b.clicked += () => AudioManager.Instance.PlayBoton();
+        }
+    }
 }
