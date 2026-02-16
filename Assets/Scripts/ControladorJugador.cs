@@ -310,7 +310,8 @@ public class MovimientoGD : MonoBehaviour
         // MONEDAS / COLECCIONABLES
         if (collision.CompareTag("Moneda"))
         {
-            AudioManager.Instance.PlaySnitch();
+            if (AudioManager.Instance != null) 
+                AudioManager.Instance.PlaySnitch();
             Debug.Log("[MovimientoGD] Moneda recogida");
             return; 
         }
@@ -501,7 +502,8 @@ public class MovimientoGD : MonoBehaviour
         // EFECTOS DE MUERTE
         // ========================================
         
-        AudioManager.Instance.PlayMuerte();
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayMuerte();
         Debug.Log("[MovimientoGD] Sonido de muerte reproducido");
 
         // Detener movimiento completamente
@@ -541,7 +543,8 @@ public class MovimientoGD : MonoBehaviour
         // Esperar el tiempo configurado
         yield return new WaitForSeconds(tiempoEsperaMuerte);
 
-        AudioManager.Instance.musicaSource.Stop();
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.musicaSource.Stop();
         
         // Recargar la escena actual
         string escenaActual = SceneManager.GetActiveScene().name;

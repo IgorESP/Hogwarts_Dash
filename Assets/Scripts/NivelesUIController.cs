@@ -67,7 +67,8 @@ public class NivelesUIController : MonoBehaviour
         if (botonAtras != null) 
             botonAtras.clicked += () =>
                 {
-                    AudioManager.Instance.musicaSource.Stop();
+                    if (AudioManager.Instance != null)
+                        AudioManager.Instance.musicaSource.Stop();
                     SceneManager.LoadScene("MenuPrincipalT");
                 };
 

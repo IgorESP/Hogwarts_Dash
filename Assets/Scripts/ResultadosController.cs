@@ -91,7 +91,8 @@ public class ResultadosController : MonoBehaviour
     private void Reintentar() 
     { 
         Time.timeScale = 1f; 
-        AudioManager.Instance.musicaSource.Stop();
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.musicaSource.Stop();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name); 
     }
 
@@ -101,7 +102,8 @@ public class ResultadosController : MonoBehaviour
     private void VolverAlMenu() 
     { 
         Time.timeScale = 1f; 
-        AudioManager.Instance.musicaSource.Stop();
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.musicaSource.Stop();
         SceneManager.LoadScene("PlayScene"); 
     }
     

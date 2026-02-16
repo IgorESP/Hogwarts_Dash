@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3037771516005074761
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8429385391622104931}
+  - component: {fileID: 4497037978803161788}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8429385391622104931
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3037771516005074761}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 94.91893, y: 8.163004, z: -67.53885}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4497037978803161788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3037771516005074761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0539fd1bbf3ab844ba2912eb09a70bee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicaSource: {fileID: 0}
+  sfxSource: {fileID: 0}
+  musicaComedor: {fileID: 8300000, guid: d1bcc5beccd6dee46b18adeb4603b49e, type: 3}
+  musicaGryffindor: {fileID: 8300000, guid: 3316fa90adcd46a46aa412710de41369, type: 3}
+  musicaHufflepuff: {fileID: 8300000, guid: fb05e6fdfff41f64c95ad04192d87e4a, type: 3}
+  musicaSlytherin: {fileID: 8300000, guid: 76b7b6dfca1a62443b0b29f835890c92, type: 3}
+  musicaRavenclaw: {fileID: 8300000, guid: e7c4b742fda54904a9dece5618e29309, type: 3}
+  sonidoMenu: {fileID: 8300000, guid: 15d03a4b7df9047468ec4f18b979dfd1, type: 3}
+  sonidoMuerte: {fileID: 8300000, guid: 3ebde79ac0f7ba244929291d4e82b044, type: 3}
+  sonidoSnitch: {fileID: 8300000, guid: d621ee7cf725480449503306da803ac9, type: 3}
+  sonidoVictoria: {fileID: 8300000, guid: b35f579543d67ed41a79829df3e7b26a, type: 3}

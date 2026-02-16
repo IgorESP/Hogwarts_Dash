@@ -124,7 +124,8 @@ public class Pausamenucontroller : MonoBehaviour
     {
         Debug.Log("[Pausa] Volviendo al menú principal");
         
-        AudioManager.Instance.musicaSource.Stop();
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.musicaSource.Stop();
 
         Time.timeScale = 1f;
         SceneManager.LoadScene("MenuPrincipalT");
@@ -138,7 +139,8 @@ public class Pausamenucontroller : MonoBehaviour
         Debug.Log("[Pausa] Reiniciando nivel actual");
         Time.timeScale = 1f;
     
-        AudioManager.Instance.musicaSource.Stop();
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.musicaSource.Stop();
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }

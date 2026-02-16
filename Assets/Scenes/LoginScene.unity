@@ -119,6 +119,63 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &643884772
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3037771516005074761, guid: 6640d914f03303a45aa2ce69241f840d, type: 3}
+      propertyPath: m_Name
+      value: AudioManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8429385391622104931, guid: 6640d914f03303a45aa2ce69241f840d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 94.91893
+      objectReference: {fileID: 0}
+    - target: {fileID: 8429385391622104931, guid: 6640d914f03303a45aa2ce69241f840d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 8.163004
+      objectReference: {fileID: 0}
+    - target: {fileID: 8429385391622104931, guid: 6640d914f03303a45aa2ce69241f840d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -67.53885
+      objectReference: {fileID: 0}
+    - target: {fileID: 8429385391622104931, guid: 6640d914f03303a45aa2ce69241f840d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8429385391622104931, guid: 6640d914f03303a45aa2ce69241f840d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8429385391622104931, guid: 6640d914f03303a45aa2ce69241f840d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8429385391622104931, guid: 6640d914f03303a45aa2ce69241f840d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8429385391622104931, guid: 6640d914f03303a45aa2ce69241f840d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8429385391622104931, guid: 6640d914f03303a45aa2ce69241f840d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8429385391622104931, guid: 6640d914f03303a45aa2ce69241f840d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6640d914f03303a45aa2ce69241f840d, type: 3}
 --- !u!1 &873066552
 GameObject:
   m_ObjectHideFlags: 0
@@ -212,8 +269,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musicaSource: {fileID: 0}
   sfxSource: {fileID: 0}
-  musicaMenu: {fileID: 0}
-  musicaJuego: {fileID: 0}
+  musicaComedor: {fileID: 0}
+  musicaGryffindor: {fileID: 0}
+  musicaHufflepuff: {fileID: 0}
+  musicaSlytherin: {fileID: 0}
+  musicaRavenclaw: {fileID: 0}
+  sonidoMenu: {fileID: 0}
+  sonidoMuerte: {fileID: 0}
+  sonidoSnitch: {fileID: 0}
+  sonidoVictoria: {fileID: 0}
 --- !u!1 &1152441980
 GameObject:
   m_ObjectHideFlags: 0
@@ -494,3 +558,4 @@ SceneRoots:
   - {fileID: 1152441982}
   - {fileID: 1073487804}
   - {fileID: 873066554}
+  - {fileID: 643884772}
