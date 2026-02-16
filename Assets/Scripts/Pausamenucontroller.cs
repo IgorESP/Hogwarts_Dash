@@ -10,6 +10,8 @@ public class Pausamenucontroller : MonoBehaviour
 {
     private VisualElement root;
     private VisualElement panelPausa;
+    private VisualElement barraRelleno;
+    private Label labelPorcentajeHUD;
     private bool juegoEnPausa = false;
 
     void Awake()
@@ -43,8 +45,11 @@ public class Pausamenucontroller : MonoBehaviour
             panelPausa.visible = false;
         }
 
-        ConfigurarBotones();
+        // Referencias de HUD (Barra de progreso GD)
+        barraRelleno = root.Q<VisualElement>("BarraRelleno");
+        labelPorcentajeHUD = root.Q<Label>("Label_PorcentajeHUD");
 
+        ConfigurarBotones();
         AñadirSonidoABotones();
     }
 
@@ -122,13 +127,47 @@ public class Pausamenucontroller : MonoBehaviour
     /// </summary>
     private void OnMenuClicked()
     {
-        Debug.Log("[Pausa] Volviendo al menú principal");
+        Debug.Log("[Pausa] Guardando progreso y volviendo al menú principal");
         
+        // Antes de salir, registrar el progreso actual (como si fuera una muerte/intento fallido)
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.PlayerDied();
+        }
+
         if (AudioManager.Instance != null)
             AudioManager.Instance.musicaSource.Stop();
 
         Time.timeScale = 1f;
         SceneManager.LoadScene("MenuPrincipalT");
+    }
+
+    /// <summary> 
+    /// Actualiza la barra de progreso en tiempo real
+    /// </summary>
+    void Update()
+    {
+        // Actualizar HUD de progreso siempre (esté pausado o no)
+        ActualizarHUDProgreso();
+
+        // Atajo para pausa (Esc o P)
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P))
+        {
+            AlternarPausa();
+        }
+    }
+
+    private void ActualizarHUDProgreso()
+    {
+        if (GameManager.Instance == null || barraRelleno == null || labelPorcentajeHUD == null) return;
+
+        int porcentaje = GameManager.Instance.ObtenerPorcentajeActual();
+        
+        // Actualizar ancho de la barra (0% a 100%)
+        barraRelleno.style.width = new Length(porcentaje, LengthUnit.Percent);
+        
+        // Actualizar texto
+        labelPorcentajeHUD.text = $"{porcentaje}%";
     }
 
     /// <summary> 

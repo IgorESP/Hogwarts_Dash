@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class NivelesUIController : MonoBehaviour
 {
     private VisualElement root;
-    private Button botonMundo1, botonMundo2, botonMundo3, botonMundo4, botonMundo5, botonAtras;
+    private Button botonMundo1, botonMundo2, botonMundo3, botonMundo4, botonMundo5, botonAtras, botonReset;
     private Label labelProgreso;
  
     // Array que mapea cada mundo con su escena correspondiente
@@ -50,6 +50,7 @@ public class NivelesUIController : MonoBehaviour
         botonMundo5 = root.Q<Button>("Mundo_5");
 
         botonAtras = root.Q<Button>("Boton_Atras");
+        botonReset = root.Q<Button>("Boton_Reset_Progreso");
         labelProgreso = root.Q<Label>("Progreso");
     }
     
@@ -72,6 +73,16 @@ public class NivelesUIController : MonoBehaviour
                     SceneManager.LoadScene("MenuPrincipalT");
                 };
 
+        if (botonReset != null)
+            botonReset.clicked += () => 
+            {
+                if (NivelesManager.Instance != null)
+                {
+                    NivelesManager.Instance.ResetearProgreso();
+                    ActualizarUI();
+                    Debug.Log("[NivelesUI] Progreso reseteado por el usuario.");
+                }
+            };
     }
     
     /// <summary> 
@@ -107,17 +118,20 @@ public class NivelesUIController : MonoBehaviour
         b.EnableInClassList("desbloqueado", unlocked);
         
         // Actualizar estrellas y porcentaje dentro de la tarjeta del mundo
-        int stars = NivelesManager.Instance.ObtenerEstrellasTotalMundo(num);
+        int snitches = NivelesManager.Instance.ObtenerSnitchesTotalMundo(num);
+        float pRecord = NivelesManager.Instance.ObtenerPorcentajeMundo(num);
+        
+        Debug.Log($"[NivelesUI] Mundo {num} - Récord leido: {pRecord}% - Snitches: {snitches}");
 
         b.Query<Label>().ForEach(l => 
         {
-            // Actualizar estrellas (ej: "2/3")
+            // Actualizar snitches (ej: "2/3")
             if (l.text.Contains("/3")) 
-                l.text = $"{stars}/3";
+                l.text = $"{snitches}/3";
             
-            // Actualizar porcentaje (100% si completado, 0% si no)
+            // Actualizar porcentaje real (ej: "54%")
             else if (l.text.Contains("%")) 
-                l.text = unlocked ? "100%" : "0%";
+                l.text = $"{Mathf.RoundToInt(pRecord)}%";
         });
     }
     
@@ -129,8 +143,9 @@ public class NivelesUIController : MonoBehaviour
         int completados = 0;
 
         for (int i = 1; i <= 5; i++) 
-            if (NivelesManager.Instance.ObtenerEstrellasTotalMundo(i) > 0) 
+            if (NivelesManager.Instance.MundoEstaCompletado(i)) 
                 completados++;
+        
         if (labelProgreso != null) 
             labelProgreso.text = $"Progreso: {completados}/5 mundos";
     }
@@ -179,6 +194,13 @@ public class NivelesUIController : MonoBehaviour
     { 
         if (Input.GetKeyDown(KeyCode.F5)) 
             ActualizarUI();
+
+        // DEPURACIÓN: Borrar récord del mundo 1 con la tecla DELETE (Supr)
+        if (Input.GetKeyDown(KeyCode.Delete))
+        {
+            NivelesManager.Instance.LimpiarRécordNivel(1, 1);
+            ActualizarUI();
+        }
     }
 
     /// <summary> 

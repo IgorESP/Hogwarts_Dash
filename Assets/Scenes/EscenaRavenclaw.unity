@@ -7839,6 +7839,37 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &149403335
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 149403336}
+  m_Layer: 0
+  m_Name: Punto_Final
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &149403336
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 149403335}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 595.3, y: 0.6, z: -0.032637022}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &166819185
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -332182,6 +332213,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &777646970
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 777646971}
+  m_Layer: 0
+  m_Name: Punto_Inicio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &777646971
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 777646970}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -16.39, y: -2.83, z: -0.032637022}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &816968160
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -353036,6 +353098,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7376581055592872105, guid: 9aa3d1d2421c782408172b9eed3366c0, type: 3}
+      propertyPath: ptoFinal
+      value: 
+      objectReference: {fileID: 149403336}
+    - target: {fileID: 7376581055592872105, guid: 9aa3d1d2421c782408172b9eed3366c0, type: 3}
+      propertyPath: ptoInicio
+      value: 
+      objectReference: {fileID: 777646971}
     - target: {fileID: 9181040200250241826, guid: 9aa3d1d2421c782408172b9eed3366c0, type: 3}
       propertyPath: m_Name
       value: GameMargen
@@ -371219,3 +371289,5 @@ SceneRoots:
   - {fileID: 1749285693}
   - {fileID: 618426033}
   - {fileID: 1390409395}
+  - {fileID: 777646971}
+  - {fileID: 149403336}

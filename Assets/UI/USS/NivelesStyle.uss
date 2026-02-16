@@ -142,33 +142,33 @@
    COLORES POR CASA - DESBLOQUEADOS
    ==================================== */
 
-/* GRYFFINDOR */
+/* COMEDOR - GRIS */
 #Mundo_1.desbloqueado {
-    border-color: rgb(116, 0, 1);
+    border-color: rgb(150, 150, 150);
 }
 
 #Mundo_1.desbloqueado:hover {
-    border-color: rgb(211, 166, 37);
+    border-color: rgb(255, 255, 255);
     border-width: 6px;
 }
 
-/* SLYTHERIN */
+/* GRYFFINDOR - ROJO */
 #Mundo_2.desbloqueado {
-    border-color: rgb(26, 71, 42);
+    border-color: rgb(116, 0, 1);
 }
 
 #Mundo_2.desbloqueado:hover {
-    border-color: rgb(93, 93, 93);
+    border-color: rgb(200, 30, 30); /* Rojo brillante */
     border-width: 6px;
 }
 
-/* RAVENCLAW */
+/* SLYTHERIN - VERDE */
 #Mundo_3.desbloqueado {
-    border-color: rgb(14, 26, 64);
+    border-color: rgb(26, 71, 42);
 }
 
 #Mundo_3.desbloqueado:hover {
-    border-color: rgb(148, 107, 45);
+    border-color: rgb(40, 150, 60); /* Verde brillante */
     border-width: 6px;
 }
 
@@ -178,17 +178,17 @@
 }
 
 #Mundo_4.desbloqueado:hover {
-    border-color: rgb(255, 215, 0);
+    border-color: rgb(255, 230, 0); /* Amarillo brillante */
     border-width: 6px;
 }
 
-/* FINAL */
+/* RAVENCLAW - AZUL */
 #Mundo_5.desbloqueado {
-    border-color: rgb(150, 150, 150);
+    border-color: rgb(14, 26, 64);
 }
 
 #Mundo_5.desbloqueado:hover {
-    border-color: rgb(255, 255, 255);
+    border-color: rgb(30, 80, 220); /* Azul brillante */
     border-width: 6px;
 }
 
@@ -212,4 +212,31 @@
 .tarjeta-mundo Label {
     white-space: normal;
     -unity-text-align: upper-center;
+}
+
+/* ====================================
+   BOTONES ADICIONALES
+   ==================================== */
+
+#Boton_Reset_Progreso {
+    width: 200px;
+    height: 50px;
+    font-size: 16px;
+    background-color: rgba(139, 69, 19, 0.9);
+    color: rgb(255, 215, 0);
+    border-radius: 10px;
+    border-width: 2px;
+    border-color: rgb(255, 215, 0);
+    -unity-font-style: bold;
+    transition-duration: 0.3s;
+    margin-left: 20px;
+}
+
+#Boton_Reset_Progreso:hover {
+    scale: 1.05;
+    background-color: rgba(180, 50, 50, 0.9); /* Rojo al pasar el ratón para advertir */
+}
+
+#Boton_Reset_Progreso:active {
+    scale: 0.95;
 }

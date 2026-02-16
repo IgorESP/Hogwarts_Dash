@@ -32,28 +32,15 @@ public class FinishLevel : MonoBehaviour
     /// </summary>
     private void FinalizarNivel()
     {
-        int mundoActual = PlayerPrefs.GetInt("MundoSeleccionado", 1);
-        float porcentaje = 100f; // Victoria = 100%
-        int monedasRecogidas = ContarMonedasRecogidas();
-        int intentos = ObtenerIntentos();
-        
-        Debug.Log($"[FinishLevel] Estadísticas - Porcentaje: {porcentaje}%, Snitches: {monedasRecogidas}, Intentos: {intentos}");
-        
-        // Guardar en PlayerPrefs
-        PlayerPrefs.SetFloat("UltimoPorcentaje", porcentaje);
-        PlayerPrefs.SetInt("UltimosIntentos", intentos);
-        PlayerPrefs.SetInt("UltimasSnitches", monedasRecogidas);
-        PlayerPrefs.Save();
-        
-        // Llamar al GameManager
+        // Llamar al GameManager para que calcule y guarde todo
         if (GameManager.Instance != null)
         {
             GameManager.Instance.FinalizarNivel();
         }
         else
         {
-            Debug.LogWarning("[FinishLevel] GameManager no encontrado, cargando escena de resultados directamente");
-            SceneManager.LoadScene("ResultadosScene");
+            Debug.LogWarning("[FinishLevel] GameManager no encontrado");
+            SceneManager.LoadScene("PlayScene");
         }
     }
     

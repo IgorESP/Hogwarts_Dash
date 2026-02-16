@@ -11,9 +11,9 @@ public class AjustesController : MonoBehaviour
     
     // Referencias a elementos de UI
     private Slider sliderMusica, sliderSFX, sliderTamanoLetra;
-    private Label labelMusica, labelSFX, labelTamanoLetra, mensajeVacio;
-    private Button botonRanking, botonAtras, botonCerrarSesion, botonCreditos, botonTutorial, botonManual, botonCerrarRanking, botonCerrarCreditos, botonCerrarManual, botonCerrarTutorial;
-    private VisualElement panelRankingOverlay, panelCreditosOverlay, panelManualOverlay, panelTutorialOverlay;
+    private Label labelMusica, labelSFX, labelTamanoLetra, mensajeVacio, labelPerfilNiveles, labelPerfilSnitches, labelPerfilIntentos;
+    private Button botonRanking, botonPerfil, botonAtras, botonCerrarSesion, botonCreditos, botonTutorial, botonManual, botonCerrarRanking, botonCerrarPerfil, botonCerrarCreditos, botonCerrarManual, botonCerrarTutorial;
+    private VisualElement panelRankingOverlay, panelPerfilOverlay, panelCreditosOverlay, panelManualOverlay, panelTutorialOverlay;
     private ScrollView listaRanking, contenidoManual, contenidoTutorial;
 
     void Start() 
@@ -50,14 +50,21 @@ public class AjustesController : MonoBehaviour
         botonAtras = root.Q<Button>("Boton_Atras");
         botonCerrarSesion = root.Q<Button>("Boton_CerrarSesion");
         botonCreditos = root.Q<Button>("Boton_Creditos");
+        botonPerfil = root.Q<Button>("Boton_Perfil");
         botonTutorial = root.Q<Button>("Boton_Tutorial"); 
         botonManual = root.Q<Button>("Boton_Manual");
 
         // Paneles y Ranking
         panelRankingOverlay = root.Q<VisualElement>("PanelRankingOverlay");
         listaRanking = root.Q<ScrollView>("ListaRanking");
-        botonCerrarRanking = root.Q<Button>("Boton_CerrarRanking");
         mensajeVacio = root.Q<Label>("MensajeVacio");
+
+        // Perfil
+        panelPerfilOverlay = root.Q<VisualElement>("PanelPerfilOverlay");
+        botonCerrarPerfil = root.Q<Button>("Boton_CerrarPerfil");
+        labelPerfilNiveles = root.Q<Label>("Label_PerfilNiveles");
+        labelPerfilSnitches = root.Q<Label>("Label_PerfilSnitches");
+        labelPerfilIntentos = root.Q<Label>("Label_PerfilIntentos");
 
         // Manual de usuario
         panelManualOverlay = root.Q<VisualElement>("PanelManualOverlay");
@@ -96,6 +103,9 @@ public class AjustesController : MonoBehaviour
 
         if (botonManual != null) botonManual.clicked += OnManualClick;
         if (botonCerrarManual != null) botonCerrarManual.clicked += CerrarManual;
+
+        if (botonPerfil != null) botonPerfil.clicked += OnPerfilClick;
+        if (botonCerrarPerfil != null) botonCerrarPerfil.clicked += CerrarPerfil;
 
         if (botonCerrarSesion != null) botonCerrarSesion.clicked += OnCerrarSesionClick;
 
@@ -427,20 +437,40 @@ public class AjustesController : MonoBehaviour
         root.Query<Label>().ForEach(label => {
             if (label.name != "Label_Musica" && label.name != "Label_SFX" && label.name != "Label_TamanoLetra")
             {
-                float baseSize = DeterminarTamanoBase(label.text);
+                float baseSize = DeterminarTamanoBase(label);
                 label.style.fontSize = baseSize * escala;
             }
         });
     }
 
     /// <summary> 
-    /// Determina un tamaño base según el tipo de texto 
+    /// Determina un tamaño base según el tipo de texto y su posición en la jerarquía. 
     /// </summary>
-    private float DeterminarTamanoBase(string texto)
+    private float DeterminarTamanoBase(Label label)
     {
+        string texto = label.text;
         if (string.IsNullOrEmpty(texto)) return 22f;
-        if (texto.Contains("OPCIONES") || texto.Contains("HOGWARTS")) return 50f;
-        if (texto.Contains("AUDIO") || texto.Contains("ACCESIBILIDAD") || texto.Contains("RANKING")) return 32f;
+        
+        // 1. Títulos de Pantalla (En UXML 50px)
+        if (texto.Contains("CONFIGURACIÓN")) return 50f;
+        
+        // 2. Títulos de Paneles Flotantes (Perfil, Ranking, etc. en UXML 32px-38px)
+        if (texto.Contains("TOP 10") || texto.Contains("MI PERFIL") || texto.Contains("MANUAL") || texto.Contains("TUTORIAL")) return 36f;
+        
+        // 3. Cabeceras de Sección (AUDIO, ACCESIBILIDAD, ASSETS, etc. en UXML 30px)
+        if (label.name == "Titulo") return 50f; // Caso especial por nombre
+        if (label.parent?.name == "Header") return 50f;
+
+        // Si es una cabecera de sección dentro del scroll (30px)
+        if (texto == "AUDIO" || texto == "ACCESIBILIDAD" || texto == "ASSETS UTILIZADOS" || texto == "MÚSICA" || texto == "EQUIPO DE DESARROLLO") return 30f;
+        
+        // 4. Botones de Opción (CRÉDITOS, RANKING, etc. en UXML 26px)
+        if (label.parent is Button || (label.parent != null && label.parent.parent is Button)) return 26f;
+
+        // 5. Etiquetas de Sliders y Contenido (En UXML 22px)
+        if (texto.Contains("Música:") || texto.Contains("SFX:") || texto.Contains("Tamaño")) return 22f;
+
+        // Default para el resto del contenido del manual/créditos
         return 22f;
     }
 
@@ -515,6 +545,34 @@ public class AjustesController : MonoBehaviour
     {
         if (mensajeVacio != null) 
             mensajeVacio.style.display = DisplayStyle.Flex;
+    }
+
+    // --------------------------------------------------------- 
+    // ----------------------- PERFIL -------------------------- 
+    // ---------------------------------------------------------
+
+    private void OnPerfilClick()
+    {
+        if (panelPerfilOverlay != null)
+            panelPerfilOverlay.style.display = DisplayStyle.Flex;
+
+        if (NivelesManager.Instance != null)
+        {
+            if (labelPerfilNiveles != null)
+                labelPerfilNiveles.text = $"{NivelesManager.Instance.ObtenerTotalNivelesCompletados()}/5";
+            
+            if (labelPerfilSnitches != null)
+                labelPerfilSnitches.text = NivelesManager.Instance.ObtenerTotalSnitches().ToString();
+            
+            if (labelPerfilIntentos != null)
+                labelPerfilIntentos.text = NivelesManager.Instance.ObtenerTotalIntentos().ToString();
+        }
+    }
+
+    private void CerrarPerfil()
+    {
+        if (panelPerfilOverlay != null)
+            panelPerfilOverlay.style.display = DisplayStyle.None;
     }
 
     // --------------------------------------------------------- 

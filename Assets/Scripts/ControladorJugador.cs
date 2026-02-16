@@ -484,8 +484,13 @@ public class MovimientoGD : MonoBehaviour
         Debug.Log("[MovimientoGD] ☠️ Jugador ha muerto");
         
         // ========================================
-        // REGISTRO DE ESTADÍSTICAS (PlayerPrefs)
+        // REGISTRO DE ESTADÍSTICAS (GameManager)
         // ========================================
+        
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.PlayerDied();
+        }
         
         string escenaActual = SceneManager.GetActiveScene().name;
         int intentosActuales = PlayerPrefs.GetInt("Intentos_" + escenaActual, 0);

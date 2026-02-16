@@ -110,7 +110,7 @@ public class ProgressManager : MonoBehaviour
         Debug.Log($"[Progress] Finalizando Nivel {mundoActual}. Porcentaje: {p:F1}%. Intentos: {intentos}");
         
         if (NivelesManager.Instance != null) 
-            NivelesManager.Instance.CompletarNivel(mundoActual, 1, p);
+            NivelesManager.Instance.CompletarNivel(mundoActual, 1, p, snitchesRecogidos);
         
         // Persistir resultados para la escena de fin
         PlayerPrefs.SetFloat("UltimoPorcentaje", p);

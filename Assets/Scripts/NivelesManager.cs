@@ -97,33 +97,46 @@ public class NivelesManager : MonoBehaviour
     /// <summary>
     /// Registra la finalización de un nivel y actualiza récords
     /// </summary>
-    public void CompletarNivel(int m, int n, float porcentaje) 
+    public void CompletarNivel(int m, int n, float porcentaje, int snitches) 
     {
-        // Calcular estrellas según el porcentaje alcanzado
-        int estrellas = CalcularEstrellas(porcentaje);
+        // 1. Guardar récord de porcentaje si es mejor
+        float recordPerc = PlayerPrefs.GetFloat($"Nivel_{m}_{n}_Porcentaje", 0f);
+        if (porcentaje > recordPerc) 
+        {
+            PlayerPrefs.SetFloat($"Nivel_{m}_{n}_Porcentaje", porcentaje);
+            Debug.Log($"[Niveles] ¡Nuevo récord de porcentaje! Mundo {m}: {porcentaje:F1}%");
+        }
 
-        // Leer récord anterior
-        float record = PlayerPrefs.GetFloat($"Nivel_{m}_{n}_Porcentaje", 0f);
-        
-        // Si el nuevo porcentaje es mejor, actualizar récord
-        if (porcentaje > record) 
+        // 2. Guardar récord de snitches si es mejor
+        int recordSnit = PlayerPrefs.GetInt($"Nivel_{m}_{n}_Snitches", 0);
+        if (snitches > recordSnit)
+        {
+            PlayerPrefs.SetInt($"Nivel_{m}_{n}_Snitches", snitches);
+            Debug.Log($"[Niveles] ¡Nuevo récord de snitches! Mundo {m}: {snitches}/3");
+        }
+
+        // 3. Calcular estrellas según el porcentaje alcanzado (Lógica original)
+        int estrellas = CalcularEstrellas(porcentaje);
+        int recordEst = PlayerPrefs.GetInt($"Nivel_{m}_{n}_Estrellas", 0);
+        if (estrellas > recordEst)
         {
             PlayerPrefs.SetInt($"Nivel_{m}_{n}_Estrellas", estrellas);
-            PlayerPrefs.SetFloat($"Nivel_{m}_{n}_Porcentaje", porcentaje);
-
-            Debug.Log($"[Niveles] ¡Nuevo récord! Mundo {m}: {porcentaje:F1}% ({estrellas}⭐)");
         }
         
-        // Marcar nivel como completado
-        PlayerPrefs.SetInt($"Nivel_{m}_{n}_Completado", 1);
-        PlayerPrefs.Save();
-        
-        // Desbloquear siguiente mundo y su primer nivel si corresponde
-        if (m < TOTAL_MUNDOS) 
+        // Marcar nivel como completado SOLO si llegó al 100%
+        if (porcentaje >= 99f) 
         {
-            DesbloquearMundo(m + 1);
-            DesbloquearNivel(m + 1, 1);
+            PlayerPrefs.SetInt($"Nivel_{m}_{n}_Completado", 1);
+            
+            // Desbloquear siguiente mundo y su primer nivel si corresponde
+            if (m < TOTAL_MUNDOS) 
+            {
+                DesbloquearMundo(m + 1);
+                DesbloquearNivel(m + 1, 1);
+            }
         }
+        
+        PlayerPrefs.Save();
     }
 
     /// <summary> 
@@ -138,16 +151,58 @@ public class NivelesManager : MonoBehaviour
     }
 
     /// <summary> 
-    /// Obtiene las estrellas del primer nivel del mundo (para mostrar progreso global).
+    /// Obtiene las snitches del primer nivel del mundo.
+    /// </summary>
+    public int ObtenerSnitchesTotalMundo(int m) => 
+        PlayerPrefs.GetInt($"Nivel_{m}_1_Snitches", 0);
+
+    /// <summary> 
+    /// Obtiene las estrellas del primer nivel del mundo (basado en porcentaje).
     /// </summary>
     public int ObtenerEstrellasTotalMundo(int m) => 
         PlayerPrefs.GetInt($"Nivel_{m}_1_Estrellas", 0);
     
     /// <summary> 
-    /// Devuelve 100% si el primer nivel del mundo está completado. 
+    /// Devuelve el porcentaje récord del primer nivel del mundo. 
     /// </summary>
     public float ObtenerPorcentajeMundo(int m) => 
-        PlayerPrefs.GetInt($"Nivel_{m}_1_Completado", 0) == 1 ? 100f : 0f;
+        PlayerPrefs.GetFloat($"Nivel_{m}_1_Porcentaje", 0f);
+
+    /// <summary>
+    /// Indica si el mundo ha sido completado al 100%
+    /// </summary>
+    public bool MundoEstaCompletado(int m) => 
+        PlayerPrefs.GetInt($"Nivel_{m}_1_Completado", 0) == 1;
+
+    // ============================================================ 
+    // AGREGACIÓN DE ESTADÍSTICAS GLOBALES (Perfil de Usuario)
+    // ============================================================
+
+    public int ObtenerTotalSnitches()
+    {
+        int total = 0;
+        for (int i = 1; i <= TOTAL_MUNDOS; i++)
+            total += ObtenerSnitchesTotalMundo(i);
+        return total;
+    }
+
+    public int ObtenerTotalNivelesCompletados()
+    {
+        int total = 0;
+        for (int i = 1; i <= TOTAL_MUNDOS; i++)
+            if (MundoEstaCompletado(i)) total++;
+        return total;
+    }
+
+    public int ObtenerTotalIntentos() => 
+        PlayerPrefs.GetInt("TotalIntentosGlobal", 0);
+
+    public void RegistrarIntentoGlobal()
+    {
+        int total = ObtenerTotalIntentos() + 1;
+        PlayerPrefs.SetInt("TotalIntentosGlobal", total);
+        PlayerPrefs.Save();
+    }
 
     // ============================================================ 
     // RESETEO COMPLETO DEL PROGRESO 
@@ -156,7 +211,21 @@ public class NivelesManager : MonoBehaviour
     public void ResetearProgreso() 
     { 
         PlayerPrefs.DeleteAll(); 
+        InicializarNiveles(); // Re-desbloquear el primer nivel
         PlayerPrefs.Save(); 
-        Debug.Log("[Niveles] Progreso borrado por completo"); 
+        Debug.Log("[Niveles] Progreso borrado y re-inicializado"); 
+    }
+
+    /// <summary>
+    /// Limpia los récords de un nivel específico (útil para desarrollo y arreglar bugs de datos)
+    /// </summary>
+    public void LimpiarRécordNivel(int m, int n)
+    {
+        PlayerPrefs.DeleteKey($"Nivel_{m}_{n}_Porcentaje");
+        PlayerPrefs.DeleteKey($"Nivel_{m}_{n}_Snitches");
+        PlayerPrefs.DeleteKey($"Nivel_{m}_{n}_Estrellas");
+        PlayerPrefs.DeleteKey($"Nivel_{m}_{n}_Completado");
+        PlayerPrefs.Save();
+        Debug.Log($"[Niveles] Récord limpiado para Mundo {m} Nivel {n}");
     }
 }

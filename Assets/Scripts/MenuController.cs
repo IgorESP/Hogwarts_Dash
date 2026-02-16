@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class MenuController : MonoBehaviour
 {
     private UIDocument uiDocument;
-    private Button botonPlay, botonPerfil, botonAjustes;
+    private Button botonPlay, botonPerfil, botonAjustes, botonSalir;
 
     private VisualElement root;
 
@@ -32,11 +32,13 @@ public class MenuController : MonoBehaviour
         botonPlay = root.Q<Button>("Boton_play");
         botonPerfil = root.Q<Button>("Boton_perfil");
         botonAjustes = root.Q<Button>("Boton_Ajustes");
+        botonSalir = root.Q<Button>("Boton_Salir");
         
         // Registrar eventos de clic
         if (botonPlay != null) botonPlay.clicked += OnPlayClicked;
         if (botonPerfil != null) botonPerfil.clicked += OnPerfilClicked;
         if (botonAjustes != null) botonAjustes.clicked += OnAjustesClicked;
+        if (botonSalir != null) botonSalir.clicked += OnSalirClicked;
 
         AñadirSonidoABotones();
     }
@@ -47,6 +49,7 @@ public class MenuController : MonoBehaviour
         if (botonPlay != null) botonPlay.clicked -= OnPlayClicked;
         if (botonPerfil != null) botonPerfil.clicked -= OnPerfilClicked;
         if (botonAjustes != null) botonAjustes.clicked -= OnAjustesClicked;
+        if (botonSalir != null) botonSalir.clicked -= OnSalirClicked;
     }
 
     /// <summary> 
@@ -74,6 +77,19 @@ public class MenuController : MonoBehaviour
     { 
         Debug.Log("[Menu] Navegando a Ajustes"); 
         SceneManager.LoadScene("AjustesScene"); 
+    }
+
+    /// <summary> 
+    /// Cierra la aplicación. 
+    /// </summary>
+    void OnSalirClicked()
+    {
+        Debug.Log("[Menu] Cerrando juego");
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 
     /// <summary> 

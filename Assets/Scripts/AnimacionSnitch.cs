@@ -51,6 +51,11 @@ public class AnimacionSnitch : MonoBehaviour
         if (other.CompareTag("Player") && !recogida)
         {
             Debug.Log($"[AnimacionSnitch] Snitch '{gameObject.name}' recogida");
+            
+            // Notificar al GameManager
+            if (GameManager.Instance != null)
+                GameManager.Instance.RegistrarSnitchRecogida();
+                
             StartCoroutine(SecuenciaRecoleccion());
         }
     }

@@ -133,6 +133,11 @@
     background-color: rgba(160, 80, 20, 0.95);
 }
 
+/* Botón de Perfil - Hover */
+#Boton_Perfil:hover {
+    background-color: rgba(160, 80, 20, 0.95);
+}
+
 /* Botón de Cerrar Sesión - Hover (color rojo) */
 /*#Boton_CerrarSesion:hover {
     background-color: rgba(220, 20, 20, 0.95);

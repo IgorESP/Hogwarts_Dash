@@ -40,3 +40,8 @@ Button:active {
     scale: 1.15;
     rotate: 5deg;
 }
+
+#Boton_Salir:hover {
+    background-color: rgb(255, 0, 0);
+    scale: 1.1;
+}

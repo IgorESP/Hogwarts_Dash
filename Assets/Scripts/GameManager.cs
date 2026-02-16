@@ -15,6 +15,13 @@ public class GameManager : MonoBehaviour
     
     [Tooltip("Número de snitches recogidas en la sesión actual")]
     public int snitchesRecogidas = 0;
+
+    [Header("Marcadores de Progreso (Opcional)")]
+    [Tooltip("Objeto que marca el inicio real del nivel (0%)")]
+    public Transform ptoInicio;
+    
+    [Tooltip("Objeto que marca la pared final del nivel (100%)")]
+    public Transform ptoFinal;
     
     [Header("Configuración del Nivel")]
     [Tooltip("Mundo que se está jugando actualmente")]
@@ -24,6 +31,10 @@ public class GameManager : MonoBehaviour
     public int nivelActual = 1;
     
     private ResultadosController resultadosController;
+    private Transform playerTransform;
+    private float startX;
+    private float endX;
+    private bool nivelFinalizado = false;
     
     void Awake()
     {
@@ -47,8 +58,62 @@ public class GameManager : MonoBehaviour
     
     void Start()
     {
+        // Reiniciar estadísticas de esta sesión/intento
+        snitchesRecogidas = 0;
+        if (NivelesManager.Instance != null) NivelesManager.Instance.RegistrarIntentoGlobal();
+
         // Buscar el controlador de resultados en la escena
         resultadosController = FindFirstObjectByType<ResultadosController>();
+
+        // Configurar puntos de inicio y fin para el porcentaje
+        if (ptoInicio != null)
+        {
+            startX = ptoInicio.position.x;
+        }
+        else
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                playerTransform = player.transform;
+                startX = playerTransform.position.x;
+            }
+        }
+
+        // Si el playerTransform no se asignó arriba (porque usamos ptoInicio), buscarlo ahora
+        if (playerTransform == null)
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null) playerTransform = player.transform;
+        }
+
+        // Configurar punto final
+        if (ptoFinal != null)
+        {
+            endX = ptoFinal.position.x;
+        }
+        else
+        {
+            // Fallback: Buscar meta (FinishLevel o tag Win)
+            GameObject meta = GameObject.FindWithTag("Win");
+            if (meta == null)
+            {
+                FinishLevel finishScript = FindFirstObjectByType<FinishLevel>();
+                if (finishScript != null) meta = finishScript.gameObject;
+            }
+
+            if (meta != null)
+            {
+                endX = meta.transform.position.x;
+            }
+            else
+            {
+                Debug.LogWarning("[GameManager] No se encontró meta para calcular porcentaje. Usando valor por defecto.");
+                endX = startX + 500f; // Valor más largo por defecto
+            }
+        }
+        
+        Debug.Log($"[GameManager] Configuración de progreso: Inicio={startX}, Fin={endX}, Distancia Total={endX - startX}");
     }
     
     /// <summary>
@@ -56,12 +121,15 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void FinalizarNivel()
     {
+        if (nivelFinalizado) return;
+        nivelFinalizado = true;
+
         Debug.Log("[GameManager] Iniciando proceso de finalización de nivel...");
         
-        // Recuperar datos guardados temporalmente en PlayerPrefs por FinishLevel
-        int porcentaje = Mathf.RoundToInt(PlayerPrefs.GetFloat("UltimoPorcentaje", 0f));
-        int intentos = PlayerPrefs.GetInt("UltimosIntentos", 0);
-        int snitches = PlayerPrefs.GetInt("UltimasSnitches", 0);
+        // Calcular porcentaje real al ganar (debería ser 100 o muy cerca)
+        int porcentaje = ObtenerPorcentajeActual();
+        int intentos = PlayerPrefs.GetInt("IntentosActuales", totalIntentos); 
+        int snitches = snitchesRecogidas;
         
         Debug.Log($"[GameManager] Resultados - Porcentaje: {porcentaje}%, Intentos: {intentos}, Snitches: {snitches}");
         
@@ -71,6 +139,11 @@ public class GameManager : MonoBehaviour
             // Se considera victoria si se llega a la meta (100%) o según lógica de porcentaje
             bool victoria = porcentaje >= 40; 
             resultadosController.MostrarResultados(porcentaje, intentos, snitches, victoria);
+            
+            // Actualizar sistema de progresión global
+            if (NivelesManager.Instance != null)
+                NivelesManager.Instance.CompletarNivel(mundoActual, nivelActual, porcentaje, snitches);
+
             Debug.Log("[GameManager] Panel de resultados desplegado");
         }
         else
@@ -88,8 +161,24 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void PlayerDied()
     {
+        if (nivelFinalizado) return;
+        
         totalIntentos++;
-        Debug.Log($"[GameManager] Jugador muerto. Total intentos sesión: {totalIntentos}");
+        int porcentajeMuerte = ObtenerPorcentajeActual();
+        
+        // Guardar progreso para la UI (si se decide mostrar tras morir)
+        PlayerPrefs.SetFloat("UltimoPorcentaje", porcentajeMuerte);
+        PlayerPrefs.SetInt("UltimasSnitches", snitchesRecogidas);
+        PlayerPrefs.Save();
+
+        // Registrar progreso de muerte en el sistema global (estilo GD)
+        if (NivelesManager.Instance != null)
+        {
+            NivelesManager.Instance.CompletarNivel(mundoActual, nivelActual, porcentajeMuerte, snitchesRecogidas);
+            NivelesManager.Instance.RegistrarIntentoGlobal();
+        }
+
+        Debug.Log($"[GameManager] Jugador muerto al {porcentajeMuerte}%. Intento #{totalIntentos}");
     }
     
     /// <summary> 
@@ -131,11 +220,19 @@ public class GameManager : MonoBehaviour
     }
     
     /// <summary> 
-    /// Devuelve el porcentaje actual del nivel. 
+    /// Devuelve el porcentaje actual del nivel basado en la posición X. 
     /// </summary>
     public int ObtenerPorcentajeActual()
     {
-        return 0; 
+        if (playerTransform == null) return 0;
+
+        float totalDist = endX - startX;
+        if (totalDist <= 0.1f) return 0;
+
+        float distRecorrida = playerTransform.position.x - startX;
+        float progreso = distRecorrida / totalDist;
+
+        return Mathf.Clamp(Mathf.RoundToInt(progreso * 100), 0, 100);
     }
     
     /// <summary> 

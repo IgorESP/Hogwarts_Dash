@@ -5,7 +5,10 @@
         <ui:VisualElement name="Header" style="flex-direction: row; width: 95%; max-width: 1600px; justify-content: space-between; align-items: center; margin-bottom: 30px;">
             <ui:Button name="Boton_Atras" text="← ATRÁS" />
             <ui:Label name="Titulo" text="SELECCIÓN DE MUNDOS" />
-            <ui:Label name="Progreso" text="Progreso: 1/5 mundos" />
+            <ui:VisualElement style="flex-direction: row; align-items: center;">
+                <ui:Label name="Progreso" text="Progreso: 1/5 mundos" style="margin-right: 20px;" />
+                <ui:Button name="Boton_Reset_Progreso" text="REINICIAR TODO" />
+            </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="FilaMundos1" style="flex-direction: row; justify-content: center; align-items: flex-start; width: 100%; margin-bottom: 30px; gap: 10px;">
             <!-- MUNDO 1: GRAN COMEDOR (PRIMER NIVEL) -->
