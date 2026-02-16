@@ -2,9 +2,6 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 
-/// <summary>
-/// Controlador de la interfaz de inicio de sesión
-/// </summary>
 public class LoginUIController : MonoBehaviour
 {
     private VisualElement root;
@@ -23,18 +20,15 @@ public class LoginUIController : MonoBehaviour
         RegistrarEventos();
     }
 
-    /// <summary>
-    /// Forzado de estilo para inputs de texto (compatibilidad visual)
-    /// </summary>
     private void ForzarColorTexto(TextField tf)
     {
         if (tf == null) return;
-        var input = tf.Q<VisualElement>("unity-text-input"); 
-        if (input != null) 
+        var input = tf.Q<VisualElement>("unity-text-input");
+        if (input != null)
         {
-            input.style.color = Color.black; 
-            input.style.unityFontStyleAndWeight = FontStyle.Bold; 
-        } 
+            input.style.color = Color.black;
+            input.style.unityFontStyleAndWeight = FontStyle.Bold;
+        }
     }
 
     private void AplicarAccesibilidad()
@@ -42,30 +36,26 @@ public class LoginUIController : MonoBehaviour
         if (root == null) return;
         if (PlayerPrefs.GetInt("ModoDaltonico", 0) == 1) root.AddToClassList("modo-daltonico-activado");
 
-        float porcentaje = PlayerPrefs.GetFloat("TamanoLetra", 100f);
-        float escala = porcentaje / 100f;
-
-        root.Query<Label>().ForEach(label => {
-            label.style.fontSize = 24f * escala; 
-        });
+        float escala = PlayerPrefs.GetFloat("TamanoLetra", 100f) / 100f;
+        root.Query<Label>().ForEach(label => label.style.fontSize = 24f * escala);
     }
 
     private void ObtenerReferencias()
     {
         if (root == null) return;
-        campoUsuario = root.Q<TextField>("Campo_Usuario");
+        campoUsuario    = root.Q<TextField>("Campo_Usuario");
         campoContrasena = root.Q<TextField>("Campo_Contrasena");
-        botonLogin = root.Q<Button>("Boton_IniciarSesion");
-        botonRegistrarse = root.Q<Button>("Boton_Registrarse");
-        mensajeError = root.Q<Label>("Mensaje_Error");
+        botonLogin      = root.Q<Button>("Boton_IniciarSesion");
+        botonRegistrarse= root.Q<Button>("Boton_Registrarse");
+        mensajeError    = root.Q<Label>("Mensaje_Error");
 
-        ForzarColorTexto(campoUsuario); 
+        ForzarColorTexto(campoUsuario);
         ForzarColorTexto(campoContrasena);
     }
 
     private void RegistrarEventos()
     {
-        if (botonLogin != null) botonLogin.clicked += OnLoginClick;
+        if (botonLogin != null)      botonLogin.clicked      += OnLoginClick;
         if (botonRegistrarse != null) botonRegistrarse.clicked += OnRegistrarseClick;
     }
 
@@ -82,39 +72,33 @@ public class LoginUIController : MonoBehaviour
         botonLogin.SetEnabled(false);
         botonLogin.text = "Cargando...";
 
-        Debug.Log($"[Login] Intentando acceder con el usuario: {campoUsuario.value}");
-        ApiManager.Instance.Login(campoUsuario.value, campoContrasena.value, OnLoginRespuesta);
+        Debug.Log($"[Login] Intentando acceder con: {campoUsuario.value}");
+        ApiManager.Instance.Login(campoUsuario.value.ToLower().Trim(), campoContrasena.value, OnLoginRespuesta);
     }
 
-    private void OnLoginRespuesta(bool exito, string mensaje, dynamic datos)
+    // ✅ CORREGIDO: ApiManager.UserData en vez de dynamic
+    private void OnLoginRespuesta(bool exito, string mensaje, ApiManager.UserData datos)
     {
-        if (botonLogin != null)
-        {
-            botonLogin.SetEnabled(true);
-            botonLogin.text = "ENTRAR";
-        }
+        botonLogin?.SetEnabled(true);
+        if (botonLogin != null) botonLogin.text = "ENTRAR";
 
         if (exito)
         {
-            Debug.Log("[Login] Sesión iniciada con éxito");
+            Debug.Log($"[Login] Sesión iniciada: {datos?.username}");
             SceneManager.LoadScene("MenuPrincipalT");
         }
         else
         {
-            Debug.LogWarning($"[Login] Error de autenticación: {mensaje}");
+            Debug.LogWarning($"[Login] Error: {mensaje}");
             MostrarError(mensaje);
         }
     }
 
     private void OnRegistrarseClick() => SceneManager.LoadScene("RegistroScene");
 
-    private void MostrarError(string mensaje)
+    private void MostrarError(string msg)
     {
-        if (mensajeError != null)
-        {
-            mensajeError.text = mensaje;
-            mensajeError.style.display = DisplayStyle.Flex;
-        }
+        if (mensajeError != null) { mensajeError.text = msg; mensajeError.style.display = DisplayStyle.Flex; }
     }
 
     private void OcultarError()
