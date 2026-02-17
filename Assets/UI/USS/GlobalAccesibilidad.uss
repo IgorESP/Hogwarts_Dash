@@ -1,7 +1,7 @@
 :root {
     font-size: 108%;
 }
-
+/*
 .modo-daltonico .error-label {
     color: rgb(0, 150, 255);
 }
@@ -124,6 +124,7 @@
 .modo-daltonico TextField:focus {
     border-color: rgb(0, 255, 255);
 }
+*/
 
 .unity-text-field__input {
     color: rgb(20, 20, 20);
@@ -142,6 +143,7 @@
     -unity-font-style: italic;
 }
 
+/*
 .modo-daltonico .unity-text-field__input {
     color: rgb(0, 0, 0);
     background-color: rgb(200, 230, 255);
@@ -152,3 +154,4 @@
     background-color: rgb(255, 255, 255);
     border-color: rgb(0, 255, 255);
 }
+*/
