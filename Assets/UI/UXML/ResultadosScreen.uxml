@@ -6,10 +6,8 @@
         
         <ui:VisualElement name="ContenedorResultados" style="width: 550px; background-color: rgba(20, 15, 10, 0.95); border-radius: 30px; border-width: 5px; border-color: rgb(255, 215, 0); padding: 40px; align-items: center;">
             
-            <!-- Titulo (SIEMPRE: NIVEL COMPLETADO) -->
+            <!-- Titulo -->
             <ui:Label text="¡NIVEL COMPLETADO!" name="Titulo" style="font-size: 42px; color: rgb(255, 215, 0); -unity-font-style: bold; margin-bottom: 40px; -unity-text-outline-width: 3px; -unity-text-outline-color: rgba(0, 0, 0, 0.8); -unity-text-align: middle-center;" />
-            
-            <!-- ESTRELLAS ELIMINADAS -->
             
             <!-- Estadisticas -->
             <ui:VisualElement name="ContenedorEstadisticas" style="width: 100%; background-color: rgba(0, 0, 0, 0.4); border-radius: 20px; padding: 25px; margin-bottom: 30px; border-width: 2px; border-color: rgba(255, 215, 0, 0.2);">

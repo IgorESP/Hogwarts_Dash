@@ -11,6 +11,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="FilaMundos1" style="flex-direction: row; justify-content: center; align-items: flex-start; width: 100%; margin-bottom: 30px; gap: 10px;">
+            
             <!-- MUNDO 1: GRAN COMEDOR (PRIMER NIVEL) -->
             <ui:Button name="Mundo_1" class="tarjeta-mundo desbloqueado">
                 <ui:Label text="MUNDO 1 - GRAN COMEDOR" style="font-size: 14px; color: rgb(211, 166, 37); margin-bottom: 10px; -unity-font-style: bold;" />
@@ -26,6 +27,7 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:Button>
+            
             <!-- MUNDO 2: GRYFFINDOR -->
             <ui:Button name="Mundo_2" class="tarjeta-mundo bloqueado">
                 <ui:Label text="MUNDO 2 - GRYFFINDOR" style="font-size: 14px; color: rgb(211, 166, 37); margin-bottom: 10px; -unity-font-style: bold;" />
@@ -41,6 +43,7 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:Button>
+            
             <!-- MUNDO 3: SLYTHERIN -->
             <ui:Button name="Mundo_3" class="tarjeta-mundo bloqueado">
                 <ui:Label text="MUNDO 3 - SLYTHERIN" style="font-size: 14px; color: rgb(211, 166, 37); margin-bottom: 10px; -unity-font-style: bold;" />
@@ -58,6 +61,7 @@
             </ui:Button>
         </ui:VisualElement>
         <ui:VisualElement name="FilaMundos2" style="flex-direction: row; justify-content: center; align-items: flex-start; width: 100%; margin-bottom: 30px; gap: 10px;">
+            
             <!-- MUNDO 4: HUFFLEPUFF -->
             <ui:Button name="Mundo_4" class="tarjeta-mundo bloqueado">
                 <ui:Label text="MUNDO 4 - HUFFLEPUFF" style="font-size: 14px; color: rgb(236, 185, 57); margin-bottom: 10px; -unity-font-style: bold;" />
@@ -73,6 +77,7 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:Button>
+            
             <!-- MUNDO 5: RAVENCLAW (ÚLTIMO NIVEL) -->
             <ui:Button name="Mundo_5" class="tarjeta-mundo bloqueado">
                 <ui:Label text="MUNDO 5 - RAVENCLAW" style="font-size: 14px; color: rgb(211, 166, 37); margin-bottom: 10px; -unity-font-style: bold;" />

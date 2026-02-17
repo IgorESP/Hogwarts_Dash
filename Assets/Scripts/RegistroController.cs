@@ -179,6 +179,7 @@ public class RegistroUIController : MonoBehaviour
                 if (exito) 
                 { 
                     Debug.Log("[Registro] Usuario creado con éxito"); 
+                    PlayerPrefs.SetString("MensajeExito", "¡Cuenta creada!");
                     SceneManager.LoadScene("LoginScene"); 
                 }
                 else 

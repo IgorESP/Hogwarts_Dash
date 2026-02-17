@@ -37,7 +37,6 @@ public class CameraFollow : MonoBehaviour
         // Verificar que la cámara existe
         if (cam != null)
         {
-            // Configurar cámara ortográfica (ideal para juegos 2D/Pixel Art)
             cam.orthographic = true;
             cam.orthographicSize = orthographicSize;
             
@@ -76,24 +75,15 @@ public class CameraFollow : MonoBehaviour
             Vector3 temp = transform.position;
             
             // SEGUIMIENTO HORIZONTAL (EJE X)
-            // Actualizamos solo la posición X para seguir al jugador horizontalmente
-            // Sumamos el xOffset para dar visión adelante (útil en juegos de plataformas)
             temp.x = target.position.x + xOffset;
-            
-            // NOTA: Y y Z se mantienen fijos
-            // - Y (vertical) se mantiene constante para evitar que la cámara suba/baje
-            // - Z (profundidad) debe ser negativo en 2D para que la cámara pueda ver los sprites
             
             // Aplicar la nueva posición a la cámara
             transform.position = temp;
-            
-            // Log opcional (comentado para rendimiento, descomentar si necesitas debug)
-            // Debug.Log($"[CameraFollow] Posición cámara: X={temp.x:F2}, Y={temp.y:F2}, Z={temp.z:F2}");
+        
         }
         else
         {
             // Si el objetivo se destruye durante el juego, registrar advertencia
-            // (Esto podría pasar si el jugador muere y se destruye el GameObject)
             Debug.LogWarning("[CameraFollow] El target es null. La cámara no se moverá.");
         }
     }

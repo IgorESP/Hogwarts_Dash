@@ -1,57 +1,87 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+
     <Style src="project://database/Assets/UI/USS/GlobalAccesibilidad.uss?fileID=7433441132597879392&amp;guid=54de473943b1544468f4e32873b9414e&amp;type=3#GlobalAccesibilidad" />
+
     <ui:VisualElement name="Contenedor" style="flex-grow: 1; width: 100%; height: 100%; position: absolute; background-image: url(&quot;project://database/Assets/ASSETS_MENUS/fondo%20(1).png?fileID=2800000&amp;guid=0ae676ad7a14f814c9b9fbe500038b98&amp;type=3#fondo (1)&quot;); -unity-background-scale-mode: scale-and-crop; justify-content: center; align-items: center; background-color: rgb(108, 103, 103); -unity-background-image-tint-color: rgb(108, 103, 103);">
+
         <Style src="project://database/Assets/UI/USS/AjustesEstilos.uss?fileID=7433441132597879392&amp;guid=01d7789c7a9eda741b3379e6f8ec8a29&amp;type=3#AjustesEstilos" />
+
+        <!-- Cabecera con botón atrás y título -->
         <ui:VisualElement name="Header" style="flex-direction: row; width: 95%; justify-content: space-between; align-items: center; margin-bottom: 30px;">
             <ui:Button name="Boton_Atras" text="← ATRÁS" style="width: 150px; height: 50px; font-size: 20px; background-color: rgba(139, 69, 19, 0.9); color: rgb(255, 215, 0); border-radius: 10px; border-width: 2px; border-color: rgb(255, 215, 0); -unity-font-style: bold;" />
             <ui:Label text="CONFIGURACIÓN" name="Titulo" style="font-size: 50px; color: rgb(255, 215, 0); -unity-font-style: bold; -unity-text-outline-width: 4px; -unity-text-outline-color: rgb(0, 0, 0);" />
             <ui:VisualElement style="width: 70px; height: 70px;" />
         </ui:VisualElement>
+
         <ui:ScrollView name="ContenedorScroll" mode="Vertical" style="width: 90%; flex-grow: 1; background-color: rgba(0, 0, 0, 0); margin-bottom: 20px;">
+
+            <!-- SECCIÓN: Controles de volumen -->
             <ui:VisualElement name="Seccion_Audio" class="seccion-opciones" style="background-color: rgba(20, 20, 20, 0.9); border-radius: 20px; padding: 25px; margin-bottom: 20px; border-width: 3px; border-color: rgb(139, 69, 19);">
                 <ui:Label text="AUDIO" style="font-size: 30px; color: rgb(255, 215, 0); -unity-font-style: bold; margin-bottom: 20px; -unity-text-outline-width: 2px; -unity-text-outline-color: rgb(0, 0, 0);" />
+                
+                <!-- Slider de música -->
                 <ui:VisualElement style="flex-direction: row; align-items: center; margin-bottom: 15px;">
                     <ui:VisualElement style="width: 35px; height: 35px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/43.png?fileID=21300000&amp;guid=3e1b9a4ae214a844bb0a864020fcfa24&amp;type=3#43&quot;); -unity-background-scale-mode: scale-to-fit; margin-right: 15px;" />
                     <ui:Label text="Música:" style="font-size: 22px; color: rgb(220, 220, 220); min-width: 120px; -unity-font-style: bold;" />
                     <ui:Slider name="Slider_Musica" high-value="100" value="75" style="flex-grow: 1; margin-left: 10px; margin-right: 10px;" />
                     <ui:Label name="Label_Musica" text="75%" style="font-size: 22px; color: rgb(255, 215, 0); min-width: 60px; -unity-font-style: bold;" />
                 </ui:VisualElement>
+
+                <!-- Slider de efectos de sonido -->
                 <ui:VisualElement style="flex-direction: row; align-items: center;">
-                    <ui:VisualElement style="width: 35px; height: 35px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/50.png?fileID=21300000&amp;guid=9990eb331c6c0f149992882497f10eee&amp;type=3#50&quot;); -unity-background-scale-mode: scale-to-fit; margin-right: 15px;" />
+                    <ui:VisualElement style="width: 35px; height: 35px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/48.png?fileID=21300000&amp;guid=ee04e0b3f6d57f74ba77df2359f189d1&amp;type=3#48&quot;); -unity-background-scale-mode: scale-to-fit; margin-right: 15px;" />
                     <ui:Label text="SFX:" style="font-size: 22px; color: rgb(220, 220, 220); min-width: 120px; -unity-font-style: bold;" />
                     <ui:Slider name="Slider_SFX" high-value="100" value="75" style="flex-grow: 1; margin-left: 10px; margin-right: 10px;" />
                     <ui:Label name="Label_SFX" text="75%" style="font-size: 22px; color: rgb(255, 215, 0); min-width: 60px; -unity-font-style: bold;" />
                 </ui:VisualElement>
             </ui:VisualElement>
+
+            <!-- SECCIÓN: Opciones de accesibilidad -->
             <ui:VisualElement name="Seccion_Accesibilidad" class="seccion-opciones" style="background-color: rgba(20, 20, 20, 0.9); border-radius: 20px; padding: 25px; margin-bottom: 20px; border-width: 3px; border-color: rgb(139, 69, 19);">
                 <ui:Label text="ACCESIBILIDAD" style="font-size: 30px; color: rgb(255, 215, 0); -unity-font-style: bold; margin-bottom: 20px; -unity-text-outline-width: 2px; -unity-text-outline-color: rgb(0, 0, 0);" />
+                
+                <!-- Slider de tamaño de letra -->
                 <ui:VisualElement style="flex-direction: row; align-items: center; margin-bottom: 15px;">
                     <ui:Label text="Tamaño de Letra:" style="font-size: 22px; color: rgb(220, 220, 220); min-width: 200px; -unity-font-style: bold;" />
                     <ui:Slider name="Slider_TamanoLetra" high-value="100" low-value="30" value="100" style="flex-grow: 1; margin-left: 10px; margin-right: 10px;" />
                     <ui:Label name="Label_TamanoLetra" text="100%" style="font-size: 22px; color: rgb(255, 215, 0); min-width: 80px; -unity-font-style: bold;" />
                 </ui:VisualElement>
             </ui:VisualElement>
+
+            <!-- SECCIÓN: Botones de navegación -->
             <ui:VisualElement name="Seccion_Botones" style="flex-direction: column; width: 100%;">
+
+                <!-- Abre panel flotante de créditos -->
                 <ui:Button name="Boton_Creditos" class="boton-opcion" style="height: 80px; background-color: rgba(20, 20, 20, 0.9); border-radius: 15px; border-width: 3px; border-color: rgb(139, 69, 19); margin-bottom: 15px; flex-direction: row; align-items: center; padding-left: 20px;">
                     <ui:VisualElement style="width: 40px; height: 40px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/134.png?fileID=21300000&amp;guid=dfaf1b33f455f0c41a6037c399795495&amp;type=3#134&quot;); -unity-background-scale-mode: scale-to-fit; margin-right: 20px;" />
                     <ui:Label text="CRÉDITOS" style="font-size: 26px; color: rgb(255, 215, 0); -unity-font-style: bold; -unity-text-outline-width: 2px; -unity-text-outline-color: rgb(0, 0, 0);" />
                 </ui:Button>
+
+                <!-- Abre panel flotante del perfil del jugador -->
                 <ui:Button name="Boton_Perfil" class="boton-opcion" style="height: 80px; background-color: rgba(20, 20, 20, 0.9); border-radius: 15px; border-width: 3px; border-color: rgb(139, 69, 19); margin-bottom: 15px; flex-direction: row; align-items: center; padding-left: 20px;">
-                    <ui:VisualElement style="width: 40px; height: 40px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/153.png?fileID=21300000&amp;guid=1fe2bfd606d41cb4199b1023b6bf2a66&amp;type=3#153&quot;); -unity-background-scale-mode: scale-to-fit; margin-right: 20px;" />
+                    <ui:VisualElement style="width: 40px; height: 40px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/150.png?fileID=21300000&amp;guid=2badcda32dbeead47a2e21aef9e8a3e3&amp;type=3#150&quot;); -unity-background-scale-mode: scale-to-fit; margin-right: 20px;" />
                     <ui:Label text="VER PERFIL" style="font-size: 26px; color: rgb(255, 215, 0); -unity-font-style: bold; -unity-text-outline-width: 2px; -unity-text-outline-color: rgb(0, 0, 0);" />
                 </ui:Button>
+
+                <!-- Abre panel flotante del ranking global -->
                 <ui:Button name="Boton_Ranking" class="boton-opcion" style="height: 80px; background-color: rgba(20, 20, 20, 0.9); border-radius: 15px; border-width: 3px; border-color: rgb(139, 69, 19); margin-bottom: 15px; flex-direction: row; align-items: center; padding-left: 20px;">
                     <ui:VisualElement style="width: 40px; height: 40px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/122.png?fileID=21300000&amp;guid=f19245d751804bf4cb3de69c1a36c826&amp;type=3#122&quot;); -unity-background-scale-mode: scale-to-fit; margin-right: 20px;" />
                     <ui:Label text="RANKING" style="font-size: 26px; color: rgb(255, 215, 0); -unity-font-style: bold; -unity-text-outline-width: 2px; -unity-text-outline-color: rgb(0, 0, 0);" />
                 </ui:Button>
+
+                <!-- Abre panel flotante del tutorial -->
                 <ui:Button name="Boton_Tutorial" class="boton-opcion" style="height: 80px; background-color: rgba(20, 20, 20, 0.9); border-radius: 15px; border-width: 3px; border-color: rgb(139, 69, 19); margin-bottom: 15px; flex-direction: row; align-items: center; padding-left: 20px;"> 
                     <ui:VisualElement style="width: 40px; height: 40px; background-image: url('project://database/Assets/A lot of useful icons_05/png/icon_white/153.png?fileID=21300000&amp;guid=1fe2bfd606d41cb4199b1023b6bf2a66&amp;type=3#153'); -unity-background-scale-mode: scale-to-fit; margin-right: 20px;" /> 
                     <ui:Label text="TUTORIAL" style="font-size: 26px; color: rgb(255, 215, 0); -unity-font-style: bold; -unity-text-outline-width: 2px; -unity-text-outline-color: rgb(0, 0, 0);" /> 
                 </ui:Button>
+
+                <!-- Abre panel flotante del manual de usuario -->
                 <ui:Button name="Boton_Manual" class="boton-opcion" style="height: 80px; background-color: rgba(20, 20, 20, 0.9); border-radius: 15px; border-width: 3px; border-color: rgb(139, 69, 19); margin-bottom: 15px; flex-direction: row; align-items: center; padding-left: 20px;"> 
                     <ui:VisualElement style="width: 40px; height: 40px; background-image: url('project://database/Assets/A lot of useful icons_05/png/icon_white/153.png?fileID=21300000&amp;guid=1fe2bfd606d41cb4199b1023b6bf2a66&amp;type=3#153'); -unity-background-scale-mode: scale-to-fit; margin-right: 20px;" /> 
                     <ui:Label text="MANUAL DE USUARIO" style="font-size: 26px; color: rgb(255, 215, 0); -unity-font-style: bold; -unity-text-outline-width: 2px; -unity-text-outline-color: rgb(0, 0, 0);" /> 
                 </ui:Button>
+
+                <!-- Cierra sesión y vuelve a LoginScene -->
                 <ui:Button name="Boton_CerrarSesion" class="boton-opcion" style="height: 80px; background-color: rgba(20, 20, 20, 0.9); border-radius: 15px; border-width: 3px; border-color: rgb(139, 69, 19); flex-direction: row; align-items: center; padding-left: 20px;">
                     <ui:VisualElement style="width: 40px; height: 40px; background-image: url(&quot;project://database/Assets/A%20lot%20of%20useful%20icons_05/png/icon_white/80.png?fileID=21300000&amp;guid=cff3165f7b458e740be13bcb944f91b8&amp;type=3#80&quot;); -unity-background-scale-mode: scale-to-fit; margin-right: 20px;" />
                     <ui:Label text="CERRAR SESIÓN" style="font-size: 26px; color: rgb(255, 215, 0); -unity-font-style: bold; -unity-text-outline-width: 2px; -unity-text-outline-color: rgb(0, 0, 0);" />
@@ -234,6 +264,11 @@
         <!-- Estadísticas -->
         <ui:VisualElement style="background-color: rgba(0, 0, 0, 0.3); border-radius: 15px; padding: 25px; border-width: 2px; border-color: rgba(255, 215, 0, 0.3);">
             <ui:VisualElement style="flex-direction: row; justify-content: space-between; margin-bottom: 20px;">
+                <ui:Label text="Usuario:" style="font-size: 22px; color: rgb(200, 200, 200);" />
+                <ui:Label name="Label_PerfilUsername" text="-" style="font-size: 24px; color: rgb(255, 215, 0); -unity-font-style: bold;" />
+            </ui:VisualElement>
+
+            <ui:VisualElement style="flex-direction: row; justify-content: space-between; margin-bottom: 20px;">
                 <ui:Label text="Niveles Completados:" style="font-size: 22px; color: rgb(200, 200, 200);" />
                 <ui:Label name="Label_PerfilNiveles" text="0/5" style="font-size: 24px; color: rgb(255, 215, 0); -unity-font-style: bold;" />
             </ui:VisualElement>
@@ -243,9 +278,14 @@
                 <ui:Label name="Label_PerfilSnitches" text="0" style="font-size: 24px; color: rgb(255, 215, 0); -unity-font-style: bold;" />
             </ui:VisualElement>
             
-            <ui:VisualElement style="flex-direction: row; justify-content: space-between;">
+            <ui:VisualElement style="flex-direction: row; justify-content: space-between; margin-bottom: 20px;">
                 <ui:Label text="Total Intentos:" style="font-size: 22px; color: rgb(200, 200, 200);" />
                 <ui:Label name="Label_PerfilIntentos" text="0" style="font-size: 24px; color: rgb(255, 215, 0); -unity-font-style: bold;" />
+            </ui:VisualElement>
+
+            <ui:VisualElement style="flex-direction: row; justify-content: space-between;">
+                <ui:Label text="Miembro desde:" style="font-size: 22px; color: rgb(200, 200, 200);" />
+                <ui:Label name="Label_PerfilFecha" text="-" style="font-size: 24px; color: rgb(255, 215, 0); -unity-font-style: bold;" />
             </ui:VisualElement>
         </ui:VisualElement>
 

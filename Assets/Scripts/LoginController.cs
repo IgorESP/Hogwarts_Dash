@@ -2,11 +2,20 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Controlador de la interfaz de inicio de sesión
+/// </summary>
 public class LoginUIController : MonoBehaviour
 {
     private VisualElement root;
+
+    // Campos de entrada
     private TextField campoUsuario, campoContrasena;
+
+    // Botones
     private Button botonLogin, botonRegistrarse;
+
+    // Mensaje de error/éxito
     private Label mensajeError;
 
     void Start()
@@ -18,8 +27,20 @@ public class LoginUIController : MonoBehaviour
         AplicarAccesibilidad();
         ObtenerReferencias();
         RegistrarEventos();
+
+        // Si viene de un registro exitoso, mostrar mensaje en verde
+        string mensajeExito = PlayerPrefs.GetString("MensajeExito", "");
+        if (!string.IsNullOrEmpty(mensajeExito))
+        {
+            mensajeError.style.color = new StyleColor(Color.green);
+            MostrarError(mensajeExito);
+            PlayerPrefs.DeleteKey("MensajeExito");
+        }
     }
 
+    /// <summary>
+    /// Ajusta el color y grosor del texto dentro de un TextField para mejorar visibilidad
+    /// </summary>
     private void ForzarColorTexto(TextField tf)
     {
         if (tf == null) return;
@@ -31,6 +52,9 @@ public class LoginUIController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Aplica ajustes de accesibilidad guardados en PlayerPrefs
+    /// </summary>
     private void AplicarAccesibilidad()
     {
         if (root == null) return;
@@ -40,6 +64,9 @@ public class LoginUIController : MonoBehaviour
         root.Query<Label>().ForEach(label => label.style.fontSize = 24f * escala);
     }
 
+    /// <summary>
+    /// Obtiene referencias a todos los elementos del UXML
+    /// </summary>
     private void ObtenerReferencias()
     {
         if (root == null) return;
@@ -53,12 +80,18 @@ public class LoginUIController : MonoBehaviour
         ForzarColorTexto(campoContrasena);
     }
 
+    /// <summary>
+    /// Registra los eventos de los botones
+    /// </summary>
     private void RegistrarEventos()
     {
         if (botonLogin != null)       botonLogin.clicked       += OnLoginClick;
         if (botonRegistrarse != null) botonRegistrarse.clicked += OnRegistrarseClick;
     }
 
+    /// <summary>
+    /// Lógica al pulsar "Entrar": valida campos y llama a la API
+    /// </summary>
     private void OnLoginClick()
     {
         OcultarError();
@@ -76,7 +109,9 @@ public class LoginUIController : MonoBehaviour
         ApiManager.Instance.Login(campoUsuario.value.ToLower().Trim(), campoContrasena.value, OnLoginRespuesta);
     }
 
-    // ✅ CORREGIDO: ApiManager.UserData en vez de dynamic
+    /// <summary>
+    /// Callback con la respuesta de la API tras intentar el login
+    /// </summary>
     private void OnLoginRespuesta(bool exito, string mensaje, ApiManager.UserData datos)
     {
         botonLogin?.SetEnabled(true);
@@ -94,15 +129,29 @@ public class LoginUIController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Navega a la pantalla de registro
+    /// </summary>
     private void OnRegistrarseClick() => SceneManager.LoadScene("RegistroScene");
 
+    /// <summary>
+    /// Muestra un mensaje en el label de error/éxito
+    /// </summary>
     private void MostrarError(string msg)
     {
-        if (mensajeError != null) { mensajeError.text = msg; mensajeError.style.display = DisplayStyle.Flex; }
+        if (mensajeError != null) 
+        { 
+            mensajeError.text = msg; 
+            mensajeError.style.display = DisplayStyle.Flex; 
+        }
     }
 
+    /// <summary>
+    /// Oculta el mensaje de error/éxito
+    /// </summary>
     private void OcultarError()
     {
-        if (mensajeError != null) mensajeError.style.display = DisplayStyle.None;
+        if (mensajeError != null) 
+            mensajeError.style.display = DisplayStyle.None;
     }
 }

@@ -3,37 +3,53 @@
     
     <ui:VisualElement name="Contenedor" style="flex-grow: 1; width: 100%; height: 100%; position: absolute; background-image: url(&quot;project://database/Assets/ASSETS_MENUS/fondo%20(1).png?fileID=2800000&amp;guid=0ae676ad7a14f814c9b9fbe500038b98&amp;type=3#fondo (1)&quot;); -unity-background-scale-mode: scale-and-crop; justify-content: center; align-items: center; background-color: rgb(108, 103, 103); -unity-background-image-tint-color: rgb(108, 103, 103);">
         
+        <!-- Nombre del juego -->
         <ui:VisualElement name="Logotipo" picking-mode="Ignore" style="width: 400px; height: 110px; background-image: url(&quot;project://database/Assets/ASSETS_MENUS/titulo%20(1).png?fileID=-3271962813208512830&amp;guid=4f5830131bc7dcd469c1a72a375836d2&amp;type=3#titulo (1)_0&quot;); -unity-background-scale-mode: scale-to-fit; margin-bottom: 30px;" />
         
         <ui:VisualElement name="PanelRegistro" style="width: 420px; background-color: rgba(25, 20, 15, 0.95); border-radius: 25px; padding: 30px; border-width: 4px; border-color: rgb(139, 69, 19); align-items: center;">
             <ui:Label text="Crear Cuenta" style="font-size: 32px; color: gold; margin-bottom: 25px; -unity-font-style: bold;" />
             
+            <!-- Campo Nombre -->
             <ui:VisualElement class="campo-input" style="width: 100%; margin-bottom: 15px;">
-                <ui:Label text="Nombre" style="color: gold; margin-bottom: 5px; -unity-font-style: bold;" />
-                <ui:TextField name="Campo_Nombre" focusable="true" placeholder-text="Juan" style="font-size: 16px;" />
+                <ui:Label text="Nombre (ej:Juan)" style="color: gold; margin-bottom: 5px; -unity-font-style: bold;" />
+                <ui:TextField name="Campo_Nombre" focusable="true" style="font-size: 16px;" />
             </ui:VisualElement>
             
+            <!-- Campo Apellido -->
             <ui:VisualElement class="campo-input" style="width: 100%; margin-bottom: 15px;">
-                <ui:Label text="Apellido" style="color: gold; margin-bottom: 5px; -unity-font-style: bold;" />
-                <ui:TextField name="Campo_Apellido" focusable="true" placeholder-text="Pérez" style="font-size: 16px;" />
+                <ui:Label text="Apellido (ej: Perez)" style="color: gold; margin-bottom: 5px; -unity-font-style: bold;" />
+                <ui:TextField name="Campo_Apellido" focusable="true" style="font-size: 16px;" />
             </ui:VisualElement>
             
+            <!-- Campo Usuario - debe ser único en el sistema -->
             <ui:VisualElement class="campo-input" style="width: 100%; margin-bottom: 15px;"> 
-                <ui:Label text="Usuario" style="color: gold; margin-bottom: 5px; -unity-font-style: bold;" /> 
-                <ui:TextField name="Campo_Usuario" focusable="true" placeholder-text="" style="font-size: 16px;" /> 
+                <ui:Label text="Nombre de Usuario (ej: juanpe)" style="color: gold; margin-bottom: 5px; -unity-font-style: bold;" /> 
+                <ui:TextField name="Campo_Usuario" focusable="true" style="font-size: 16px;" /> 
             </ui:VisualElement>
             
+            <!-- Campo Contraseña - oculta los caracteres con password=true -->
             <ui:VisualElement class="campo-input" style="width: 100%; margin-bottom: 15px;">
                 <ui:Label text="Contraseña" style="color: gold; margin-bottom: 5px; -unity-font-style: bold;" />
                 <ui:TextField name="Campo_Contrasena" password="true" focusable="true" placeholder-text="" style="font-size: 16px;" />
             </ui:VisualElement>
             
+            <!-- Campo Confirmar Contraseña - se valida que coincida con el anterior -->
+            <ui:VisualElement class="campo-input" style="width: 100%; margin-bottom: 30px;">
+                <ui:Label text="Confirmar Contraseña" style="color: gold; margin-bottom: 5px; -unity-font-style: bold;" />
+                <ui:TextField name="Campo_Confirmar" password="true" focusable="true" />
+            </ui:VisualElement>            
             
+            <!-- Botón para enviar el formulario a la API -->
             <ui:Button name="Boton_Crear" text="CREAR CUENTA" class="boton-login" style="width: 100%; height: 55px; background-color: darkgreen; color: white; border-radius: 12px; -unity-font-style: bold; font-size: 18px;" />
             
-            <ui:Button name="Boton_Volver" text="VOLVER" class="boton-login" style="width: 100%; height: 55px; margin-top: 12px; background-color: saddlebrown; color: white; border-radius: 12px; -unity-font-style: bold; font-size: 18px;" />
+            <!-- Botón para volver a la pantalla de login -->
+            <ui:Button name="Boton_Volver" text="INICIAR SESION" class="boton-login" style="width: 100%; height: 55px; margin-top: 12px; background-color: saddlebrown; color: white; border-radius: 12px; -unity-font-style: bold; font-size: 18px;" />
             
+            <!-- Mensaje de error - oculto por defecto, se muestra desde C# -->
             <ui:Label name="Mensaje_Error" style="color: red; margin-top: 15px; display: none; -unity-font-style: bold; font-size: 14px;" />
+
         </ui:VisualElement>
+
     </ui:VisualElement>
+    
 </ui:UXML>

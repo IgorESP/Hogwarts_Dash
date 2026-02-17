@@ -33,24 +33,6 @@ public class AccesibilidadManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Gestiona la clase de estilo para el modo daltónico
-    /// </summary>
-    /*private void AplicarModoDaltonico(VisualElement root)
-    {
-        bool modoDaltonico = PlayerPrefs.GetInt("ModoDaltonico", 0) == 1;
-        
-        if (modoDaltonico)
-        {
-            root.AddToClassList("modo-daltonico-activado");
-            Debug.Log($"[Accesibilidad] Modo daltónico ACTIVADO en {gameObject.scene.name}");
-        }
-        else
-        {
-            root.RemoveFromClassList("modo-daltonico-activado");
-        }
-    }*/
-
-    /// <summary>
     /// Escala el tamaño de las fuentes basándose en el porcentaje guardado
     /// </summary>
     private void AplicarTamanoLetra(VisualElement root)

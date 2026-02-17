@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
@@ -58,6 +59,7 @@ public class AjustesController : MonoBehaviour
         panelRankingOverlay = root.Q<VisualElement>("PanelRankingOverlay");
         listaRanking = root.Q<ScrollView>("ListaRanking");
         mensajeVacio = root.Q<Label>("MensajeVacio");
+        botonCerrarRanking = root.Q<Button>("Boton_CerrarRanking");
 
         // Perfil
         panelPerfilOverlay = root.Q<VisualElement>("PanelPerfilOverlay");
@@ -532,7 +534,7 @@ public class AjustesController : MonoBehaviour
 
             fila.Add(new Label(medalla) { style = { minWidth = 50, fontSize = 24, color = Color.white } });
             fila.Add(new Label(entrada.username) { style = { flexGrow = 1, fontSize = 20, color = Color.grey } });
-            fila.Add(new Label(entrada.puntuacion + " pts") { style = { fontSize = 22, color = Color.yellow } });
+            fila.Add(new Label(entrada.puntuacion + " snitchs") { style = { fontSize = 22, color = Color.yellow } });
             
             listaRanking.Add(fila);
         }
@@ -556,17 +558,37 @@ public class AjustesController : MonoBehaviour
         if (panelPerfilOverlay != null)
             panelPerfilOverlay.style.display = DisplayStyle.Flex;
 
-        if (NivelesManager.Instance != null)
+        string playerId = PlayerPrefs.GetString("player_id", "");
+        if (string.IsNullOrEmpty(playerId))
         {
-            if (labelPerfilNiveles != null)
-                labelPerfilNiveles.text = $"{NivelesManager.Instance.ObtenerTotalNivelesCompletados()}/5";
-            
-            if (labelPerfilSnitches != null)
-                labelPerfilSnitches.text = NivelesManager.Instance.ObtenerTotalSnitches().ToString();
-            
-            if (labelPerfilIntentos != null)
-                labelPerfilIntentos.text = NivelesManager.Instance.ObtenerTotalIntentos().ToString();
+            Debug.LogWarning("[Perfil] No hay player_id guardado");
+            return;
         }
+
+        ApiManager.Instance.ObtenerJugador(playerId, (exito, datos) =>
+        {
+            if (!exito || datos == null)
+            {
+                Debug.LogWarning("[Perfil] Error obteniendo datos del jugador");
+                return;
+            }
+
+            var labelUsername = root.Q<Label>("Label_PerfilUsername");
+            var labelFecha    = root.Q<Label>("Label_PerfilFecha");
+
+            if (labelUsername != null) labelUsername.text = datos.username;
+            if (labelPerfilNiveles != null) labelPerfilNiveles.text = $"{datos.niveles_completados}/5";
+            if (labelPerfilSnitches != null) labelPerfilSnitches.text = datos.snitch_totales.ToString();
+            if (labelPerfilIntentos != null) labelPerfilIntentos.text = datos.total_intentos.ToString();
+            if (labelFecha != null) {
+            if (datos.created_at != null) {
+                DateTime fecha = DateTime.Parse(datos.created_at);
+                labelFecha.text = fecha.ToString("dd/MM/yyyy");
+            } else {
+                labelFecha.text = "-";
+            }
+        }
+        });
     }
 
     private void CerrarPerfil()

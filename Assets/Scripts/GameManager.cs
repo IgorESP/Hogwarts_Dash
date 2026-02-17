@@ -58,8 +58,10 @@ public class GameManager : MonoBehaviour
     
     void Start()
     {
+        ReiniciarEstadisticas();  
+
         // Reiniciar estadísticas de esta sesión/intento
-        snitchesRecogidas = 0;
+        //snitchesRecogidas = 0;
         if (NivelesManager.Instance != null) NivelesManager.Instance.RegistrarIntentoGlobal();
 
         // Buscar el controlador de resultados en la escena
@@ -162,23 +164,53 @@ public class GameManager : MonoBehaviour
     public void PlayerDied()
     {
         if (nivelFinalizado) return;
-        
+
         totalIntentos++;
-        int porcentajeMuerte = ObtenerPorcentajeActual();
         
-        // Guardar progreso para la UI (si se decide mostrar tras morir)
+        int intentosEsteIntento = 1;  
+        int porcentajeMuerte = ObtenerPorcentajeActual();
+        int snitchEsteIntento = snitchesRecogidas;
+        
+        EnviarProgresoAlMorir(porcentajeMuerte, snitchEsteIntento, intentosEsteIntento);
+        
         PlayerPrefs.SetFloat("UltimoPorcentaje", porcentajeMuerte);
         PlayerPrefs.SetInt("UltimasSnitches", snitchesRecogidas);
         PlayerPrefs.Save();
 
-        // Registrar progreso de muerte en el sistema global (estilo GD)
         if (NivelesManager.Instance != null)
         {
             NivelesManager.Instance.CompletarNivel(mundoActual, nivelActual, porcentajeMuerte, snitchesRecogidas);
             NivelesManager.Instance.RegistrarIntentoGlobal();
         }
-
+        
         Debug.Log($"[GameManager] Jugador muerto al {porcentajeMuerte}%. Intento #{totalIntentos}");
+    }
+
+    private void EnviarProgresoAlMorir(int porcentaje, int snitchesEsteIntento, int intentosEsteIntento)
+    {
+        string playerId = PlayerPrefs.GetString("player_id", "");
+        if (string.IsNullOrEmpty(playerId)) return;
+        
+        string nivel = GetNombreNivelActual();
+        float tiempo = Time.timeSinceLevelLoad;
+        
+        ApiManager.Instance.ActualizarProgresoNivel(
+            playerId, nivel, porcentaje, snitchesEsteIntento, intentosEsteIntento, tiempo,
+            (exito, msg) => Debug.Log(exito ? "[API] Progreso muerte OK" : "[API] Error muerte")
+        );
+    }
+
+     private string GetNombreNivelActual()
+    {
+        return mundoActual switch
+        {
+            1 => "comedor",
+            2 => "gryffindor", 
+            3 => "slytherin",
+            4 => "hufflepuff",
+            5 => "ravenclaw",
+            _ => "comedor"
+        };
     }
     
     /// <summary> 

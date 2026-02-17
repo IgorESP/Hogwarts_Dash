@@ -24,26 +24,25 @@
     padding: 0;
 }
 
-/* ✅ TEXTO ULTRA NEGRITA Y GIGANTE */
+/* Texto escrito por el usuario dentro del input */
 .unity-text-field__input {
-    color: rgb(0, 0, 0) !important;              /* NEGRO ABSOLUTO */
+    color: rgb(0, 0, 0) !important;
     background-color: transparent !important;
-    font-size: 52px !important;                  /* AÚN MÁS GRANDE */
-    -unity-font-style: bold !important;          /* NEGRITA */
-    -unity-font-weight: 900 !important;          /* NEGRITA MÁXIMA */
+    font-size: 52px !important;
+    -unity-font-style: bold !important;
+    -unity-font-weight: 900 !important;
     -unity-text-align: middle-left;
-    padding-left: 35px !important;               /* MÁS ESPACIO */
+    padding-left: 35px !important;
     padding-right: 35px !important;
     border-width: 0 !important;
     margin: 0 !important;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.7) !important; /* SOMBRA FUERTE */
-    letter-spacing: 1px !important;              /* ESPACIADO para más claridad */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7) !important;
+    letter-spacing: 1px !important;
 }
 
-/* PLACEHOLDER TAMBIÉN GIGANTE NEGRITA */
 .unity-text-field__input::placeholder {
-    color: rgb(40, 40, 40) !important;           /* Gris MUY oscuro */
-    font-size: 52px !important;                  /* MISMO TAMAÑO */
+    color: rgb(40, 40, 40) !important;
+    font-size: 52px !important;
     -unity-font-style: bold !important;
     -unity-font-weight: 800 !important;
     opacity: 0.9 !important;
@@ -57,18 +56,18 @@
     color: gold !important;
     -unity-font-style: bold !important;
     -unity-font-weight: 900 !important;
-    font-size: 38px !important;                 /* MÁS GRANDES */
+    font-size: 38px !important;
     margin-bottom: 20px;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.6) !important;
 }
 
 /* ==========================================
-   BOTONES ULTRA GRANDES
+   BOTONES
    ========================================= */
 .boton-login {
     width: 100%;
-    height: 110px !important;                    /* MÁS ALTOS */
-    font-size: 42px !important;                  /* TEXTO ENORME */
+    height: 110px !important;
+    font-size: 42px !important;
     -unity-font-style: bold !important;
     -unity-font-weight: 900 !important;
     border-radius: 20px;
@@ -83,7 +82,7 @@
 }
 
 /* ==========================================
-   ERROR ULTRA VISIBLE
+   MENSAJE DE ERROR / ÉXITO
    ========================================= */
 #Mensaje_Error {
     color: rgb(255, 255, 255) !important;
@@ -92,7 +91,7 @@
     border-radius: 20px;
     margin-top: 30px;
     -unity-text-align: middle-center;
-    font-size: 32px !important;                 /* MÁS GRANDE */
+    font-size: 32px !important;
     -unity-font-style: bold !important;
     -unity-font-weight: 900 !important;
     text-shadow: 3px 3px 6px rgba(0,0,0,0.9) !important;

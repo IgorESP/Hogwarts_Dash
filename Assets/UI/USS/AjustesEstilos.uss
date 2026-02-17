@@ -1,9 +1,4 @@
 /* ====================================
-   ARCHIVO: AjustesEstilos.uss
-   DESCRIPCIÓN: Estilos para la pantalla de Ajustes/Opciones
-   ==================================== */
-
-/* ====================================
    BOTÓN VOLVER
    ==================================== */
 
@@ -107,12 +102,6 @@
     transition-property: scale, background-color;
 }
 
-/* Efecto hover general para botones */
-/*.boton-opcion:hover {
-    scale: 1.05;
-    border-width: 4px !important;
-}*/
-
 /* Efecto click para botones */
 .boton-opcion:active {
     scale: 0.98;
@@ -136,27 +125,4 @@
 /* Botón de Perfil - Hover */
 #Boton_Perfil:hover {
     background-color: rgba(160, 80, 20, 0.95);
-}
-
-/* Botón de Cerrar Sesión - Hover (color rojo) */
-/*#Boton_CerrarSesion:hover {
-    background-color: rgba(220, 20, 20, 0.95);
-    border-color: white !important;
-}*/
-
-/* CLASE MAESTRA DE DALTONISMO */
-
-
-.modo-daltonico-activado Label {
-    color: white !important; /* Cambiamos el oro por blanco puro */
-}
-
-.modo-daltonico-activado .seccion-opciones, 
-.modo-daltonico-activado .boton-opcion {
-    border-color: #0077FF !important; /* Cambiamos el marrón por un azul vibrante */
-    background-color: #111111 !important; /* Fondo más oscuro para contraste */
-}
-
-.modo-daltonico-activado #Titulo {
-    color: #00FFFF !important; /* Título en Cyan */
 }

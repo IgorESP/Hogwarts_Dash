@@ -12,15 +12,12 @@ public class OrbeAmarilloGD : MonoBehaviour
     [Tooltip("Sistema de partículas que se emite al usar el orbe")]
     public ParticleSystem particulasBrillo;
     
-    // NOTA: Configura las partículas DIRECTAMENTE en el Inspector de Unity.
-    // Valores recomendados para efecto Geometry Dash:
-    // - Start Lifetime: 0.3, Start Speed: 20, Start Size: 0.2
     
     [Tooltip("Cantidad de partículas emitidas al activar el orbe")]
     public int cantidadParticulasExplosion = 300; 
 
-    private bool jugadorEnRango = false;      // True si el jugador está dentro del trigger
-    private MovimientoGD scriptJugador;       // Referencia al controlador del jugador
+    private bool jugadorEnRango = false; 
+    private MovimientoGD scriptJugador;
 
     void Update()
     {

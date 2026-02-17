@@ -59,7 +59,7 @@ public class ResultadosController : MonoBehaviour
         MostrarPanel();
         
         // Enviar a la base de datos si hay sesión
-        StartCoroutine(EnviarResultadosAPI(porcentaje, intentos, snitches));
+        StartCoroutine(EnviarResultadosAPI(porcentaje, 1, snitches));
     }
     
     /// <summary> 
@@ -110,33 +110,32 @@ public class ResultadosController : MonoBehaviour
     /// <summary>
     /// Sincroniza el progreso del usuario con la API de Hogwarts Dash
     /// </summary>
-    private IEnumerator EnviarResultadosAPI(int p, int i, int s)
+    private IEnumerator EnviarResultadosAPI(int porcentaje, int intentos, int snitches)
     {
-        string pid = PlayerPrefs.GetString("player_id", "");
-        if (string.IsNullOrEmpty(pid)) yield break;
-        
-        int mundo = PlayerPrefs.GetInt("MundoSeleccionado", 1);
-        string url = $"https://hogwartsdashapi.onrender.com/api/v1/jugadores/{pid}/progreso";
-        
-        // Calcular estrellas según porcentaje
-        int estreq = p >= 90 ? 3 : p >= 70 ? 2 : p >= 40 ? 1 : 0;
-        
-        string json = $"{{\"player_id\":\"{pid}\",\"mundo\":{mundo},\"nivel\":1,\"porcentaje\":{p},\"intentos\":{i},\"snitches\":{s},\"estrellas\":{estreq}}}";
-        
-        using (var req = new UnityEngine.Networking.UnityWebRequest(url, "POST"))
+        string playerId = PlayerPrefs.GetString("player_id", "");
+        if (string.IsNullOrEmpty(playerId)) 
         {
-            byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
-            req.uploadHandler = new UnityEngine.Networking.UploadHandlerRaw(body);
-            req.downloadHandler = new UnityEngine.Networking.DownloadHandlerBuffer();
-            req.SetRequestHeader("Content-Type", "application/json");
-            
-            string ak = PlayerPrefs.GetString("ApiKey", "hogwarts_dash_2026_admin");
-            req.SetRequestHeader("X-API-Key", ak);
-            
-            yield return req.SendWebRequest();
-            if (req.result == UnityEngine.Networking.UnityWebRequest.Result.Success) Debug.Log("[Resultados] API actualizada correctamente");
-            else Debug.LogWarning("[Resultados] Fallo al actualizar API");
+            Debug.LogWarning("[API] Sin player_id logueado");
+            yield break;
         }
+
+        string mundoActual = PlayerPrefs.GetString("MundoSeleccionado", "comedor");
+        string[] nombresNiveles = { "comedor", "gryffindor", "slytherin", "hufflepuff", "ravenclaw" };
+        string nivel = nombresNiveles[Mathf.Clamp(PlayerPrefs.GetInt("MundoSeleccionado", 0) - 1, 0, 4)];
+
+        float tiempoJugado = GameManager.Instance ? Time.timeSinceLevelLoad : 0f;
+
+        Debug.Log($"[VICTORIA] Este intento: {snitches} snitch, {intentos} intentos");
+
+        ApiManager.Instance.ActualizarProgresoNivel(
+            playerId, nivel, porcentaje, snitches, 1, tiempoJugado,
+            (exito, mensaje) => {
+                if (exito) Debug.Log($"[API] Progreso guardado: {mensaje}");
+                else Debug.LogWarning($"[API] Error: {mensaje}");
+            }
+        );
+
+        yield return null;
     }
     
     /// <summary> 
