@@ -10,12 +10,12 @@
             
             <ui:VisualElement class="campo-input" style="width: 100%; margin-bottom: 20px;">
                 <ui:Label text="Usuario" style="color: gold; margin-bottom: 5px; -unity-font-style: bold;" />
-                <ui:TextField name="Campo_Usuario" placeholder-text="Introduce tu nombre..." focusable="true" style="font-size: 18px; -unity-font-style: bold;" />
+                <ui:TextField name="Campo_Usuario" placeholder-text="" focusable="true" style="font-size: 18px; -unity-font-style: bold;" />
             </ui:VisualElement>
             
             <ui:VisualElement class="campo-input" style="width: 100%; margin-bottom: 30px;">
                 <ui:Label text="Contraseña" style="color: gold; margin-bottom: 5px; -unity-font-style: bold;" />
-                <ui:TextField name="Campo_Contrasena" placeholder-text="Tu contraseña secreta" password="true" focusable="true" style="font-size: 18px; -unity-font-style: bold;" />
+                <ui:TextField name="Campo_Contrasena" placeholder-text="" password="true" focusable="true" style="font-size: 18px; -unity-font-style: bold;" />
             </ui:VisualElement>
             
             <ui:Button name="Boton_IniciarSesion" text="ENTRAR" class="boton-login" style="width: 100%; height: 60px; background-color: darkgreen; color: white; border-radius: 12px; -unity-font-style: bold; font-size: 20px;" />

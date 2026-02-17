@@ -1,169 +1,154 @@
-/* ============================================
-   SISTEMA DE ACCESIBILIDAD GLOBAL
-   ============================================ */
-
-/* --------------------------------------------
-   TAMAÑO DE LETRA BASE
-   -------------------------------------------- */
 :root {
-    font-size: 108%; /* Por defecto 100% */
+    font-size: 108%;
 }
 
-/* --------------------------------------------
-   MODO DALTÓNICO (Deuteranopia/Protanopia)
-   Colores: Azul #0000FF y Cian #00FFFF
-   -------------------------------------------- */
-
-/* === LOGIN Y REGISTRO === */
 .modo-daltonico .error-label {
-    color: rgb(0, 150, 255) !important; /* Azul claro para errores */
+    color: rgb(0, 150, 255);
 }
 
-.modo-daltonico .btn-login,
+.modo-daltonico .btn-login {
+    background-color: rgb(0, 100, 200);
+    border-color: rgb(0, 200, 255);
+}
+
 .modo-daltonico .btn-registro {
-    background-color: rgb(0, 100, 200) !important;
-    border-color: rgb(0, 200, 255) !important;
+    background-color: rgb(0, 100, 200);
+    border-color: rgb(0, 200, 255);
 }
 
-.modo-daltonico .btn-login:hover,
+.modo-daltonico .btn-login:hover {
+    background-color: rgb(0, 150, 255);
+}
+
 .modo-daltonico .btn-registro:hover {
-    background-color: rgb(0, 150, 255) !important;
+    background-color: rgb(0, 150, 255);
 }
 
 .modo-daltonico .input-field {
-    border-color: rgb(0, 150, 255) !important;
+    border-color: rgb(0, 150, 255);
 }
 
 .modo-daltonico .input-field:focus {
-    border-color: rgb(0, 255, 255) !important;
+    border-color: rgb(0, 255, 255);
     box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
 }
 
-/* === SELECCIÓN DE CASAS === */
 .modo-daltonico .casa-card {
-    border-color: rgb(0, 100, 200) !important;
+    border-color: rgb(0, 100, 200);
 }
 
 .modo-daltonico .casa-card:hover {
-    border-color: rgb(0, 200, 255) !important;
+    border-color: rgb(0, 200, 255);
     box-shadow: 0 0 20px rgba(0, 200, 255, 0.6);
 }
 
 .modo-daltonico .casa-selected {
-    border-color: rgb(0, 255, 255) !important;
-    background-color: rgba(0, 100, 200, 0.3) !important;
+    border-color: rgb(0, 255, 255);
+    background-color: rgba(0, 100, 200, 0.3);
 }
 
-/* === SELECCIÓN DE MUNDOS === */
 .modo-daltonico .mundo-card {
-    background-color: rgba(0, 50, 100, 0.8) !important;
-    border-color: rgb(0, 150, 255) !important;
+    background-color: rgba(0, 50, 100, 0.8);
+    border-color: rgb(0, 150, 255);
 }
 
 .modo-daltonico .mundo-card:hover {
-    border-color: rgb(0, 255, 255) !important;
+    border-color: rgb(0, 255, 255);
     box-shadow: 0 0 25px rgba(0, 255, 255, 0.7);
 }
 
 .modo-daltonico .mundo-bloqueado {
-    background-color: rgba(50, 50, 100, 0.5) !important;
-    border-color: rgb(100, 100, 150) !important;
+    background-color: rgba(50, 50, 100, 0.5);
+    border-color: rgb(100, 100, 150);
 }
 
-/* === AJUSTES === */
 .modo-daltonico .slider {
-    background-color: rgba(0, 100, 200, 0.3) !important;
+    background-color: rgba(0, 100, 200, 0.3);
 }
 
 .modo-daltonico .unity-slider__dragger {
-    background-color: rgb(0, 200, 255) !important;
-    border-color: rgb(0, 255, 255) !important;
+    background-color: rgb(0, 200, 255);
+    border-color: rgb(0, 255, 255);
 }
 
 .modo-daltonico .toggle-checkmark {
-    background-color: rgb(0, 200, 255) !important;
+    background-color: rgb(0, 200, 255);
 }
 
-/* === RANKING Y CRÉDITOS === */
-.modo-daltonico .ranking-panel,
+.modo-daltonico .ranking-panel {
+    background-color: rgba(0, 30, 80, 0.9);
+    border-color: rgb(0, 150, 255);
+}
+
 .modo-daltonico .creditos-panel {
-    background-color: rgba(0, 30, 80, 0.9) !important;
-    border-color: rgb(0, 150, 255) !important;
+    background-color: rgba(0, 30, 80, 0.9);
+    border-color: rgb(0, 150, 255);
 }
 
 .modo-daltonico .ranking-item:hover {
-    background-color: rgba(0, 100, 200, 0.4) !important;
+    background-color: rgba(0, 100, 200, 0.4);
 }
 
-/* === MENÚ PRINCIPAL === */
 .modo-daltonico .menu-button {
-    background-color: rgb(0, 80, 160) !important;
-    border-color: rgb(0, 150, 255) !important;
+    background-color: rgb(0, 80, 160);
+    border-color: rgb(0, 150, 255);
 }
 
 .modo-daltonico .menu-button:hover {
-    background-color: rgb(0, 120, 200) !important;
-    border-color: rgb(0, 255, 255) !important;
+    background-color: rgb(0, 120, 200);
+    border-color: rgb(0, 255, 255);
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
 }
 
-/* === MENÚ DE PAUSA === */
 .modo-daltonico .pausa-panel {
-    background-color: rgba(0, 20, 60, 0.95) !important;
-    border-color: rgb(0, 200, 255) !important;
+    background-color: rgba(0, 20, 60, 0.95);
+    border-color: rgb(0, 200, 255);
 }
 
 .modo-daltonico .pausa-button {
-    background-color: rgb(0, 100, 200) !important;
+    background-color: rgb(0, 100, 200);
 }
 
 .modo-daltonico .pausa-button:hover {
-    background-color: rgb(0, 150, 255) !important;
+    background-color: rgb(0, 150, 255);
 }
 
-/* === INPUTS Y TEXTFIELDS === */
 .modo-daltonico .unity-text-field__input {
-    border-color: rgb(0, 150, 255) !important;
+    border-color: rgb(0, 150, 255);
 }
 
 .modo-daltonico .unity-text-field__input:focus {
-    border-color: rgb(0, 255, 255) !important;
+    border-color: rgb(0, 255, 255);
 }
 
 .modo-daltonico TextField:focus {
-    border-color: rgb(0, 255, 255) !important;
+    border-color: rgb(0, 255, 255);
 }
-/* ============================================
-   TEXTO EN NEGRO OSCURO PARA INPUTS
-   ============================================ */
 
-/* === TEXTO QUE ESCRIBE EL USUARIO === */
 .unity-text-field__input {
-    color: rgb(20, 20, 20) !important; /* Negro oscuro */
-    background-color: rgb(240, 240, 240) !important; /* Fondo gris claro */
-    font-size: 18px !important;
-    -unity-font-style: normal !important;
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-    padding-top: 8px !important;
-    padding-bottom: 8px !important;
-    border-radius: 5px !important;
+    color: rgb(20, 20, 20);
+    background-color: rgb(240, 240, 240);
+    font-size: 18px;
+    -unity-font-style: normal;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-radius: 5px;
 }
 
-/* === COLOR DEL PLACEHOLDER (MODO NORMAL) === */
 .unity-base-text-field__placeholder {
-    color: rgba(50, 50, 50, 0.6) !important; /* Un gris oscuro con algo de transparencia */
-    -unity-font-style: italic; /* Opcional: para diferenciarlo del texto escrito */
+    color: rgba(88, 88, 88, 0.6);
+    -unity-font-style: italic;
 }
 
-/* === MODO DALTÓNICO - Mantener negro pero con fondo azul claro === */
 .modo-daltonico .unity-text-field__input {
-    color: rgb(0, 0, 0) !important; /* Negro */
-    background-color: rgb(200, 230, 255) !important; /* Fondo azul muy claro */
+    color: rgb(0, 0, 0);
+    background-color: rgb(200, 230, 255);
 }
 
 .modo-daltonico .unity-text-field__input:focus {
-    color: rgb(0, 0, 0) !important;
-    background-color: rgb(255, 255, 255) !important;
-    border-color: rgb(0, 255, 255) !important; /* Borde cian */
+    color: rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
+    border-color: rgb(0, 255, 255);
 }
