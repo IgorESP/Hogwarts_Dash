@@ -150,23 +150,10 @@
     border-radius: 5px !important;
 }
 
-/* === PLACEHOLDER (texto de ayuda) === */
-.unity-text-field__input::placeholder {
-    color: rgba(100, 100, 100, 0.7) !important; /* Gris medio */
-    font-size: 16px !important;
-}
-
-/* === CUANDO EL USUARIO ESTÁ ESCRIBIENDO === */
-.unity-text-field__input:focus {
-    color: rgb(0, 0, 0) !important; /* Negro puro al escribir */
-    background-color: rgb(255, 255, 255) !important; /* Fondo blanco al escribir */
-    border-color: rgb(139, 69, 19) !important; /* Borde dorado/marrón estilo HP */
-}
-
-/* === CAMPOS DE CONTRASEÑA === */
-.unity-text-field__input[type="password"] {
-    color: rgb(20, 20, 20) !important;
-    font-size: 18px !important;
+/* === COLOR DEL PLACEHOLDER (MODO NORMAL) === */
+.unity-base-text-field__placeholder {
+    color: rgba(50, 50, 50, 0.6) !important; /* Un gris oscuro con algo de transparencia */
+    -unity-font-style: italic; /* Opcional: para diferenciarlo del texto escrito */
 }
 
 /* === MODO DALTÓNICO - Mantener negro pero con fondo azul claro === */
