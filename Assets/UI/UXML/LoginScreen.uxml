@@ -1,20 +1,28 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" schemaLocation="UnityEngine.UIElements ../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/USS/GlobalAccesibilidad.uss?fileID=7433441132597879392&amp;guid=54de473943b1544468f4e32873b9414e&amp;type=3#GlobalAccesibilidad" />
+    
     <ui:VisualElement name="Contenedor" style="flex-grow: 1; width: 100%; height: 100%; position: absolute; background-image: url(&quot;project://database/Assets/ASSETS_MENUS/fondo%20(1).png?fileID=2800000&amp;guid=0ae676ad7a14f814c9b9fbe500038b98&amp;type=3#fondo (1)&quot;); -unity-background-scale-mode: scale-and-crop; justify-content: center; align-items: center; background-color: rgb(108, 103, 103); -unity-background-image-tint-color: rgb(108, 103, 103);">
+        
         <ui:VisualElement name="Logotipo" picking-mode="Ignore" style="width: 400px; height: 110px; background-image: url(&quot;project://database/Assets/ASSETS_MENUS/titulo%20(1).png?fileID=-3271962813208512830&amp;guid=4f5830131bc7dcd469c1a72a375836d2&amp;type=3#titulo (1)_0&quot;); -unity-background-scale-mode: scale-to-fit; margin-bottom: 30px;" />
+        
         <ui:VisualElement name="PanelLogin" style="width: 420px; background-color: rgba(25, 20, 15, 0.95); border-radius: 25px; padding: 30px; border-width: 4px; border-color: rgb(139, 69, 19); align-items: center;">
             <ui:Label text="Iniciar Sesión" style="font-size: 32px; color: gold; margin-bottom: 25px; -unity-font-style: bold;" />
+            
             <ui:VisualElement class="campo-input" style="width: 100%; margin-bottom: 20px;">
                 <ui:Label text="Usuario" style="color: gold; margin-bottom: 5px; -unity-font-style: bold;" />
-                <ui:TextField name="Campo_Usuario" focusable="true" />
+                <ui:TextField name="Campo_Usuario" placeholder-text="" focusable="true" style="font-size: 18px; -unity-font-style: bold;" />
             </ui:VisualElement>
+            
             <ui:VisualElement class="campo-input" style="width: 100%; margin-bottom: 30px;">
                 <ui:Label text="Contraseña" style="color: gold; margin-bottom: 5px; -unity-font-style: bold;" />
-                <ui:TextField name="Campo_Contrasena" password="true" focusable="true" />
+                <ui:TextField name="Campo_Contrasena" placeholder-text="" password="true" focusable="true" style="font-size: 18px; -unity-font-style: bold;" />
             </ui:VisualElement>
+            
             <ui:Button name="Boton_IniciarSesion" text="ENTRAR" class="boton-login" style="width: 100%; height: 60px; background-color: darkgreen; color: white; border-radius: 12px; -unity-font-style: bold; font-size: 20px;" />
+            
             <ui:Button name="Boton_Registrarse" text="REGISTRARSE" class="boton-login" style="width: 100%; height: 60px; margin-top: 15px; background-color: saddlebrown; color: white; border-radius: 12px; -unity-font-style: bold; font-size: 20px;" />
-            <ui:Label name="Mensaje_Error" style="color: red; margin-top: 15px; display: none;" />
+            
+            <ui:Label name="Mensaje_Error" style="color: red; margin-top: 15px; display: none; -unity-font-style: bold; -unity-text-align: middle-left; font-size: 20px;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
