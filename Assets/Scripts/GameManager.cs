@@ -63,6 +63,7 @@ public class GameManager : MonoBehaviour
         // Reiniciar estadísticas de esta sesión/intento
         //snitchesRecogidas = 0;
         if (NivelesManager.Instance != null) NivelesManager.Instance.RegistrarIntentoGlobal();
+        if (ProgressManager.Instance != null) ProgressManager.Instance.RegistrarIntento();
 
         // Buscar el controlador de resultados en la escena
         resultadosController = FindFirstObjectByType<ResultadosController>();
@@ -130,7 +131,7 @@ public class GameManager : MonoBehaviour
         
         // Calcular porcentaje real al ganar (debería ser 100 o muy cerca)
         int porcentaje = ObtenerPorcentajeActual();
-        int intentos = PlayerPrefs.GetInt("IntentosActuales", totalIntentos); 
+        int intentos = (ProgressManager.Instance != null) ? ProgressManager.Instance.ObtenerIntentos() : PlayerPrefs.GetInt("IntentosActuales", totalIntentos); 
         int snitches = snitchesRecogidas;
         
         Debug.Log($"[GameManager] Resultados - Porcentaje: {porcentaje}%, Intentos: {intentos}, Snitches: {snitches}");
@@ -179,8 +180,9 @@ public class GameManager : MonoBehaviour
 
         if (NivelesManager.Instance != null)
         {
+            float tiempoSesion = Time.timeSinceLevelLoad;
             NivelesManager.Instance.CompletarNivel(mundoActual, nivelActual, porcentajeMuerte, snitchesRecogidas);
-            NivelesManager.Instance.RegistrarIntentoGlobal();
+            NivelesManager.Instance.RegistrarTiempoNivel(mundoActual, nivelActual, tiempoSesion);
         }
         
         Debug.Log($"[GameManager] Jugador muerto al {porcentajeMuerte}%. Intento #{totalIntentos}");

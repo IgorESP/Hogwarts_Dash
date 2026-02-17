@@ -12,7 +12,7 @@ public class AjustesController : MonoBehaviour
     
     // Referencias a elementos de UI
     private Slider sliderMusica, sliderSFX, sliderTamanoLetra;
-    private Label labelMusica, labelSFX, labelTamanoLetra, mensajeVacio, labelPerfilNiveles, labelPerfilSnitches, labelPerfilIntentos;
+    private Label labelMusica, labelSFX, labelTamanoLetra, mensajeVacio, labelPerfilNiveles, labelPerfilSnitches, labelPerfilIntentos, labelPerfilTiempo, labelPerfilFecha;
     private Button botonRanking, botonPerfil, botonAtras, botonCerrarSesion, botonCreditos, botonTutorial, botonManual, botonCerrarRanking, botonCerrarPerfil, botonCerrarCreditos, botonCerrarManual, botonCerrarTutorial;
     private VisualElement panelRankingOverlay, panelPerfilOverlay, panelCreditosOverlay, panelManualOverlay, panelTutorialOverlay;
     private ScrollView listaRanking, contenidoManual, contenidoTutorial;
@@ -67,6 +67,8 @@ public class AjustesController : MonoBehaviour
         labelPerfilNiveles = root.Q<Label>("Label_PerfilNiveles");
         labelPerfilSnitches = root.Q<Label>("Label_PerfilSnitches");
         labelPerfilIntentos = root.Q<Label>("Label_PerfilIntentos");
+        labelPerfilTiempo = root.Q<Label>("Label_PerfilTiempo");
+        labelPerfilFecha = root.Q<Label>("Label_PerfilFecha");
 
         // Manual de usuario
         panelManualOverlay = root.Q<VisualElement>("PanelManualOverlay");
@@ -558,6 +560,23 @@ public class AjustesController : MonoBehaviour
         if (panelPerfilOverlay != null)
             panelPerfilOverlay.style.display = DisplayStyle.Flex;
 
+        // 1. Mostrar datos locales inmediatamente (100% precisos y sin lag)
+        if (NivelesManager.Instance != null)
+        {
+            if (labelPerfilNiveles != null) labelPerfilNiveles.text = $"{NivelesManager.Instance.ObtenerTotalNivelesCompletados()}/5";
+            if (labelPerfilSnitches != null) labelPerfilSnitches.text = NivelesManager.Instance.ObtenerTotalSnitches().ToString();
+            if (labelPerfilIntentos != null) labelPerfilIntentos.text = NivelesManager.Instance.ObtenerTotalIntentos().ToString();
+            
+            if (labelPerfilTiempo != null)
+            {
+                float segundosTotales = NivelesManager.Instance.ObtenerTotalTiempoGlobal();
+                int horas = (int)(segundosTotales / 3600);
+                int minutos = (int)((segundosTotales % 3600) / 60);
+                labelPerfilTiempo.text = $"{horas}h {minutos}m";
+            }
+        }
+
+        // 2. Cargar metadatos del jugador desde la API (Username, fecha)
         string playerId = PlayerPrefs.GetString("player_id", "");
         if (string.IsNullOrEmpty(playerId))
         {
@@ -569,7 +588,7 @@ public class AjustesController : MonoBehaviour
         {
             if (!exito || datos == null)
             {
-                Debug.LogWarning("[Perfil] Error obteniendo datos del jugador");
+                Debug.LogWarning("[Perfil] Error obteniendo metadatos del jugador de la API");
                 return;
             }
 
@@ -577,17 +596,19 @@ public class AjustesController : MonoBehaviour
             var labelFecha    = root.Q<Label>("Label_PerfilFecha");
 
             if (labelUsername != null) labelUsername.text = datos.username;
-            if (labelPerfilNiveles != null) labelPerfilNiveles.text = $"{datos.niveles_completados}/5";
-            if (labelPerfilSnitches != null) labelPerfilSnitches.text = datos.snitch_totales.ToString();
-            if (labelPerfilIntentos != null) labelPerfilIntentos.text = datos.total_intentos.ToString();
+            
             if (labelFecha != null) {
-            if (datos.created_at != null) {
-                DateTime fecha = DateTime.Parse(datos.created_at);
-                labelFecha.text = fecha.ToString("dd/MM/yyyy");
-            } else {
-                labelFecha.text = "-";
+                if (!string.IsNullOrEmpty(datos.created_at)) {
+                    if (DateTime.TryParse(datos.created_at, out DateTime fecha))
+                        labelFecha.text = fecha.ToString("dd/MM/yyyy");
+                    else
+                        labelFecha.text = datos.created_at.Split('T')[0]; // Fallback simple
+                } else {
+                    labelFecha.text = "-";
+                }
             }
-        }
+            
+            // Nota: Podríamos comparar datos.snitch_totales con el local para detectar desincronización si fuera necesario
         });
     }
 

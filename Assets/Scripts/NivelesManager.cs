@@ -139,6 +139,17 @@ public class NivelesManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
+    /// <summary>
+    /// Acumula el tiempo jugado en un nivel específico.
+    /// </summary>
+    public void RegistrarTiempoNivel(int m, int n, float segundos)
+    {
+        float totalAnterior = PlayerPrefs.GetFloat($"Nivel_{m}_{n}_TiempoTotal", 0f);
+        PlayerPrefs.SetFloat($"Nivel_{m}_{n}_TiempoTotal", totalAnterior + segundos);
+        PlayerPrefs.Save();
+        Debug.Log($"[Niveles] Tiempo acumulado en Mundo {m}: {segundos:F1}s (Total: {totalAnterior + segundos:F1}s)");
+    }
+
     /// <summary> 
     /// Determina cuántas estrellas obtiene el jugador según su porcentaje. 
     /// </summary>
@@ -174,6 +185,12 @@ public class NivelesManager : MonoBehaviour
     public bool MundoEstaCompletado(int m) => 
         PlayerPrefs.GetInt($"Nivel_{m}_1_Completado", 0) == 1;
 
+    /// <summary>
+    /// Obtiene el tiempo total dedicado a un mundo (en segundos).
+    /// </summary>
+    public float ObtenerTiempoTotalMundo(int m) => 
+        PlayerPrefs.GetFloat($"Nivel_{m}_1_TiempoTotal", 0f);
+
     // ============================================================ 
     // AGREGACIÓN DE ESTADÍSTICAS GLOBALES (Perfil de Usuario)
     // ============================================================
@@ -196,6 +213,14 @@ public class NivelesManager : MonoBehaviour
 
     public int ObtenerTotalIntentos() => 
         PlayerPrefs.GetInt("TotalIntentosGlobal", 0);
+
+    public float ObtenerTotalTiempoGlobal()
+    {
+        float total = 0;
+        for (int i = 1; i <= TOTAL_MUNDOS; i++)
+            total += ObtenerTiempoTotalMundo(i);
+        return total;
+    }
 
     public void RegistrarIntentoGlobal()
     {

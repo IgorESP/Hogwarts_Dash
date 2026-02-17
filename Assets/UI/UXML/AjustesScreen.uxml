@@ -283,6 +283,11 @@
                 <ui:Label name="Label_PerfilIntentos" text="0" style="font-size: 24px; color: rgb(255, 215, 0); -unity-font-style: bold;" />
             </ui:VisualElement>
 
+            <ui:VisualElement style="flex-direction: row; justify-content: space-between; margin-bottom: 20px;">
+                <ui:Label text="Tiempo Jugado:" style="font-size: 22px; color: rgb(200, 200, 200);" />
+                <ui:Label name="Label_PerfilTiempo" text="0h 0m" style="font-size: 24px; color: rgb(255, 215, 0); -unity-font-style: bold;" />
+            </ui:VisualElement>
+
             <ui:VisualElement style="flex-direction: row; justify-content: space-between;">
                 <ui:Label text="Miembro desde:" style="font-size: 22px; color: rgb(200, 200, 200);" />
                 <ui:Label name="Label_PerfilFecha" text="-" style="font-size: 24px; color: rgb(255, 215, 0); -unity-font-style: bold;" />

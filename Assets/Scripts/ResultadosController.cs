@@ -58,6 +58,11 @@ public class ResultadosController : MonoBehaviour
         
         MostrarPanel();
         
+        // Registrar tiempo localmente
+        float tiempoSesion = (GameManager.Instance != null) ? Time.timeSinceLevelLoad : 0f;
+        if (NivelesManager.Instance != null) 
+            NivelesManager.Instance.RegistrarTiempoNivel(PlayerPrefs.GetInt("MundoSeleccionado", 1), 1, tiempoSesion);
+
         // Enviar a la base de datos si hay sesión
         StartCoroutine(EnviarResultadosAPI(porcentaje, 1, snitches));
     }
@@ -115,23 +120,32 @@ public class ResultadosController : MonoBehaviour
         string playerId = PlayerPrefs.GetString("player_id", "");
         if (string.IsNullOrEmpty(playerId)) 
         {
-            Debug.LogWarning("[API] Sin player_id logueado");
+            Debug.LogWarning("[API] Sin player_id logueado, no se sincronizará el progreso.");
             yield break;
         }
 
-        string mundoActual = PlayerPrefs.GetString("MundoSeleccionado", "comedor");
-        string[] nombresNiveles = { "comedor", "gryffindor", "slytherin", "hufflepuff", "ravenclaw" };
-        string nivel = nombresNiveles[Mathf.Clamp(PlayerPrefs.GetInt("MundoSeleccionado", 0) - 1, 0, 4)];
+        // Obtener el nombre del nivel correctamente (coincidiendo con GameManager y la DB)
+        int mundoNum = PlayerPrefs.GetInt("MundoSeleccionado", 1);
+        string nivel = mundoNum switch
+        {
+            1 => "comedor",
+            2 => "gryffindor",
+            3 => "slytherin",
+            4 => "hufflepuff",
+            5 => "ravenclaw",
+            _ => "comedor"
+        };
 
-        float tiempoJugado = GameManager.Instance ? Time.timeSinceLevelLoad : 0f;
+        float tiempoJugado = (GameManager.Instance != null) ? Time.timeSinceLevelLoad : 0f;
 
-        Debug.Log($"[VICTORIA] Este intento: {snitches} snitch, {intentos} intentos");
+        Debug.Log($"[API] Enviando victoria: Nivel={nivel}, %={porcentaje}, Snitches={snitches}");
 
+        // Enviamos 1 intento para que el backend lo sume o actualice según su lógica
         ApiManager.Instance.ActualizarProgresoNivel(
             playerId, nivel, porcentaje, snitches, 1, tiempoJugado,
             (exito, mensaje) => {
-                if (exito) Debug.Log($"[API] Progreso guardado: {mensaje}");
-                else Debug.LogWarning($"[API] Error: {mensaje}");
+                if (exito) Debug.Log($"[API] Progreso guardado exitosamente para {nivel}");
+                else Debug.LogWarning($"[API] Error al guardar progreso: {mensaje}");
             }
         );
 

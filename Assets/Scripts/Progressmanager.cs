@@ -30,13 +30,12 @@ public class ProgressManager : MonoBehaviour
         Debug.Log($"[Progress] Iniciando seguimiento: Mundo {mundoActual}");
         
         IniciarPartida();
-        DesbloquearSiguienteMundoAlEntrar();
     }
     
     /// <summary> 
     /// Inicializa todas las estadísticas de la partida. 
     /// </summary>
-    private void IniciarPartida()
+    public void IniciarPartida()
     {
         preguntasTotales = 0;
         respuestasCorrectas = 0;
@@ -47,19 +46,6 @@ public class ProgressManager : MonoBehaviour
         tiempoInicio = Time.time;
     }
     
-    /// <summary>
-    /// Desbloquea preventivamente el siguiente mundo al entrar en el actual
-    /// </summary>
-    private void DesbloquearSiguienteMundoAlEntrar()
-    {
-        if (mundoActual < 5)
-        {
-            int next = mundoActual + 1;
-            if (NivelesManager.Instance != null) 
-                NivelesManager.Instance.DesbloquearMundo(next);
-            else PlayerPrefs.SetInt($"Mundo_{next}_Desbloqueado", 1);
-        }
-    }
     
     /// <summary> 
     /// Registra una respuesta (correcta o incorrecta). 
@@ -83,6 +69,8 @@ public class ProgressManager : MonoBehaviour
     { 
         intentos++; 
     }
+
+    public int ObtenerIntentos() => intentos;
 
     /// <summary>
     /// Registra una snitch recogida. 
@@ -110,7 +98,12 @@ public class ProgressManager : MonoBehaviour
         Debug.Log($"[Progress] Finalizando Nivel {mundoActual}. Porcentaje: {p:F1}%. Intentos: {intentos}");
         
         if (NivelesManager.Instance != null) 
-            NivelesManager.Instance.CompletarNivel(mundoActual, 1, p, snitchesRecogidos);
+        {
+            // Usar snitches del GameManager si están disponibles para mayor precisión
+            int finalSnitches = (GameManager.Instance != null) ? GameManager.Instance.snitchesRecogidas : snitchesRecogidos;
+            NivelesManager.Instance.CompletarNivel(mundoActual, 1, p, finalSnitches);
+            snitchesRecogidos = finalSnitches; // Sincronizar localmente por si acaso
+        }
         
         // Persistir resultados para la escena de fin
         PlayerPrefs.SetFloat("UltimoPorcentaje", p);

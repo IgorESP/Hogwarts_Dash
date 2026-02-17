@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 32
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -139,23 +139,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: cubo_hufflepuff_0
+      name: CUBO2_0
       rect:
         serializedVersion: 2
-        x: 70
-        y: 73
-        width: 357
-        height: 354
+        x: 71
+        y: 74
+        width: 355
+        height: 352
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 82ca606808c114680800000000000000
-      internalID: -8772699260811039704
+      spriteID: 23ba83c17b040f24ea615a89a40ec71e
+      internalID: -2102443775
       vertices: []
       indices: 
       edges: []
@@ -164,7 +164,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 1ab89ce12114a994d877e26b53db6da3
     internalID: 0
     vertices: []
     indices: 
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      cubo_hufflepuff_0: -8772699260811039704
+      CUBO2_0: -2102443775
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

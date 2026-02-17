@@ -160,6 +160,9 @@ public class NivelesUIController : MonoBehaviour
         PlayerPrefs.SetInt("MundoSeleccionado", num);
         PlayerPrefs.Save();
 
+        if (ProgressManager.Instance != null)
+            ProgressManager.Instance.IniciarPartida();
+
         // Música segun el mundo
         switch (num) 
         { 
