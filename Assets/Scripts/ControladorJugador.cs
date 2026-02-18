@@ -110,7 +110,7 @@ public class MovimientoGD : MonoBehaviour
     /// </summary>
     void Start()
     {
-        Debug.Log("[MovimientoGD] Inicializando jugador...");
+        Debug.Log($"[MovimientoGD] Invocado Start para {gameObject.name}. Capa Muerte: {capaMuerte.value}, Capa Suelo: {capaSuelo.value}");
         
         // Obtener referencias a componentes
         rb = GetComponent<Rigidbody2D>();
@@ -350,9 +350,13 @@ public class MovimientoGD : MonoBehaviour
         // OBSTÁCULOS LETALES (por Layer)
         if (((1 << collision.gameObject.layer) & capaMuerte) != 0)
         {
-            Debug.Log($"[MovimientoGD] Colisión con objeto letal (Física): {collision.gameObject.name}");
+            Debug.Log($"[MovimientoGD] 💀 Colisión con objeto LETAL: {collision.gameObject.name} (Layer: {LayerMask.LayerToName(collision.gameObject.layer)})");
             Morir();
             return;
+        }
+        else if (collision.gameObject.layer != LayerMask.NameToLayer("Suelo")) 
+        {
+            Debug.Log($"[MovimientoGD] Colisión con objeto NO letal: {collision.gameObject.name} (Layer: {LayerMask.LayerToName(collision.gameObject.layer)})");
         }
 
         // MUERTE POR COLISIÓN FRONTAL
@@ -489,7 +493,11 @@ public class MovimientoGD : MonoBehaviour
         
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.PlayerDied();
+            try {
+                GameManager.Instance.PlayerDied();
+            } catch (System.Exception e) {
+                Debug.LogError($"[MovimientoGD] Error al notificar muerte al GameManager: {e.Message}");
+            }
         }
         
         string escenaActual = SceneManager.GetActiveScene().name;

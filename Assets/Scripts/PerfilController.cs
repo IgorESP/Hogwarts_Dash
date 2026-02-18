@@ -16,10 +16,6 @@ public class PerfilUIController : MonoBehaviour
     // Botones de selección de casa
     private Button botonGryffindor, botonHufflepuff, botonRavenclaw, botonSlytherin, botonConfirmar, botonVolver;
 
-    // Botones de navegación
-    private VisualElement iconoCubo, iconoBola, iconoCohete, iconoUFO;
-
-    // Iconos de previsualización del personaje
     private string casaSeleccionada = "Gryffindor";
     
     /// <summary> 
@@ -64,11 +60,6 @@ public class PerfilUIController : MonoBehaviour
 
         botonConfirmar = root.Q<Button>("Boton_Confirmar");
         botonVolver = root.Q<Button>("Boton_Volver");
-
-        iconoCubo = root.Q<VisualElement>("Icono_Cubo");
-        iconoBola = root.Q<VisualElement>("Icono_Bola");
-        iconoCohete = root.Q<VisualElement>("Icono_Cohete");
-        iconoUFO = root.Q<VisualElement>("Icono_UFO");
     }
 
     /// <summary> 
@@ -100,38 +91,22 @@ public class PerfilUIController : MonoBehaviour
         
         casaSeleccionada = nombreCasa;
         
-        // Aplicar nuevos estilos e iconos según la casa
+        // Aplicar nuevos estilos según la casa
         switch (nombreCasa)
         {
             case "Gryffindor":
                 botonGryffindor.AddToClassList("casa-seleccionada");
-                ActualizarIconos(new AssetsCasa("Assets/ASSETS_CUBOS/CUBO1.png", "Assets/ASSETS_CUBOS/Bola_gryffindor.png", "Assets/ASSETS_CUBOS/Cohete_gryffindor.png", "Assets/ASSETS_CUBOS/UFO_gryffindor.png")); 
                 break;
             case "Hufflepuff":
                 botonHufflepuff.AddToClassList("casa-seleccionada");
-                ActualizarIconos(new AssetsCasa("Assets/ASSETS_CUBOS/CUBO2.png", "Assets/ASSETS_CUBOS/Bola_hufflepuff.png", "Assets/ASSETS_CUBOS/Cohete_hufflepuff.png", "Assets/ASSETS_CUBOS/UFO_hufflepuff.png")); 
                 break;
             case "Ravenclaw":
                 botonRavenclaw.AddToClassList("casa-seleccionada");
-                ActualizarIconos(new AssetsCasa("Assets/ASSETS_CUBOS/CUBO3.png", "Assets/ASSETS_CUBOS/Bola_ravenclaw.png", "Assets/ASSETS_CUBOS/Cohete_ravenclaw.png", "Assets/ASSETS_CUBOS/UFO_ravenclaw.png")); 
                 break;
             case "Slytherin":
                 botonSlytherin.AddToClassList("casa-seleccionada");
-                ActualizarIconos(new AssetsCasa("Assets/ASSETS_CUBOS/CUBO4.png", "Assets/ASSETS_CUBOS/Bola_slytherin.png", "Assets/ASSETS_CUBOS/Cohete_slytherin.png", "Assets/ASSETS_CUBOS/UFO_slytherin.png")); 
                 break;
         }
-    }
-    
-    /// <summary>
-    /// Carga las texturas de previsualización de los modos de juego (Solo editor para previsualización directa)
-    /// </summary>
-    private void ActualizarIconos(AssetsCasa assets) {
-        #if UNITY_EDITOR
-        iconoCubo.style.backgroundImage = new StyleBackground(AssetDatabase.LoadAssetAtPath<Texture2D>(assets.cubo));
-        iconoBola.style.backgroundImage = new StyleBackground(AssetDatabase.LoadAssetAtPath<Texture2D>(assets.bola));
-        iconoCohete.style.backgroundImage = new StyleBackground(AssetDatabase.LoadAssetAtPath<Texture2D>(assets.cohete));
-        iconoUFO.style.backgroundImage = new StyleBackground(AssetDatabase.LoadAssetAtPath<Texture2D>(assets.ufo));
-        #endif
     }
     
     /// <summary> 

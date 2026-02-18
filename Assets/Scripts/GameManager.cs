@@ -16,6 +16,12 @@ public class GameManager : MonoBehaviour
     [Tooltip("Número de snitches recogidas en la sesión actual")]
     public int snitchesRecogidas = 0;
 
+    [Header("Personajes por Casa")]
+    public GameObject playerGryffindor;
+    public GameObject playerHufflepuff;
+    public GameObject playerRavenclaw;
+    public GameObject playerSlytherin;
+    
     [Header("Marcadores de Progreso (Opcional)")]
     [Tooltip("Objeto que marca el inicio real del nivel (0%)")]
     public Transform ptoInicio;
@@ -58,6 +64,7 @@ public class GameManager : MonoBehaviour
     
     void Start()
     {
+        ActivarJugadorPorCasa();
         ReiniciarEstadisticas();  
 
         // Reiniciar estadísticas de esta sesión/intento
@@ -68,26 +75,27 @@ public class GameManager : MonoBehaviour
         // Buscar el controlador de resultados en la escena
         resultadosController = FindFirstObjectByType<ResultadosController>();
 
+        // Activar al jugador de la casa y obtener su transform
+        ActivarJugadorPorCasa();
+
         // Configurar puntos de inicio y fin para el porcentaje
         if (ptoInicio != null)
         {
             startX = ptoInicio.position.x;
         }
+        else if (playerTransform != null)
+        {
+            startX = playerTransform.position.x;
+        }
         else
         {
+            Debug.LogWarning("[GameManager] Sin transform de jugador ni ptoInicio. Buscando fallback.");
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             if (player != null)
             {
                 playerTransform = player.transform;
                 startX = playerTransform.position.x;
             }
-        }
-
-        // Si el playerTransform no se asignó arriba (porque usamos ptoInicio), buscarlo ahora
-        if (playerTransform == null)
-        {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null) playerTransform = player.transform;
         }
 
         // Configurar punto final
@@ -193,6 +201,12 @@ public class GameManager : MonoBehaviour
         string playerId = PlayerPrefs.GetString("player_id", "");
         if (string.IsNullOrEmpty(playerId)) return;
         
+        if (ApiManager.Instance == null)
+        {
+            Debug.LogWarning("[GameManager] ApiManager.Instance no encontrado. El progreso no se enviará a la API.");
+            return;
+        }
+
         string nivel = GetNombreNivelActual();
         float tiempo = Time.timeSinceLevelLoad;
         
@@ -265,10 +279,55 @@ public class GameManager : MonoBehaviour
 
         float distRecorrida = playerTransform.position.x - startX;
         float progreso = distRecorrida / totalDist;
-
         return Mathf.Clamp(Mathf.RoundToInt(progreso * 100), 0, 100);
     }
     
+    /// <summary> 
+    /// Activa el objeto de jugador correspondiente a la casa seleccionada.
+    /// </summary>
+    private void ActivarJugadorPorCasa()
+    {
+        string casa = PlayerPrefs.GetString("CasaSeleccionada", "Slytherin");
+        Debug.Log($"[GameManager] Aplicando skin para la casa: {casa}");
+
+        // Desactivar todos primero
+        if (playerGryffindor) playerGryffindor.SetActive(false);
+        if (playerHufflepuff) playerHufflepuff.SetActive(false);
+        if (playerRavenclaw) playerRavenclaw.SetActive(false);
+        if (playerSlytherin) playerSlytherin.SetActive(false);
+
+        // Activar el elegido
+        GameObject elegido = casa switch
+        {
+            "Gryffindor" => playerGryffindor,
+            "Hufflepuff" => playerHufflepuff,
+            "Ravenclaw" => playerRavenclaw,
+            "Slytherin" => playerSlytherin,
+            _ => playerSlytherin
+        };
+
+        if (elegido != null)
+        {
+            elegido.SetActive(true);
+            playerTransform = elegido.transform;
+            Debug.Log($"[GameManager] Jugador de {casa} activado.");
+            
+            // Notificar a la cámara si es necesario
+            // Intentar con ambos tipos de scripts de cámara por si acaso
+            CameraFollow cam1 = FindFirstObjectByType<CameraFollow>();
+            if (cam1 != null) cam1.target = playerTransform;
+
+            CameraFollowGD cam2 = FindFirstObjectByType<CameraFollowGD>();
+            if (cam2 != null) cam2.jugador = playerTransform;
+        }
+        else
+        {
+            Debug.LogWarning($"[GameManager] No se encontró el objeto de jugador para la casa {casa}. Buscando por tag como fallback.");
+            GameObject fallback = GameObject.FindGameObjectWithTag("Player");
+            if (fallback != null) playerTransform = fallback.transform;
+        }
+    }
+
     /// <summary> 
     /// Reinicia estadísticas de la sesión actual. 
     /// </summary>
