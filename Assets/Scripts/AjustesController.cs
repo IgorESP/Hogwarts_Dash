@@ -295,11 +295,7 @@ public class AjustesController : MonoBehaviour
                 "En Android, todos los controles serán con el dedo. Durante los niveles tendrá que pulsar la pantalla cada vez que quiera saltar."
             );
 
-            AgregarSeccion("3. Menús",
-                "Menú principal: elegir skins, niveles o ajustes.\n" +
-                "Menú pausa: reanudar, reiniciar o volver al menú.\n" +
-                "Menú ajustes: audio, accesibilidad, créditos, ranking, tutorial y manual."
-            );
+            AgregarSeccion("3. Menús", "");
             
             AgregarSeccion("3.1. Menú principal",
                 "En el menú principal encontrarás 3 botones. \n" +
@@ -314,7 +310,8 @@ public class AjustesController : MonoBehaviour
                 "Para abrir el menú de pausa tendrás que hacer clic dentro de cualquier nivel en la parte superior derecha. \n" + 
                 "Te mostrará un menú parecido al de abajo en el cual tendrás varias opciones. \n" +
                 "Empezando con el botón con el logo de una casa, nos llevará al menú principal. Siguiendo con el botón del medio con el logo de play, reanuda la partida que estés haciendo en el mismo lugar. Por último, encontraremos un botón para reiniciar el nivel desde el inicio. \n" +
-                "En la parte inferior encontrarás 2 barras deslizantes para cambiar el volumen de la música y de los efectos."
+                "En la parte inferior encontrarás 2 barras deslizantes para cambiar el volumen de la música y de los efectos. \n " +
+                "En la parte superior de la derecha encontrarás un botón con una cruz, el cual al pulsarlo se cerrará el juego."
             );
 
             AgregarImagen("Manual/Menu_pausa");
@@ -322,7 +319,7 @@ public class AjustesController : MonoBehaviour
             AgregarSeccion("3.3. Menú ajustes",
                 "Aquí encontrarás muchas opciones para configurar o mirar. \n" +
                 "Empezando de arriba hacia abajo, primero encontraremos los audios. En el cual podrás subir o bajar el volumen de la música y de los efectos. Después encontraremos la parte de accesibilidad. En la que podremos aumentar o disminuir la el tamaño de la letra. \n" +
-                "Luego encontraremos varios botones para informarnos sobre diferentes temas. En créditos encontrarás los assets utilizados, la música utilizada y los desarrolladores del videojuego. El ranking te mostrará los 10 mejores jugadores. En tutorial te mostrará una ventana con los conocimientos básicos que necesitas saber para jugar. El manual de usuario te mostrará en una ventana el documento que estás leyendo ahora mismo. Por último, un botón para cerrar sesión la cuenta y volver al menú de login/registro."
+                "Luego encontraremos varios botones para informarnos sobre diferentes temas. En créditos encontrarás los assets utilizados, la música utilizada y los desarrolladores del videojuego. En ver perfil podrás ver todas tus estadísticas más importantes. El ranking te mostrará los 10 mejores jugadores. En tutorial te mostrará una ventana con los conocimientos básicos que necesitas saber para jugar. El manual de usuario te mostrará en una ventana el documento que estás leyendo ahora mismo. Por último, un botón para cerrar sesión la cuenta y volver al menú de login/registro."
             );
             
             AgregarImagen("Manual/Menu_ajustes");
@@ -334,7 +331,7 @@ public class AjustesController : MonoBehaviour
             AgregarImagen("Manual/Nivel_juego");
 
             AgregarSeccion("5. Cambiar skins de personaje",
-                "En esta sección podrás ver los diferentes personajes con los diferentes colores. Solo tendrás que seleccionar la casa (color) que más te guste y te mostrarán en la parte inferior el resultado."
+                "En esta sección podrás ver los diferentes personajes con los diferentes colores. Solo tendrás que seleccionar la casa (color) que más te guste y pulsar el boton de Entrar al Juego."
             );
 
             AgregarImagen("Manual/Skins_personajes");

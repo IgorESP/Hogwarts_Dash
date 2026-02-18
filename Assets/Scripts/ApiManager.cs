@@ -182,13 +182,26 @@ public class ApiManager : MonoBehaviour
     public void ActualizarStatsGlobales(string playerId, Action<bool, StatsResponse> callback)
     {
         string endpoint = $"/jugadores/{playerId}/stats";
-        Debug.Log($"[API] Actualizando stats globales: {endpoint}");
-        
-        StartCoroutine(GetRequestSingle<StatsResponse>(endpoint, (exito, res) => {
-            if (exito && res != null) 
-                Debug.Log($"[API] Stats actualizadas: {res.snitch_totales} snitch totales");
-            callback(exito, res);
-        }));
+        StartCoroutine(PatchRequest<StatsResponse>(endpoint, callback));
+    }
+
+    private IEnumerator PatchRequest<T>(string endpoint, Action<bool, T> callback)
+    {
+        string url = apiBaseUrl.TrimEnd('/') + endpoint;
+        using (UnityWebRequest req = new UnityWebRequest(url, "PATCH"))
+        {
+            req.uploadHandler = new UploadHandlerRaw(new byte[0]);
+            req.downloadHandler = new DownloadHandlerBuffer();
+            req.SetRequestHeader("Content-Type", "application/json");
+            if (!string.IsNullOrEmpty(apiKey)) req.SetRequestHeader("api-key", apiKey);
+            req.timeout = timeoutSeconds;
+            yield return req.SendWebRequest();
+
+            if (req.result == UnityWebRequest.Result.Success)
+                callback(true, JsonUtility.FromJson<T>(req.downloadHandler.text));
+            else
+                callback(false, default(T));
+        }
     }
 
     // ---------------------------------------------------------

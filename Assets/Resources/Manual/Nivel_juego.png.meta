@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 01b33bd215deff64cbb9f884f48b5312
+guid: 951ed2bad2be36947a7256c5e224a75e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4215205099100228947
-    second: mundos_0
+      213: -6105311345206246471
+    second: elegir_nivel_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,13 +139,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: mundos_0
+      name: elegir_nivel_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 770
-        height: 433
+        width: 1090
+        height: 633
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 35dc84b54ba6f7a30800000000000000
-      internalID: 4215205099100228947
+      spriteID: 9b3c1d9cda3954ba0800000000000000
+      internalID: -6105311345206246471
       vertices: []
       indices: 
       edges: []
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      mundos_0: 4215205099100228947
+      elegir_nivel_0: -6105311345206246471
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

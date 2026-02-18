@@ -141,8 +141,23 @@ public class GameManager : MonoBehaviour
         int porcentaje = ObtenerPorcentajeActual();
         int intentos = (ProgressManager.Instance != null) ? ProgressManager.Instance.ObtenerIntentos() : PlayerPrefs.GetInt("IntentosActuales", totalIntentos); 
         int snitches = snitchesRecogidas;
+        float tiempo = Time.timeSinceLevelLoad;
         
         Debug.Log($"[GameManager] Resultados - Porcentaje: {porcentaje}%, Intentos: {intentos}, Snitches: {snitches}");
+
+        string playerId = PlayerPrefs.GetString("player_id", "");
+        if (!string.IsNullOrEmpty(playerId) && ApiManager.Instance != null)
+        {
+            string nivel = GetNombreNivelActual();
+            ApiManager.Instance.ActualizarProgresoNivel(
+                playerId, nivel, porcentaje, snitches, intentos, tiempo,
+                (exito, msg) => Debug.Log(exito ? "[API] Victoria guardada OK" : "[API] Error guardando victoria: " + msg)
+            );
+        }
+        else
+        {
+            Debug.LogWarning("[GameManager] No se enviará victoria a la API: sin player_id o ApiManager");
+        }
         
         // Mostrar la interfaz de resultados
         if (resultadosController != null)
@@ -176,7 +191,9 @@ public class GameManager : MonoBehaviour
 
         totalIntentos++;
         
-        int intentosEsteIntento = 1;  
+        int intentosEsteIntento = (ProgressManager.Instance != null) 
+            ? ProgressManager.Instance.ObtenerIntentos() 
+            : totalIntentos;
         int porcentajeMuerte = ObtenerPorcentajeActual();
         int snitchEsteIntento = snitchesRecogidas;
         
