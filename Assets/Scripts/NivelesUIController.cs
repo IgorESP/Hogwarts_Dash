@@ -93,6 +93,8 @@ public class NivelesUIController : MonoBehaviour
         for (int i = 1; i <= 5; i++)
         {
             Button b = root.Q<Button>($"Mundo_{i}");
+            bool unlocked = NivelesManager.Instance.MundoEstaDesbloqueado(i);
+            Debug.Log($"[NivelesUI] Mundo {i} estado: {(unlocked ? "DESBLOQUEADO" : "BLOQUEADO")}");
             ActualizarMundo(i, b);
         }
         ActualizarProgresoGeneral();
