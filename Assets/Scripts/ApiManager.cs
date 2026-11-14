@@ -17,7 +17,8 @@ public class ApiManager : MonoBehaviour
     public string apiBaseUrl = "https://hogwartsdashapi.onrender.com/api/v1";
     
     [Header("Seguridad")]
-    public string apiKey = "hogwarts_dash_2026_admin";
+    [Tooltip("Se carga desde Assets/Resources/ApiConfig.json (no se sube a git). Ver ApiConfig.example.json.")]
+    public string apiKey = "";
     
     [Header("Timeouts")]
     public int timeoutSeconds = 90;
@@ -33,7 +34,7 @@ public class ApiManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             
             apiBaseUrl = "https://hogwartsdashapi.onrender.com/api/v1";
-            apiKey = "hogwarts_dash_2026_admin";
+            apiKey = CargarApiKey();
             timeoutSeconds = 90;
             
             Debug.Log($"[API] Gestor inicializado orientado hacia: {apiBaseUrl}");
@@ -43,6 +44,23 @@ public class ApiManager : MonoBehaviour
             Destroy(gameObject); 
         }
     }
+
+    /// <summary>
+    /// Lee la API key de Assets/Resources/ApiConfig.json, que está en .gitignore
+    /// para no publicar la clave en el repositorio.
+    /// </summary>
+    private string CargarApiKey()
+    {
+        TextAsset config = Resources.Load<TextAsset>("ApiConfig");
+        if (config == null)
+        {
+            Debug.LogWarning("[API] Falta Assets/Resources/ApiConfig.json. Copia ApiConfig.example.json y pon tu API key.");
+            return "";
+        }
+        return JsonUtility.FromJson<ApiConfig>(config.text).apiKey;
+    }
+
+    [Serializable] private class ApiConfig { public string apiKey; }
 
     // ---------------------------------------------------------
     // ----------------------- LOGIN ---------------------------

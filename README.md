@@ -61,6 +61,31 @@ Hogwarts Dash es un juego inspirado en el clásico Geometry Dash, pero reinventa
 
 ---
 
+## 🔑 Configuración de la API (login, registro y ranking)
+
+La API key no se incluye en el repositorio. Para compilar con conexión al backend:
+
+1. Copia `ApiConfig.example.json` a `Assets/Resources/ApiConfig.json`.
+2. Sustituye `PON_AQUI_TU_API_KEY` por la clave de la API.
+
+`Assets/Resources/ApiConfig.json` está en `.gitignore`, así que nunca se sube.
+
+---
+
+## 🎨 Créditos de recursos
+
+Este es un proyecto académico sin ánimo de lucro. Los recursos gráficos de terceros pertenecen a sus autores:
+
+- **Pixel 2D Castle Tileset**: Daniel Szadi
+- **Gothicvania Town**: Ansimuz
+- **A lot of useful icons**: pack de iconos de la Unity Asset Store
+- **Recursos de Rafael Matos**: Rafael Matos
+- **TextMesh Pro** y **UI Toolkit**: Unity Technologies
+
+Harry Potter y todos sus elementos relacionados son propiedad de sus respectivos titulares. Este juego es un proyecto fan sin fines comerciales.
+
+---
+
 ## 📅 Última modificación
 
 4 de febrero de 2026

@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   apiBaseUrl: https://hogwartsdashapi.onrender.com/api/v1/jugadores
-  apiKey: hogwarts_dash_2026_admin
+  apiKey: 
   timeoutSeconds: 90
 --- !u!4 &585826334
 Transform:

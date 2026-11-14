@@ -97,3 +97,7 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+# API key local (no publicar). Plantilla en ApiConfig.example.json
+/Assets/Resources/ApiConfig.json
+/Assets/Resources/ApiConfig.json.meta
